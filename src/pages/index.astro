@@ -1,7 +1,5 @@
 ---
 import '../styles/globals.css';
-import { readdirSync } from 'node:fs';
-import { resolve } from 'node:path';
 
 const navItems = [
     { label: 'Home', href: '/' },
@@ -11,24 +9,68 @@ const navItems = [
     { label: 'Press Kit', href: '#press-kit' }
 ];
 
+// Edit upcoming shows here. Add/remove objects as needed.
 const upcomingShows = [
-    { date: 'Fri - Mar 21', venue: 'Shooters', city: 'Round Rock, TX' },
-    { date: 'Sat - Apr 12', venue: 'Round Rock Tavern', city: 'Round Rock, TX' },
-    { date: 'Fri - May 09', venue: 'Private Event', city: 'Austin, TX' }
+    {
+        id: 'shooters-round-rock-2026-03-21',
+        eventName: 'Mach 5 Live at Shooters',
+        venueName: 'Shooters',
+        venueAddress: '1208 N I-35 Frontage Rd, Round Rock, TX',
+        startDateTime: '2026-03-21T20:00:00-05:00',
+        directionsUrl: 'https://maps.google.com/?q=Shooters+Round+Rock+TX',
+        venueLogo: '/images/logos/m5logo2.webp'
+    },
+    {
+        id: 'round-rock-tavern-2026-04-12',
+        eventName: 'Saturday Night Rock Set',
+        venueName: 'Round Rock Tavern',
+        venueAddress: '113 W Main St, Round Rock, TX',
+        startDateTime: '2026-04-12T21:00:00-05:00',
+        directionsUrl: 'https://maps.google.com/?q=Round+Rock+Tavern+Round+Rock+TX',
+        venueLogo: '/images/logos/m5logo2.webp'
+    },
+    {
+        id: 'private-event-austin-2026-05-09',
+        eventName: 'Private Event',
+        venueName: 'Private Venue',
+        venueAddress: 'Austin, TX',
+        startDateTime: '2026-05-09T19:30:00-05:00',
+        directionsUrl: 'https://maps.google.com/?q=Austin+TX',
+        venueLogo: '/images/logos/m5logo2.webp'
+    }
 ];
 
-const liveEnergyImagePool = readdirSync(resolve(process.cwd(), 'public/images/live'))
-    .filter((fileName) => /\.(jpe?g|png|webp)$/i.test(fileName))
-    .sort()
-    .map((fileName) => `/images/live/${fileName}`);
+const showDateFormatter = new Intl.DateTimeFormat('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZone: 'America/Chicago'
+});
 
-const liveEnergyImages =
-    liveEnergyImagePool.length > 0 ? liveEnergyImagePool : ['/images/live/joechuck1.webp', '/images/live/lanae1.webp'];
+const formatShowDate = (dateTime) => showDateFormatter.format(new Date(dateTime));
+const venueInitials = (name) =>
+    name
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((part) => part[0]?.toUpperCase() ?? '')
+        .join('');
 
-const reasons = [
-    'High-octane covers with seamless transitions',
-    'Pro sound, lighting vibe, and crowd-driven pacing',
-    'Perfect for clubs, festivals, corporate and private events'
+const liveEnergyImages = [
+    { src: '/images/live/lanae1.webp', alt: 'Lead singer performing live on stage' },
+    { src: '/images/live/joechuck1.webp', alt: 'Two guitarists performing together on stage' },
+    { src: '/images/live/randylive1.jpg', alt: 'Drummer performing live behind a full kit' }
+];
+
+const whyMach5Intro =
+    'Mach 5 delivers a high-octane rock experience with nonstop momentum, bold stage presence, and crowd-first pacing that keeps dance floors packed.';
+
+const whyMach5Points = [
+    'Seamless set flow from first hit to final encore',
+    'Big visual energy with pro-level live execution',
+    'Built for clubs, festivals, corporate events, and private parties'
 ];
 ---
 
@@ -84,10 +126,34 @@ const reasons = [
                     <div class="m5-show-grid">
                         {
                             upcomingShows.map((show) => (
-                                <article class="m5-card m5-show-card">
-                                    <p class="m5-date">{show.date}</p>
-                                    <h3>{show.venue}</h3>
-                                    <p>{show.city}</p>
+                                <article id={show.id} class="m5-card m5-show-card">
+                                    <header class="m5-show-head">
+                                        <div class="m5-venue-logo-wrap" aria-hidden="true">
+                                            {show.venueLogo ? <img src={show.venueLogo} alt="" loading="lazy" decoding="async" /> : <span>{venueInitials(show.venueName)}</span>}
+                                        </div>
+                                        <div>
+                                            <p class="m5-date">
+                                                <time datetime={show.startDateTime}>{formatShowDate(show.startDateTime)}</time>
+                                            </p>
+                                            <h3>{show.eventName}</h3>
+                                        </div>
+                                    </header>
+                                    <p class="m5-show-venue">{show.venueName}</p>
+                                    <p class="m5-show-location">{show.venueAddress}</p>
+                                    <div class="m5-show-actions">
+                                        <a class="m5-show-action" href={show.directionsUrl} target="_blank" rel="noreferrer">Directions</a>
+                                        <button
+                                            type="button"
+                                            class="m5-show-action m5-show-share"
+                                            data-id={show.id}
+                                            data-event={show.eventName}
+                                            data-venue={show.venueName}
+                                            data-start={formatShowDate(show.startDateTime)}
+                                            data-directions={show.directionsUrl}
+                                        >
+                                            Share
+                                        </button>
+                                    </div>
                                 </article>
                             ))
                         }
@@ -96,35 +162,32 @@ const reasons = [
 
                 <section id="live-energy" class="m5-section">
                     <h2>Live Energy</h2>
-                    <div class="m5-media-grid">
-                        <article class="m5-media-card m5-live-scroll">
-                            <div class="m5-live-user-scroll" aria-label="Live performance photos">
-                                {
-                                    liveEnergyImages.map((image, imageIndex) => (
-                                        <img
-                                            class="m5-live-slide"
-                                            src={image}
-                                            alt={`Live performance photo ${imageIndex + 1}`}
-                                            loading={imageIndex === 0 ? 'eager' : 'lazy'}
-                                            decoding="async"
-                                        />
-                                    ))
-                                }
-                            </div>
-                        </article>
+                    <div class="m5-live-grid">
+                        {
+                            liveEnergyImages.map((image, imageIndex) => (
+                                <article class="m5-live-card">
+                                    <img src={image.src} alt={image.alt} loading={imageIndex === 0 ? 'eager' : 'lazy'} decoding="async" />
+                                </article>
+                            ))
+                        }
                     </div>
                 </section>
 
                 <section id="press-kit" class="m5-section m5-card m5-why-card">
-                    <div class="m5-why-copy">
-                        <h2>Why Mach 5</h2>
-                        <ul>
-                            {reasons.map((item) => <li>{item}</li>)}
-                        </ul>
+                    <div class="m5-why-layout">
+                        <figure class="m5-why-image">
+                            <img src="/images/hero/hero3.webp" alt="Mach 5 performing live on stage" loading="lazy" decoding="async" />
+                        </figure>
+                        <div class="m5-why-copy">
+                            <p class="m5-why-intro">{whyMach5Intro}</p>
+                            <ul>
+                                {whyMach5Points.map((item) => <li>{item}</li>)}
+                            </ul>
+                            <a href="#press-kit" class="m5-btn m5-btn-primary m5-press-btn">
+                                Get the Press Kit
+                            </a>
+                        </div>
                     </div>
-                    <a href="#press-kit" class="m5-btn m5-btn-primary m5-press-btn">
-                        Get the Press Kit
-                    </a>
                 </section>
             </main>
         </div>
@@ -368,26 +431,92 @@ const reasons = [
     }
 
     .m5-show-card {
-        padding: 1.25rem 1.35rem 1.45rem;
+        padding: 1.1rem 1.2rem 1.2rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .m5-show-head {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.8rem;
+        align-items: start;
+        min-height: 132px;
+    }
+
+    .m5-venue-logo-wrap {
+        width: 54px;
+        height: 54px;
+        border-radius: 0.7rem;
+        border: 1px solid rgb(255 255 255 / 18%);
+        background: rgb(8 11 22 / 90%);
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        color: #f5f7fb;
+        font-weight: 800;
+        font-size: 1.1rem;
+    }
+
+    .m5-venue-logo-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        background: #060a14;
+        padding: 0.18rem;
     }
 
     .m5-show-card h3 {
-        margin: 0.55rem 0 0;
-        font-size: clamp(1.6rem, 1.3rem + 0.8vw, 2.1rem);
-        line-height: 1.15;
+        margin: 0.2rem 0 0;
+        font-size: clamp(1.28rem, 1.15rem + 0.45vw, 1.65rem);
+        line-height: 1.2;
     }
 
-    .m5-show-card p {
-        margin: 0.4rem 0 0;
+    .m5-show-venue {
+        margin: 0.75rem 0 0;
+        color: rgb(238 240 247 / 95%);
+        font-size: clamp(1.03rem, 0.98rem + 0.2vw, 1.18rem);
+        font-weight: 600;
+    }
+
+    .m5-show-location {
+        margin: 0.3rem 0 0;
         color: rgb(230 233 242 / 78%);
-        font-size: clamp(1.2rem, 1.08rem + 0.3vw, 1.6rem);
+        font-size: clamp(0.98rem, 0.92rem + 0.2vw, 1.1rem);
     }
 
     .m5-date {
         margin: 0;
         color: #ff2126;
-        font-size: clamp(1.3rem, 1.1rem + 0.55vw, 1.65rem);
-        font-weight: 600;
+        font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
+        font-weight: 700;
+        letter-spacing: 0.02em;
+    }
+
+    .m5-show-actions {
+        margin-top: auto;
+        padding-top: 0.9rem;
+        display: flex;
+        gap: 0.55rem;
+    }
+
+    .m5-show-action {
+        appearance: none;
+        border: 1px solid rgb(255 255 255 / 24%);
+        background: rgb(10 14 26 / 75%);
+        color: #f5f7fb;
+        padding: 0.4rem 0.65rem;
+        border-radius: 0.6rem;
+        font-size: 0.88rem;
+        font-weight: 700;
+        text-decoration: none;
+        cursor: pointer;
+        transition: border-color 160ms ease, color 160ms ease, background-color 160ms ease;
+    }
+
+    .m5-show-action:hover {
+        border-color: #ff4e56;
+        color: #ff4e56;
     }
 
     .m5-media-grid {
@@ -412,51 +541,30 @@ const reasons = [
         filter: saturate(0.95) contrast(1.06);
     }
 
-    .m5-live-user-scroll {
-        display: flex;
-        align-items: stretch;
-        gap: 0.5rem;
+    .m5-live-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.95rem;
+    }
+
+    .m5-live-card {
+        border-radius: 0.9rem;
+        border: 1px solid rgb(255 255 255 / 14%);
+        background: linear-gradient(180deg, rgb(9 12 24 / 96%) 0%, rgb(6 9 18 / 96%) 100%);
+        box-shadow: 0 14px 30px rgb(3 5 12 / 35%);
+        overflow: hidden;
+        aspect-ratio: 4 / 3;
+        padding: 0.34rem;
+    }
+
+    .m5-live-card img {
+        width: 100%;
         height: 100%;
-        padding: 0.3rem 0.3rem 0.45rem;
-        overflow-x: auto;
-        overflow-y: hidden;
-        scroll-snap-type: x proximity;
-        scrollbar-width: thin;
-        scrollbar-color: rgb(108 118 148 / 90%) rgb(8 11 22 / 70%);
-    }
-
-    .m5-live-user-scroll::-webkit-scrollbar {
-        height: 9px;
-    }
-
-    .m5-live-user-scroll::-webkit-scrollbar-track {
-        background: rgb(8 11 22 / 70%);
-        border-radius: 6px;
-    }
-
-    .m5-live-user-scroll::-webkit-scrollbar-thumb {
-        background: rgb(108 118 148 / 90%);
-        border-radius: 6px;
-    }
-
-    .m5-live-user-scroll .m5-live-slide {
-        flex: 0 0 148px;
-        width: 148px;
-        height: 100%;
-        max-height: 100%;
-        object-fit: contain;
+        object-fit: cover;
         object-position: center;
-        background: #060a14;
-        border: 1px solid rgb(255 255 255 / 12%);
-        border-radius: 0.65rem;
-        scroll-snap-align: start;
-        padding: 0.14rem;
+        border-radius: 0.62rem;
+        background: #050913;
         filter: saturate(0.95) contrast(1.06);
-    }
-
-    .m5-media-card.m5-live-scroll {
-        min-height: 112px;
-        height: 112px;
     }
 
     .m5-media-caption {
@@ -473,18 +581,40 @@ const reasons = [
 
     .m5-why-card {
         padding: 1.7rem;
-        display: flex;
-        align-items: end;
-        justify-content: space-between;
-        gap: 2rem;
     }
 
-    .m5-why-copy h2 {
-        margin-bottom: 0.9rem;
+    .m5-why-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.35fr);
+        gap: 1.2rem;
+        align-items: center;
+    }
+
+    .m5-why-image {
+        margin: 0;
+        border-radius: 0.9rem;
+        border: 1px solid rgb(255 255 255 / 15%);
+        overflow: hidden;
+        background: #060a14;
+        aspect-ratio: 4 / 3;
+    }
+
+    .m5-why-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .m5-why-intro {
+        margin: 0 0 0.9rem;
+        font-size: clamp(1.12rem, 1rem + 0.4vw, 1.38rem);
+        line-height: 1.4;
+        color: rgb(233 236 246 / 92%);
     }
 
     .m5-why-copy ul {
-        margin: 0;
+        margin: 0 0 1rem;
         padding-left: 1.25rem;
     }
 
@@ -496,6 +626,7 @@ const reasons = [
 
     .m5-press-btn {
         white-space: nowrap;
+        align-self: start;
     }
 
     @media (max-width: 1024px) {
@@ -601,7 +732,8 @@ const reasons = [
         }
 
         .m5-show-grid,
-        .m5-media-grid {
+        .m5-media-grid,
+        .m5-live-grid {
             grid-template-columns: 1fr;
             gap: 0.9rem;
         }
@@ -610,44 +742,66 @@ const reasons = [
             padding: 1.1rem 1.15rem 1.15rem;
         }
 
-        .m5-show-card h3 {
-            font-size: clamp(2.2rem, 8.9vw, 4.5rem);
+        .m5-show-head {
+            min-height: 0;
         }
 
-        .m5-show-card p {
-            font-size: clamp(1.9rem, 6.5vw, 2.7rem);
+        .m5-show-card h3 {
+            font-size: clamp(1.4rem, 5.3vw, 2.1rem);
+        }
+
+        .m5-show-venue {
+            font-size: clamp(1.15rem, 4.4vw, 1.7rem);
+        }
+
+        .m5-show-location {
+            font-size: clamp(1rem, 3.8vw, 1.45rem);
             margin-top: 0.2rem;
         }
 
         .m5-date {
-            font-size: clamp(1.95rem, 6vw, 2.6rem);
+            font-size: clamp(0.95rem, 3.6vw, 1.3rem);
+        }
+
+        .m5-venue-logo-wrap {
+            width: 52px;
+            height: 52px;
+        }
+
+        .m5-show-actions {
+            margin-top: 0.8rem;
+            gap: 0.45rem;
+        }
+
+        .m5-show-action {
+            font-size: 0.86rem;
+            padding: 0.42rem 0.62rem;
         }
 
         .m5-media-card {
             min-height: 300px;
         }
 
-        .m5-live-user-scroll {
-            gap: 0.42rem;
-            padding: 0.2rem 0.2rem 0.35rem;
-        }
-
-        .m5-live-user-scroll .m5-live-slide {
-            flex-basis: 126px;
-            width: 126px;
-            padding: 0.1rem;
-        }
-
-        .m5-media-card.m5-live-scroll {
-            min-height: 96px;
-            height: 96px;
+        .m5-live-card {
+            aspect-ratio: 16 / 11;
+            padding: 0.26rem;
         }
 
         .m5-why-card {
             padding: 1.2rem 1rem;
-            flex-direction: column;
-            align-items: stretch;
-            gap: 1.15rem;
+        }
+
+        .m5-why-layout {
+            grid-template-columns: 1fr;
+            gap: 0.8rem;
+        }
+
+        .m5-why-image {
+            aspect-ratio: 16 / 10;
+        }
+
+        .m5-why-intro {
+            font-size: clamp(1.45rem, 4.7vw, 2.1rem);
         }
 
         .m5-why-copy li {
@@ -662,37 +816,43 @@ const reasons = [
 
 <script is:inline>
     (() => {
-        const reel = document.querySelector('.m5-live-user-scroll');
-        if (!reel) return;
+        const buttons = Array.from(document.querySelectorAll('.m5-show-share'));
+        if (!buttons.length) return;
 
-        let pausedUntil = 0;
-        let lastTs = 0;
-        const speedPxPerSecond = 12;
+        const shareShow = async (button) => {
+            const id = button.getAttribute('data-id') ?? '';
+            const eventName = button.getAttribute('data-event') ?? 'Mach 5 Show';
+            const venue = button.getAttribute('data-venue') ?? '';
+            const start = button.getAttribute('data-start') ?? '';
+            const directions = button.getAttribute('data-directions') ?? '';
+            const url = `${window.location.origin}${window.location.pathname}#${id}`;
+            const text = `${eventName} at ${venue} on ${start}. Directions: ${directions}`;
 
-        const pauseBriefly = () => {
-            pausedUntil = performance.now() + 1800;
-        };
-
-        reel.addEventListener('pointerdown', pauseBriefly, { passive: true });
-        reel.addEventListener('wheel', pauseBriefly, { passive: true });
-        reel.addEventListener('touchstart', pauseBriefly, { passive: true });
-        reel.addEventListener('mouseenter', pauseBriefly, { passive: true });
-
-        const tick = (ts) => {
-            if (!lastTs) lastTs = ts;
-            const delta = (ts - lastTs) / 1000;
-            lastTs = ts;
-
-            if (ts >= pausedUntil) {
-                reel.scrollLeft += speedPxPerSecond * delta;
-                if (reel.scrollLeft >= reel.scrollWidth - reel.clientWidth - 1) {
-                    reel.scrollLeft = 0;
+            try {
+                if (navigator.share) {
+                    await navigator.share({ title: `Mach 5 - ${eventName}`, text, url });
+                    return;
                 }
+                if (navigator.clipboard?.writeText) {
+                    await navigator.clipboard.writeText(`${text}\n${url}`);
+                } else {
+                    window.prompt('Copy this show link:', `${text}\n${url}`);
+                    return;
+                }
+                const previous = button.textContent;
+                button.textContent = 'Copied';
+                window.setTimeout(() => {
+                    button.textContent = previous;
+                }, 1400);
+            } catch {
+                // Ignore share cancel/no-op.
             }
-
-            requestAnimationFrame(tick);
         };
 
-        requestAnimationFrame(tick);
+        buttons.forEach((button) => {
+            button.addEventListener('click', () => {
+                shareShow(button);
+            });
+        });
     })();
 </script>
