@@ -1,5 +1,8 @@
 ---
 import '../styles/globals.css';
+import { getUpcomingShows } from '../lib/shows';
+
+export const prerender = false;
 
 const navItems = [
     { label: 'Home', href: '/' },
@@ -9,36 +12,7 @@ const navItems = [
     { label: 'Press Kit', href: '#press-kit' }
 ];
 
-// Edit upcoming shows here. Add/remove objects as needed.
-const upcomingShows = [
-    {
-        id: 'shooters-round-rock-2026-03-21',
-        eventName: 'Mach 5 Live at Shooters',
-        venueName: 'Shooters',
-        venueAddress: '1208 N I-35 Frontage Rd, Round Rock, TX',
-        startDateTime: '2026-03-21T20:00:00-05:00',
-        directionsUrl: 'https://maps.google.com/?q=Shooters+Round+Rock+TX',
-        venueLogo: '/images/logos/m5logo2.webp'
-    },
-    {
-        id: 'round-rock-tavern-2026-04-12',
-        eventName: 'Saturday Night Rock Set',
-        venueName: 'Round Rock Tavern',
-        venueAddress: '113 W Main St, Round Rock, TX',
-        startDateTime: '2026-04-12T21:00:00-05:00',
-        directionsUrl: 'https://maps.google.com/?q=Round+Rock+Tavern+Round+Rock+TX',
-        venueLogo: '/images/logos/m5logo2.webp'
-    },
-    {
-        id: 'private-event-austin-2026-05-09',
-        eventName: 'Private Event',
-        venueName: 'Private Venue',
-        venueAddress: 'Austin, TX',
-        startDateTime: '2026-05-09T19:30:00-05:00',
-        directionsUrl: 'https://maps.google.com/?q=Austin+TX',
-        venueLogo: '/images/logos/m5logo2.webp'
-    }
-];
+const upcomingShows = await getUpcomingShows();
 
 const showDateFormatter = new Intl.DateTimeFormat('en-US', {
     weekday: 'short',
@@ -110,7 +84,7 @@ const whyMach5Points = [
                                 <h1>Full-Throttle Rock That Packs the Dance Floor</h1>
                                 <p>High-energy 70s/80s/90s/00s rock covers - Austin, TX - Bookable for clubs and events</p>
                                 <div class="m5-hero-actions">
-                                    <a href="#press-kit" class="m5-btn m5-btn-primary">Book Us</a>
+                                    <a href="/book-us" class="m5-btn m5-btn-primary">Book Us</a>
                                     <a href="#upcoming-shows" class="m5-btn m5-btn-outline">See Shows</a>
                                 </div>
                             </div>
