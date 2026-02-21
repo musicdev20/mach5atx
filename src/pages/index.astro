@@ -1,8 +1,6 @@
 ---
 import '../styles/globals.css';
-import { getUpcomingShows } from '../lib/shows';
-
-export const prerender = false;
+import { defaultUpcomingShows } from '../lib/shows';
 
 const navItems = [
     { label: 'Home', href: '/' },
@@ -12,7 +10,7 @@ const navItems = [
     { label: 'Press Kit', href: '#press-kit' }
 ];
 
-const upcomingShows = await getUpcomingShows();
+const upcomingShows = defaultUpcomingShows;
 
 const showDateFormatter = new Intl.DateTimeFormat('en-US', {
     weekday: 'short',
@@ -46,6 +44,13 @@ const whyMach5Points = [
     'Big visual energy with pro-level live execution',
     'Built for clubs, festivals, corporate events, and private parties'
 ];
+
+const contactLinks = {
+    email: 'mach5atx@gmail.com',
+    facebook: 'https://www.facebook.com/mach5atx/',
+    instagram: 'https://www.instagram.com/mach5atx/',
+    youtube: 'https://www.youtube.com/@mach5atx'
+};
 ---
 
 <!doctype html>
@@ -161,6 +166,31 @@ const whyMach5Points = [
                                 Get the Press Kit
                             </a>
                         </div>
+                    </div>
+                </section>
+
+                <section class="m5-section m5-connect-strip" aria-label="Connect with Mach 5">
+                    <div class="m5-connect-links">
+                        <a href={contactLinks.facebook} target="_blank" rel="noreferrer" aria-label="Facebook">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M13.5 8.5V6.9c0-.8.5-1.3 1.4-1.3H16V3h-2c-2.3 0-3.8 1.5-3.8 3.9v1.6H8v2.6h2.2V21h3.3v-9.9H16l.4-2.6h-2.9z"></path>
+                            </svg>
+                        </a>
+                        <a href={contactLinks.instagram} target="_blank" rel="noreferrer" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M7.3 3h9.4A4.3 4.3 0 0 1 21 7.3v9.4a4.3 4.3 0 0 1-4.3 4.3H7.3A4.3 4.3 0 0 1 3 16.7V7.3A4.3 4.3 0 0 1 7.3 3zm0 1.9A2.4 2.4 0 0 0 4.9 7.3v9.4a2.4 2.4 0 0 0 2.4 2.4h9.4a2.4 2.4 0 0 0 2.4-2.4V7.3a2.4 2.4 0 0 0-2.4-2.4H7.3zm9.9 1.4a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4zM12 7.6a4.4 4.4 0 1 1 0 8.8 4.4 4.4 0 0 1 0-8.8zm0 1.9a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path>
+                            </svg>
+                        </a>
+                        <a href={contactLinks.youtube} target="_blank" rel="noreferrer" aria-label="YouTube">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M21 8.2c-.2-1.3-1.2-2.2-2.5-2.4C16.6 5.5 14.3 5.4 12 5.4s-4.6.1-6.5.4A2.9 2.9 0 0 0 3 8.2c-.2 1.3-.3 2.5-.3 3.8s.1 2.5.3 3.8c.2 1.3 1.2 2.2 2.5 2.4 1.9.3 4.2.4 6.5.4s4.6-.1 6.5-.4a2.9 2.9 0 0 0 2.5-2.4c.2-1.3.3-2.5.3-3.8s-.1-2.5-.3-3.8zM10 15.5v-7l6 3.5-6 3.5z"></path>
+                            </svg>
+                        </a>
+                        <a href={`mailto:${contactLinks.email}`} aria-label="Email">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2 8 5 8-5H4zm0 10h16V9l-8 5-8-5v8z"></path>
+                            </svg>
+                        </a>
                     </div>
                 </section>
             </main>
@@ -603,6 +633,41 @@ const whyMach5Points = [
         align-self: start;
     }
 
+    .m5-connect-strip {
+        margin-top: 2.2rem;
+    }
+
+    .m5-connect-links {
+        display: flex;
+        justify-content: center;
+        gap: 0.7rem;
+    }
+
+    .m5-connect-links a {
+        text-decoration: none;
+        border: 1px solid rgb(255 255 255 / 22%);
+        border-radius: 999px;
+        background: rgb(10 14 26 / 72%);
+        color: rgb(236 240 249 / 95%);
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        line-height: 0;
+    }
+
+    .m5-connect-links a svg {
+        width: 21px;
+        height: 21px;
+        fill: currentColor;
+    }
+
+    .m5-connect-links a:hover {
+        border-color: #ff4e56;
+        color: #ff4e56;
+        transform: translateY(-1px);
+    }
+
     @media (max-width: 1024px) {
         .m5-nav-links {
             gap: 0.9rem;
@@ -784,6 +849,15 @@ const whyMach5Points = [
 
         .m5-press-btn {
             align-self: stretch;
+        }
+
+        .m5-connect-links {
+            gap: 0.55rem;
+        }
+
+        .m5-connect-links a {
+            width: 40px;
+            height: 40px;
         }
     }
 </style>
