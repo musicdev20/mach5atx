@@ -20,9 +20,6 @@ import Mach5Header from '../components/Mach5Header.astro';
             <Mach5Header />
             <section class="m5-book-wrap m5-book-panel">
                 <header class="m5-book-header">
-                    <a href="/" class="m5-book-brand" aria-label="Back to home">
-                        <img src="/images/logos/m5logo2.webp" alt="Mach 5" loading="eager" decoding="async" />
-                    </a>
                     <p>Book Mach 5 for your venue or event.</p>
                 </header>
 
@@ -171,19 +168,8 @@ import Mach5Header from '../components/Mach5Header.astro';
         text-align: center;
     }
 
-    .m5-book-brand {
-        display: inline-block;
-        line-height: 0;
-        text-decoration: none;
-    }
-
-    .m5-book-brand img {
-        width: min(360px, 74vw);
-        height: auto;
-    }
-
     .m5-book-header p {
-        margin: 0.8rem 0 0;
+        margin: 0;
         color: rgb(228 232 244 / 88%);
         font-size: clamp(1rem, 0.9rem + 0.35vw, 1.2rem);
     }
