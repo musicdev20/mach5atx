@@ -61,14 +61,30 @@ const isActive = (href) => {
     .m5-top-header {
         position: relative;
         z-index: 4;
+        isolation: isolate;
+    }
+    .m5-top-header::before {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: clamp(132px, 16vw, 190px);
+        background: url('/images/checkerboardheader.png') center 42% / cover no-repeat;
+        z-index: -2;
+    }
+    .m5-top-header::after {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: clamp(132px, 16vw, 190px);
+        background:
+            linear-gradient(180deg, rgb(6 10 18 / 25%) 0%, rgb(4 8 16 / 68%) 58%, rgb(3 6 13 / 88%) 100%);
+        z-index: -1;
     }
     .m5-checker {
-        height: 18px;
-        background:
-            linear-gradient(180deg, rgb(255 255 255 / 8%) 0%, rgb(255 255 255 / 0%) 45%),
-            url('/images/checkerboard.svg') center / auto 100% repeat-x;
-        border-bottom: 1px solid #2f3445;
-        box-shadow: inset 0 -1px 0 rgb(255 255 255 / 14%);
+        height: 14px;
+        background: linear-gradient(180deg, rgb(255 255 255 / 9%) 0%, rgb(255 255 255 / 0%) 100%);
+        border-bottom: 1px solid rgb(255 255 255 / 15%);
+        box-shadow: inset 0 -1px 0 rgb(255 255 255 / 11%);
     }
     .m5-shell {
         width: min(1200px, 100% - 3.25rem);
@@ -79,7 +95,8 @@ const isActive = (href) => {
         grid-template-columns: auto 1fr auto;
         align-items: center;
         gap: 1.2rem;
-        padding-top: 14px;
+        padding-top: 12px;
+        padding-bottom: 8px;
     }
     .m5-brand {
         margin: 0;
@@ -217,9 +234,12 @@ const isActive = (href) => {
         }
     }
     @media (max-width: 860px) {
+        .m5-top-header::before,
+        .m5-top-header::after {
+            height: 132px;
+        }
         .m5-checker {
-            height: 14px;
-            background-size: auto 100%, auto 100%;
+            height: 10px;
         }
         .m5-shell {
             width: min(1200px, 100% - 1.75rem);
