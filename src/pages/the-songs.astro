@@ -1,0 +1,310 @@
+---
+import '../styles/globals.css';
+import Mach5Header from '../components/Mach5Header.astro';
+import { defaultCoveredArtists } from '../lib/artists';
+
+const artists = defaultCoveredArtists;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Artists Mach 5 covers live, from 70s classics through 2000s rock anthems." />
+        <title>Mach 5 | Artists We Cover</title>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    </head>
+    <body class="m5-artists-body">
+        <div class="m5-artists-page">
+            <Mach5Header />
+
+            <main class="m5-shell m5-artists-main">
+                <section class="m5-artists-hero m5-glass-card">
+                    <p class="m5-label">THE SONGS</p>
+                    <h1>Artists We Cover</h1>
+                    <p class="m5-tagline">
+                        <span>Legends. Anthems.</span>
+                        <span class="m5-accent">Full-Throttle Rock.</span>
+                    </p>
+                </section>
+
+                <section class="m5-artists-section">
+                    <p class="m5-label">ARTISTS WE COVER</p>
+                    <div id="artistsGrid" class="m5-artists-grid">
+                        {
+                            artists.map((artist, index) => (
+                                <article class="m5-artist-tile" style={`--tile-shift:${(index % 4) * 8}%`}>
+                                    <div class="m5-artist-image" style={artist.imageUrl ? `background-image: linear-gradient(180deg, rgb(12 18 32 / 20%) 0%, rgb(6 10 18 / 80%) 100%), url('${artist.imageUrl}'); background-size: cover; background-position: center;` : undefined} aria-hidden="true"></div>
+                                    <div class="m5-artist-copy">
+                                        <h2>{artist.name}</h2>
+                                        <ul class="m5-artist-songs">
+                                            {artist.songs.map((song) => <li>{song}</li>)}
+                                        </ul>
+                                    </div>
+                                </article>
+                            ))
+                        }
+                    </div>
+                </section>
+
+                <p class="m5-artists-footer">From 70s classics to 90s alt-rock, we deliver the biggest hits. Crank it up to 11!</p>
+            </main>
+        </div>
+        <script id="artistsData" type="application/json" set:html={JSON.stringify(artists)}></script>
+    </body>
+</html>
+
+<style is:global>
+    .m5-artists-body {
+        margin: 0;
+        color: #f5f7fb;
+        font-family: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+        background: #02050f;
+    }
+    .m5-artists-page {
+        min-height: 100vh;
+        background:
+            radial-gradient(120% 130% at 50% 0%, #111a2f 0%, #070d1a 55%, #02050f 100%),
+            url('/images/noise.png') repeat;
+        padding-bottom: 3.2rem;
+    }
+    .m5-shell {
+        width: min(1200px, 100% - 3.25rem);
+        margin-inline: auto;
+    }
+    .m5-artists-main {
+        margin-top: 0.95rem;
+    }
+    .m5-glass-card {
+        position: relative;
+        border-radius: 1.1rem;
+        overflow: hidden;
+        border: 1px solid rgb(255 255 255 / 14%);
+        background: linear-gradient(180deg, rgb(12 16 31 / 90%) 0%, rgb(7 10 20 / 88%) 100%);
+        box-shadow: 0 16px 35px rgb(2 4 12 / 32%), inset 0 1px 0 rgb(255 255 255 / 8%);
+        backdrop-filter: blur(6px);
+    }
+    .m5-artists-hero {
+        padding: clamp(1.1rem, 0.9rem + 1vw, 1.75rem);
+        min-height: clamp(250px, 31vw, 360px);
+        display: grid;
+        align-content: end;
+        gap: 0.56rem;
+        isolation: isolate;
+    }
+    .m5-artists-hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(180deg, rgb(5 8 17 / 52%) 0%, rgb(3 7 15 / 44%) 42%, rgb(4 8 16 / 60%) 100%),
+            url('/images/live/bandlive1.jpg') center 30% / cover no-repeat;
+        opacity: 0.58;
+        z-index: -2;
+    }
+    .m5-artists-hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(95% 70% at 30% 25%, rgb(255 255 255 / 8%) 0%, rgb(255 255 255 / 0%) 65%);
+        z-index: -1;
+    }
+    .m5-label {
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: rgb(230 235 246 / 82%);
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+    .m5-artists-hero h1 {
+        margin: 0;
+        font-size: clamp(2.2rem, 1.8rem + 2.8vw, 4rem);
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+    }
+    .m5-tagline {
+        margin: 0;
+        font-size: clamp(1.04rem, 0.94rem + 0.7vw, 1.45rem);
+        color: rgb(232 236 246 / 92%);
+        font-weight: 500;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.36rem;
+    }
+    .m5-accent {
+        color: #e10600;
+        font-weight: 700;
+    }
+    .m5-artists-section {
+        margin-top: 1.15rem;
+    }
+    .m5-artists-grid {
+        margin-top: 0.55rem;
+        display: grid;
+        gap: 0.8rem;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .m5-artist-tile {
+        margin: 0;
+        border-radius: 0.9rem;
+        overflow: hidden;
+        border: 1px solid rgb(255 255 255 / 14%);
+        background: linear-gradient(180deg, rgb(14 18 32 / 92%) 0%, rgb(9 13 24 / 90%) 100%);
+        box-shadow: 0 10px 24px rgb(3 5 14 / 32%), inset 0 1px 0 rgb(255 255 255 / 7%);
+        transition: transform 170ms ease, border-color 170ms ease;
+    }
+    .m5-artist-tile:hover {
+        transform: translateY(-2px);
+        border-color: rgb(255 255 255 / 34%);
+    }
+    .m5-artist-image {
+        aspect-ratio: 16 / 10;
+        background:
+            linear-gradient(180deg, rgb(12 18 32 / 12%) 0%, rgb(6 10 18 / 75%) 100%),
+            radial-gradient(130% 130% at calc(20% + var(--tile-shift)) 18%, rgb(255 255 255 / 9%) 0%, rgb(255 255 255 / 0%) 55%),
+            linear-gradient(135deg, #111a30 0%, #090f1c 40%, #060b16 100%);
+        background-size: cover;
+        background-position: center;
+    }
+    .m5-artist-copy {
+        padding: 0.66rem 0.7rem 0.72rem;
+        display: grid;
+        gap: 0.45rem;
+    }
+    .m5-artist-tile h2 {
+        margin: 0;
+        font-size: clamp(0.95rem, 0.9rem + 0.25vw, 1.08rem);
+        line-height: 1.2;
+        font-weight: 650;
+        color: rgb(245 248 255 / 95%);
+    }
+    .m5-artist-songs {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 0.28rem;
+        color: rgb(229 234 246 / 86%);
+        font-size: 0.88rem;
+        line-height: 1.28;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: max-height 190ms ease, opacity 190ms ease;
+    }
+    .m5-artist-tile:hover .m5-artist-songs,
+    .m5-artist-tile:focus-within .m5-artist-songs {
+        max-height: 9.4rem;
+        opacity: 1;
+    }
+    .m5-artist-songs li::before {
+        content: '• ';
+        color: rgb(225 6 0 / 84%);
+    }
+    .m5-artists-footer {
+        margin: 1.2rem 0 0;
+        color: rgb(228 233 245 / 76%);
+        font-size: 0.9rem;
+        line-height: 1.45;
+    }
+
+    @media (max-width: 1080px) {
+        .m5-artists-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+    @media (max-width: 860px) {
+        .m5-shell {
+            width: min(1200px, 100% - 1.75rem);
+        }
+        .m5-artists-main {
+            margin-top: 0.7rem;
+        }
+        .m5-artists-hero {
+            min-height: 220px;
+            padding: 1rem;
+        }
+        .m5-artists-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.9rem;
+        }
+        .m5-artist-copy {
+            padding: 0.68rem 0.65rem 0.74rem;
+        }
+        .m5-artists-footer {
+            margin-top: 1.3rem;
+            font-size: 0.88rem;
+        }
+    }
+</style>
+
+<script is:inline>
+    (() => {
+        const grid = document.getElementById('artistsGrid');
+        const dataNode = document.getElementById('artistsData');
+        if (!grid || !dataNode) return;
+
+        let artists = [];
+        try {
+            artists = JSON.parse(dataNode.textContent || '[]');
+        } catch {
+            artists = [];
+        }
+
+        const escapeHtml = (value) =>
+            String(value)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;');
+
+        const tileBackground = (artist, index) => {
+            if (artist.imageUrl && String(artist.imageUrl).trim().length > 0) {
+                return {
+                    tileStyle: '',
+                    imageStyle: `background-image: linear-gradient(180deg, rgb(12 18 32 / 20%) 0%, rgb(6 10 18 / 80%) 100%), url('${escapeHtml(artist.imageUrl)}'); background-size: cover; background-position: center;`
+                };
+            }
+            return {
+                tileStyle: `--tile-shift:${(index % 4) * 8}%`,
+                imageStyle: ''
+            };
+        };
+
+        const renderArtists = (rows) => {
+            grid.innerHTML = rows
+                .map((artist, index) => {
+                    const style = tileBackground(artist, index);
+                    return `
+                    <article class="m5-artist-tile" style="${style.tileStyle}">
+                        <div class="m5-artist-image" style="${style.imageStyle}" aria-hidden="true"></div>
+                        <div class="m5-artist-copy">
+                            <h2>${escapeHtml(artist.name)}</h2>
+                            <ul class="m5-artist-songs">
+                                ${(artist.songs || []).map((song) => `<li>${escapeHtml(song)}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </article>
+                `;
+                })
+                .join('');
+        };
+
+        if (Array.isArray(artists) && artists.length) {
+            renderArtists(artists);
+        }
+
+        fetch('/api/artists')
+            .then((response) => (response.ok ? response.json() : null))
+            .then((payload) => {
+                if (!payload || !Array.isArray(payload.artists) || !payload.artists.length) return;
+                renderArtists(payload.artists);
+            })
+            .catch(() => {
+                // Keep fallback list.
+            });
+    })();
+</script>

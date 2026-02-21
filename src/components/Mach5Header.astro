@@ -3,7 +3,7 @@ const navItems = [
     { label: 'Home', href: '/' },
     { label: 'Bio', href: '/bio' },
     { label: 'Shows', href: '/shows' },
-    { label: 'The Songs', href: '/#live-energy' },
+    { label: 'The Songs', href: '/the-songs' },
     { label: 'Press Kit', href: '/#press-kit' }
 ];
 
@@ -22,7 +22,7 @@ const isActive = (href) => {
             <a class="m5-brand" href="/">
                 <img class="m5-brand-logo" src="/images/logos/m5logo1.webp" alt="Mach 5" loading="eager" decoding="async" />
             </a>
-            <ul class="m5-nav-links">
+            <ul class="m5-nav-links" id="m5NavLinks">
                 {
                     navItems.map((item) => (
                         <li>
@@ -33,7 +33,27 @@ const isActive = (href) => {
                     ))
                 }
             </ul>
+            <a href="/book-us" class="m5-book-pill">Book Us</a>
+            <button class="m5-menu-toggle" id="m5MenuToggle" type="button" aria-expanded="false" aria-controls="m5MobileMenu" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </nav>
+        <div class="m5-mobile-menu" id="m5MobileMenu" hidden>
+            <ul>
+                {
+                    navItems.map((item) => (
+                        <li>
+                            <a href={item.href} class={isActive(item.href) ? 'is-active' : undefined} aria-current={isActive(item.href) ? 'page' : undefined}>
+                                {item.label}
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+            <a href="/book-us" class="m5-book-pill m5-book-pill-mobile">Book Us</a>
+        </div>
     </div>
 </header>
 
@@ -43,23 +63,23 @@ const isActive = (href) => {
         z-index: 4;
     }
     .m5-checker {
-        height: 48px;
+        height: 18px;
         background:
-            linear-gradient(180deg, rgb(255 255 255 / 10%) 0%, rgb(255 255 255 / 0%) 35%),
+            linear-gradient(180deg, rgb(255 255 255 / 8%) 0%, rgb(255 255 255 / 0%) 45%),
             url('/images/checkerboard.svg') center / auto 100% repeat-x;
-        border-bottom: 1px solid #343a4a;
-        box-shadow: inset 0 -1px 0 rgb(255 255 255 / 20%), 0 8px 24px rgb(0 0 0 / 30%);
+        border-bottom: 1px solid #2f3445;
+        box-shadow: inset 0 -1px 0 rgb(255 255 255 / 14%);
     }
     .m5-shell {
         width: min(1200px, 100% - 3.25rem);
         margin-inline: auto;
     }
     .m5-nav {
-        display: flex;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
         align-items: center;
-        justify-content: space-between;
-        gap: 1.5rem;
-        padding-top: 16px;
+        gap: 1.2rem;
+        padding-top: 14px;
     }
     .m5-brand {
         margin: 0;
@@ -71,8 +91,8 @@ const isActive = (href) => {
     }
     .m5-brand-logo {
         display: block;
-        width: clamp(126px, 10vw, 162px);
-        height: clamp(126px, 10vw, 162px);
+        width: clamp(122px, 9.5vw, 148px);
+        height: clamp(122px, 9.5vw, 148px);
         border-radius: 50%;
         object-fit: cover;
         border: 2px solid rgb(245 247 252 / 72%);
@@ -82,8 +102,9 @@ const isActive = (href) => {
     }
     .m5-nav-links {
         display: flex;
+        justify-content: center;
         flex-wrap: wrap;
-        gap: 1.5rem;
+        gap: 1.2rem;
         list-style: none;
         margin: 0;
         padding: 0;
@@ -93,35 +114,148 @@ const isActive = (href) => {
         text-decoration: none;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        font-size: 1.55rem;
-        font-weight: 750;
+        font-size: clamp(1.02rem, 0.93rem + 0.3vw, 1.23rem);
+        font-weight: 760;
     }
     .m5-nav-links a:hover {
         color: #ff3f4b;
     }
     .m5-nav-links a.is-active {
         color: #ff3f4b;
-        text-shadow: 0 0 10px rgb(255 63 75 / 28%);
+        text-shadow: 0 0 8px rgb(255 63 75 / 24%);
+    }
+    .m5-book-pill {
+        justify-self: end;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 0.93rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        color: #fff;
+        border: 1px solid rgb(225 6 0 / 68%);
+        border-radius: 0.62rem;
+        padding: 0.48rem 0.86rem;
+        background: linear-gradient(180deg, rgb(144 17 18 / 92%) 0%, rgb(91 13 14 / 92%) 100%);
+        box-shadow: inset 0 1px 0 rgb(255 255 255 / 16%);
+    }
+    .m5-book-pill:hover {
+        filter: brightness(1.08);
+    }
+    .m5-menu-toggle {
+        display: none;
+        justify-self: end;
+        width: 44px;
+        height: 44px;
+        border-radius: 0.55rem;
+        border: 1px solid rgb(255 255 255 / 20%);
+        background: rgb(10 15 28 / 78%);
+        padding: 0;
+        cursor: pointer;
+    }
+    .m5-menu-toggle span {
+        display: block;
+        width: 20px;
+        height: 2px;
+        margin: 4px auto;
+        border-radius: 999px;
+        background: #f2f6ff;
+        transition: transform 180ms ease, opacity 180ms ease;
+    }
+    .m5-menu-toggle.is-open span:nth-child(1) {
+        transform: translateY(6px) rotate(45deg);
+    }
+    .m5-menu-toggle.is-open span:nth-child(2) {
+        opacity: 0;
+    }
+    .m5-menu-toggle.is-open span:nth-child(3) {
+        transform: translateY(-6px) rotate(-45deg);
+    }
+    .m5-mobile-menu {
+        display: none;
     }
     @media (max-width: 980px) {
         .m5-nav-links {
             display: none;
         }
+        .m5-book-pill {
+            display: none;
+        }
+        .m5-menu-toggle {
+            display: block;
+        }
+        .m5-mobile-menu {
+            display: block;
+            margin-top: 0.7rem;
+            background: linear-gradient(180deg, rgb(9 12 24 / 96%) 0%, rgb(6 10 19 / 94%) 100%);
+            border: 1px solid rgb(255 255 255 / 13%);
+            border-radius: 0.9rem;
+            padding: 0.82rem;
+        }
+        .m5-mobile-menu ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: grid;
+            gap: 0.48rem;
+        }
+        .m5-mobile-menu a {
+            color: #f5f8ff;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 740;
+            font-size: 1.02rem;
+            display: inline-flex;
+            padding: 0.35rem 0.2rem;
+        }
+        .m5-mobile-menu a.is-active {
+            color: #ff3f4b;
+        }
+        .m5-book-pill-mobile {
+            display: inline-flex;
+            margin-top: 0.75rem;
+        }
     }
     @media (max-width: 860px) {
         .m5-checker {
-            height: 32px;
+            height: 14px;
             background-size: auto 100%, auto 100%;
         }
         .m5-shell {
             width: min(1200px, 100% - 1.75rem);
         }
         .m5-nav {
-            padding-top: 12px;
+            padding-top: 10px;
         }
         .m5-brand-logo {
-            width: 124px;
-            height: 124px;
+            width: 102px;
+            height: 102px;
         }
     }
 </style>
+
+<script is:inline>
+    (() => {
+        const toggle = document.getElementById('m5MenuToggle');
+        const menu = document.getElementById('m5MobileMenu');
+        if (!toggle || !menu) return;
+
+        const closeMenu = () => {
+            toggle.classList.remove('is-open');
+            toggle.setAttribute('aria-expanded', 'false');
+            menu.hidden = true;
+        };
+
+        toggle.addEventListener('click', () => {
+            const isOpen = toggle.classList.toggle('is-open');
+            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            menu.hidden = !isOpen;
+        });
+
+        menu.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', closeMenu);
+        });
+
+        closeMenu();
+    })();
+</script>
