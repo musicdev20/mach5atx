@@ -9,6 +9,7 @@ const navItems = [
 
 const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
 const isActive = (href) => {
+    if (href.includes('#')) return false;
     const path = (href.split('#')[0] || '/').replace(/\/+$/, '') || '/';
     return currentPath === path;
 };
