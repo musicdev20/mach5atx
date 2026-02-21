@@ -1,19 +1,698 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Markdown from '../components/Markdown.astro';
+import '../styles/globals.css';
+import { readdirSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-const explainer = `
-An Astro website can go way beyond static pages - on the right platform.
+const navItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Bio', href: '#live-energy' },
+    { label: 'Shows', href: '#upcoming-shows' },
+    { label: 'The Songs', href: '#live-energy' },
+    { label: 'Press Kit', href: '#press-kit' }
+];
 
-Netlify supports not only [Streaming SSR](https://docs.astro.build/en/guides/server-side-rendering/#html-streaming) and fast [Edge Middleware](https://docs.astro.build/en/guides/middleware/), but also [on-demand revalidation](https://www.netlify.com/blog/cache-tags-and-purge-api-on-netlify/) and [stale-while-revalidate](https://www.netlify.com/blog/swr-and-fine-grained-cache-control/). 
-Any page or data can be rebuilt only when needed, without site visitors ever getting a performance hit.
-`;
+const upcomingShows = [
+    { date: 'Fri - Mar 21', venue: 'Shooters', city: 'Round Rock, TX' },
+    { date: 'Sat - Apr 12', venue: 'Round Rock Tavern', city: 'Round Rock, TX' },
+    { date: 'Fri - May 09', venue: 'Private Event', city: 'Austin, TX' }
+];
+
+const liveEnergyImagePool = readdirSync(resolve(process.cwd(), 'public/images/live'))
+    .filter((fileName) => /\.(jpe?g|png|webp)$/i.test(fileName))
+    .sort()
+    .map((fileName) => `/images/live/${fileName}`);
+
+const liveEnergyImages =
+    liveEnergyImagePool.length > 0 ? liveEnergyImagePool : ['/images/live/joechuck1.webp', '/images/live/lanae1.webp'];
+
+const reasons = [
+    'High-octane covers with seamless transitions',
+    'Pro sound, lighting vibe, and crowd-driven pacing',
+    'Perfect for clubs, festivals, corporate and private events'
+];
 ---
 
-<Layout title="Welcome to Astro.">
-    <h1 class="mb-10">Netlify Platform Starter for Astro</h1>
-    <Markdown content={explainer} class="mb-10 text-lg" />
-    <p>
-        <a href="https://docs.netlify.com/frameworks/astro/" class="btn btn-lg sm:min-w-64">Read the Docs</a>
-    </p>
-</Layout>
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Mach 5 - high-energy 70s/80s/90s/00s rock covers in Austin, Texas." />
+        <title>Mach 5 | Full-Throttle Rock Covers</title>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    </head>
+    <body class="m5-body">
+        <div class="m5-page">
+            <div class="m5-checker" aria-hidden="true"></div>
+
+            <header class="m5-hero">
+                <div class="m5-shell">
+                    <nav class="m5-nav" aria-label="Main">
+                        <a class="m5-brand" href="/">
+                            <img class="m5-brand-logo" src="/images/logos/m5logo1.webp" alt="Mach 5" loading="eager" decoding="async" />
+                        </a>
+                        <ul class="m5-nav-links">
+                            {
+                                navItems.map((item) => (
+                                    <li>
+                                        <a href={item.href}>{item.label}</a>
+                                    </li>
+                                ))
+                            }
+                        </ul>
+                    </nav>
+
+                    <div class="m5-hero-grid">
+                        <div class="m5-hero-copy">
+                            <div class="m5-hero-panel">
+                                <h1>Full-Throttle Rock That Packs the Dance Floor</h1>
+                                <p>High-energy 70s/80s/90s/00s rock covers - Austin, TX - Bookable for clubs and events</p>
+                                <div class="m5-hero-actions">
+                                    <a href="#press-kit" class="m5-btn m5-btn-primary">Book Us</a>
+                                    <a href="#upcoming-shows" class="m5-btn m5-btn-outline">See Shows</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m5-hero-media" aria-hidden="true"></div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="m5-content m5-shell">
+                <section id="upcoming-shows" class="m5-section">
+                    <h2>Upcoming Shows</h2>
+                    <div class="m5-show-grid">
+                        {
+                            upcomingShows.map((show) => (
+                                <article class="m5-card m5-show-card">
+                                    <p class="m5-date">{show.date}</p>
+                                    <h3>{show.venue}</h3>
+                                    <p>{show.city}</p>
+                                </article>
+                            ))
+                        }
+                    </div>
+                </section>
+
+                <section id="live-energy" class="m5-section">
+                    <h2>Live Energy</h2>
+                    <div class="m5-media-grid">
+                        <article class="m5-media-card m5-live-scroll">
+                            <div class="m5-live-user-scroll" aria-label="Live performance photos">
+                                {
+                                    liveEnergyImages.map((image, imageIndex) => (
+                                        <img
+                                            class="m5-live-slide"
+                                            src={image}
+                                            alt={`Live performance photo ${imageIndex + 1}`}
+                                            loading={imageIndex === 0 ? 'eager' : 'lazy'}
+                                            decoding="async"
+                                        />
+                                    ))
+                                }
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+                <section id="press-kit" class="m5-section m5-card m5-why-card">
+                    <div class="m5-why-copy">
+                        <h2>Why Mach 5</h2>
+                        <ul>
+                            {reasons.map((item) => <li>{item}</li>)}
+                        </ul>
+                    </div>
+                    <a href="#press-kit" class="m5-btn m5-btn-primary m5-press-btn">
+                        Get the Press Kit
+                    </a>
+                </section>
+            </main>
+        </div>
+    </body>
+</html>
+
+<style>
+    .m5-body {
+        margin: 0;
+        color: #f5f7fb;
+        font-family: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+        background: #02050f;
+    }
+
+    .m5-page {
+        min-height: 100vh;
+        background: radial-gradient(120% 120% at 50% 0%, #0d1222 0%, #02050f 58%, #01030a 100%);
+    }
+
+    .m5-shell {
+        width: min(1200px, 100% - 3.25rem);
+        margin-inline: auto;
+    }
+
+    .m5-checker {
+        height: 48px;
+        background:
+            linear-gradient(180deg, rgb(255 255 255 / 10%) 0%, rgb(255 255 255 / 0%) 35%),
+            url('/images/checkerboard.svg') center / auto 100% repeat-x;
+        border-bottom: 1px solid #343a4a;
+        box-shadow: inset 0 -1px 0 rgb(255 255 255 / 20%), 0 8px 24px rgb(0 0 0 / 30%);
+    }
+
+    .m5-hero {
+        position: relative;
+        isolation: isolate;
+        padding-bottom: clamp(2.1rem, 4vw, 3.1rem);
+        background: radial-gradient(110% 120% at 24% 0%, #1a243f 0%, #070d1a 48%, #030712 100%);
+    }
+
+    .m5-hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: clamp(1rem, 2.6vw, 2.2rem);
+        align-items: stretch;
+        padding-top: clamp(1.8rem, 4vw, 2.8rem);
+    }
+
+    .m5-hero-media {
+        position: relative;
+        min-height: clamp(320px, 36vw, 520px);
+        border-radius: 1.15rem;
+        border: 1px solid rgb(255 255 255 / 16%);
+        overflow: hidden;
+        background: url('/images/hero/hero2.webp') 58% 20% / cover no-repeat;
+        box-shadow: 0 18px 38px rgb(0 0 0 / 35%);
+    }
+
+    .m5-hero-media::before,
+    .m5-hero-media::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    .m5-hero-media::before {
+        background: linear-gradient(110deg, rgb(3 6 14 / 65%) 2%, transparent 46%, rgb(3 6 14 / 62%) 100%);
+    }
+
+    .m5-hero-media::after {
+        background:
+            linear-gradient(170deg, rgb(255 255 255 / 0%) 0%, rgb(255 255 255 / 15%) 42%, rgb(255 255 255 / 0%) 78%),
+            linear-gradient(185deg, rgb(0 0 0 / 0%) 0%, rgb(0 0 0 / 20%) 72%, rgb(0 0 0 / 28%) 100%);
+        mix-blend-mode: soft-light;
+    }
+
+    .m5-nav {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        padding-top: 16px;
+    }
+
+    .m5-brand {
+        margin: 0;
+        display: inline-flex;
+        align-items: center;
+        flex: 0 0 auto;
+        text-decoration: none;
+        line-height: 0;
+    }
+
+    .m5-brand-logo {
+        display: block;
+        width: clamp(126px, 10vw, 162px);
+        height: clamp(126px, 10vw, 162px);
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgb(245 247 252 / 72%);
+        background: rgb(8 12 22 / 88%);
+        padding: 0.35rem;
+        filter: drop-shadow(0 4px 12px rgb(0 0 0 / 35%));
+    }
+
+    .m5-nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .m5-nav-links a {
+        color: #f7f9ff;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 1.55rem;
+        font-weight: 750;
+    }
+
+    .m5-nav-links a:hover {
+        color: #ff3f4b;
+    }
+
+    .m5-hero-copy {
+        position: relative;
+        display: flex;
+    }
+
+    .m5-hero-panel {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: clamp(1.3rem, 1.8vw, 2.1rem) clamp(1.2rem, 1.8vw, 2.2rem) clamp(1.5rem, 1.9vw, 2.3rem);
+        border: 1px solid rgb(255 255 255 / 15%);
+        border-radius: 1.1rem;
+        background: linear-gradient(165deg, rgb(6 10 20 / 98%) 0%, rgb(6 10 20 / 95%) 65%, rgb(8 13 25 / 93%) 100%);
+        box-shadow: 0 16px 34px rgb(0 0 0 / 30%);
+    }
+
+    .m5-hero-copy h1 {
+        margin: 0;
+        font-size: clamp(2.8rem, 2.2rem + 2.5vw, 5.6rem);
+        line-height: 1.06;
+        text-wrap: balance;
+        letter-spacing: 0.01em;
+    }
+
+    .m5-hero-copy p {
+        margin: 1.6rem 0 0;
+        font-size: clamp(1.65rem, 1.3rem + 0.85vw, 2.2rem);
+        line-height: 1.35;
+        color: rgb(240 242 248 / 92%);
+        max-width: 28ch;
+    }
+
+    .m5-hero-actions {
+        margin-top: 2.2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .m5-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.95rem;
+        padding: 0.88rem 1.8rem;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        font-size: 1.45rem;
+        font-weight: 800;
+        transition: transform 180ms ease, background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+    }
+
+    .m5-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .m5-btn-primary {
+        background: #f61417;
+        color: #fff;
+        border: 2px solid #f61417;
+    }
+
+    .m5-btn-primary:hover {
+        background: #ff3538;
+        border-color: #ff3538;
+    }
+
+    .m5-btn-outline {
+        color: #fff;
+        border: 2px solid rgb(255 255 255 / 82%);
+        background: rgb(9 11 18 / 28%);
+        backdrop-filter: blur(2px);
+    }
+
+    .m5-btn-outline:hover {
+        border-color: #ff4e56;
+        color: #ff4e56;
+    }
+
+    .m5-content {
+        position: relative;
+        z-index: 1;
+        margin-top: -1.5rem;
+        padding-bottom: 4.2rem;
+    }
+
+    .m5-section {
+        margin-top: 2.9rem;
+    }
+
+    .m5-section h2 {
+        margin: 0 0 1.35rem;
+        font-size: clamp(2.2rem, 1.7rem + 1.6vw, 4rem);
+        line-height: 1.1;
+        letter-spacing: 0.01em;
+    }
+
+    .m5-show-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1.2rem;
+    }
+
+    .m5-card {
+        background: linear-gradient(180deg, rgb(11 14 30 / 96%) 0%, rgb(9 12 23 / 94%) 100%);
+        border: 1px solid rgb(63 72 101 / 36%);
+        border-radius: 1.1rem;
+        box-shadow: 0 14px 34px rgb(2 4 12 / 30%);
+    }
+
+    .m5-show-card {
+        padding: 1.25rem 1.35rem 1.45rem;
+    }
+
+    .m5-show-card h3 {
+        margin: 0.55rem 0 0;
+        font-size: clamp(1.6rem, 1.3rem + 0.8vw, 2.1rem);
+        line-height: 1.15;
+    }
+
+    .m5-show-card p {
+        margin: 0.4rem 0 0;
+        color: rgb(230 233 242 / 78%);
+        font-size: clamp(1.2rem, 1.08rem + 0.3vw, 1.6rem);
+    }
+
+    .m5-date {
+        margin: 0;
+        color: #ff2126;
+        font-size: clamp(1.3rem, 1.1rem + 0.55vw, 1.65rem);
+        font-weight: 600;
+    }
+
+    .m5-media-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+    }
+
+    .m5-media-card {
+        position: relative;
+        min-height: clamp(220px, 26vw, 340px);
+        border-radius: 0.28rem;
+        overflow: hidden;
+        background: #090f1f;
+    }
+
+    .m5-media-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        filter: saturate(0.95) contrast(1.06);
+    }
+
+    .m5-live-user-scroll {
+        display: flex;
+        align-items: stretch;
+        gap: 0.5rem;
+        height: 100%;
+        padding: 0.3rem 0.3rem 0.45rem;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x proximity;
+        scrollbar-width: thin;
+        scrollbar-color: rgb(108 118 148 / 90%) rgb(8 11 22 / 70%);
+    }
+
+    .m5-live-user-scroll::-webkit-scrollbar {
+        height: 9px;
+    }
+
+    .m5-live-user-scroll::-webkit-scrollbar-track {
+        background: rgb(8 11 22 / 70%);
+        border-radius: 6px;
+    }
+
+    .m5-live-user-scroll::-webkit-scrollbar-thumb {
+        background: rgb(108 118 148 / 90%);
+        border-radius: 6px;
+    }
+
+    .m5-live-user-scroll .m5-live-slide {
+        flex: 0 0 148px;
+        width: 148px;
+        height: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        object-position: center;
+        background: #060a14;
+        border: 1px solid rgb(255 255 255 / 12%);
+        border-radius: 0.65rem;
+        scroll-snap-align: start;
+        padding: 0.14rem;
+        filter: saturate(0.95) contrast(1.06);
+    }
+
+    .m5-media-card.m5-live-scroll {
+        min-height: 112px;
+        height: 112px;
+    }
+
+    .m5-media-caption {
+        position: absolute;
+        inset: auto 0 0;
+        background: linear-gradient(180deg, transparent 0%, rgb(4 7 16 / 70%) 38%, rgb(4 7 16 / 92%) 100%);
+        padding: 1.3rem 1rem 1.1rem;
+    }
+
+    .m5-media-caption h3 {
+        margin: 0;
+        font-size: clamp(1.45rem, 1.2rem + 0.8vw, 2.25rem);
+    }
+
+    .m5-why-card {
+        padding: 1.7rem;
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 2rem;
+    }
+
+    .m5-why-copy h2 {
+        margin-bottom: 0.9rem;
+    }
+
+    .m5-why-copy ul {
+        margin: 0;
+        padding-left: 1.25rem;
+    }
+
+    .m5-why-copy li {
+        margin: 0.4rem 0;
+        font-size: clamp(1.2rem, 1.07rem + 0.35vw, 1.58rem);
+        color: rgb(233 236 246 / 92%);
+    }
+
+    .m5-press-btn {
+        white-space: nowrap;
+    }
+
+    @media (max-width: 1024px) {
+        .m5-nav-links {
+            gap: 0.9rem;
+        }
+
+        .m5-nav-links a {
+            font-size: 1.3rem;
+        }
+    }
+
+    @media (max-width: 860px) {
+        .m5-shell {
+            width: min(1200px, 100% - 1.75rem);
+        }
+
+        .m5-checker {
+            height: 32px;
+            background-size: auto 100%, auto 100%;
+        }
+
+        .m5-hero {
+            padding-bottom: 1.3rem;
+        }
+
+        .m5-hero-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            padding-top: 3.1rem;
+        }
+
+        .m5-nav {
+            padding-top: 12px;
+        }
+
+        .m5-nav-links {
+            display: none;
+        }
+
+        .m5-brand {
+            max-width: 84%;
+        }
+
+        .m5-brand-logo {
+            width: 124px;
+            height: 124px;
+            max-width: none;
+        }
+
+        .m5-hero-copy {
+            max-width: 100%;
+        }
+
+        .m5-hero-panel {
+            max-width: 100%;
+            padding: 0.95rem 0.9rem 1.1rem;
+            border-radius: 0.95rem;
+            background: linear-gradient(145deg, rgb(6 10 20 / 98%) 0%, rgb(7 12 22 / 95%) 100%);
+        }
+
+        .m5-hero-media {
+            min-height: 340px;
+            border-radius: 0.95rem;
+            background-position: 56% 16%;
+        }
+
+        .m5-hero-copy h1 {
+            font-size: clamp(2.65rem, 10.1vw, 5.1rem);
+            max-width: 12ch;
+        }
+
+        .m5-hero-copy p {
+            margin-top: 0.95rem;
+            font-size: clamp(1.85rem, 5.5vw, 2.7rem);
+            max-width: 18ch;
+        }
+
+        .m5-hero-actions {
+            margin-top: 1.7rem;
+            gap: 0.8rem;
+        }
+
+        .m5-btn {
+            flex: 1 1 170px;
+            padding: 0.85rem 1.2rem;
+            font-size: 1.8rem;
+            border-radius: 0.9rem;
+        }
+
+        .m5-content {
+            margin-top: -0.35rem;
+            padding-bottom: 2.8rem;
+        }
+
+        .m5-section {
+            margin-top: 1.7rem;
+        }
+
+        .m5-section h2 {
+            font-size: clamp(2.2rem, 9.2vw, 3.6rem);
+            margin-bottom: 0.9rem;
+        }
+
+        .m5-show-grid,
+        .m5-media-grid {
+            grid-template-columns: 1fr;
+            gap: 0.9rem;
+        }
+
+        .m5-show-card {
+            padding: 1.1rem 1.15rem 1.15rem;
+        }
+
+        .m5-show-card h3 {
+            font-size: clamp(2.2rem, 8.9vw, 4.5rem);
+        }
+
+        .m5-show-card p {
+            font-size: clamp(1.9rem, 6.5vw, 2.7rem);
+            margin-top: 0.2rem;
+        }
+
+        .m5-date {
+            font-size: clamp(1.95rem, 6vw, 2.6rem);
+        }
+
+        .m5-media-card {
+            min-height: 300px;
+        }
+
+        .m5-live-user-scroll {
+            gap: 0.42rem;
+            padding: 0.2rem 0.2rem 0.35rem;
+        }
+
+        .m5-live-user-scroll .m5-live-slide {
+            flex-basis: 126px;
+            width: 126px;
+            padding: 0.1rem;
+        }
+
+        .m5-media-card.m5-live-scroll {
+            min-height: 96px;
+            height: 96px;
+        }
+
+        .m5-why-card {
+            padding: 1.2rem 1rem;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1.15rem;
+        }
+
+        .m5-why-copy li {
+            font-size: clamp(1.7rem, 5.6vw, 2.6rem);
+        }
+
+        .m5-press-btn {
+            align-self: stretch;
+        }
+    }
+</style>
+
+<script is:inline>
+    (() => {
+        const reel = document.querySelector('.m5-live-user-scroll');
+        if (!reel) return;
+
+        let pausedUntil = 0;
+        let lastTs = 0;
+        const speedPxPerSecond = 12;
+
+        const pauseBriefly = () => {
+            pausedUntil = performance.now() + 1800;
+        };
+
+        reel.addEventListener('pointerdown', pauseBriefly, { passive: true });
+        reel.addEventListener('wheel', pauseBriefly, { passive: true });
+        reel.addEventListener('touchstart', pauseBriefly, { passive: true });
+        reel.addEventListener('mouseenter', pauseBriefly, { passive: true });
+
+        const tick = (ts) => {
+            if (!lastTs) lastTs = ts;
+            const delta = (ts - lastTs) / 1000;
+            lastTs = ts;
+
+            if (ts >= pausedUntil) {
+                reel.scrollLeft += speedPxPerSecond * delta;
+                if (reel.scrollLeft >= reel.scrollWidth - reel.clientWidth - 1) {
+                    reel.scrollLeft = 0;
+                }
+            }
+
+            requestAnimationFrame(tick);
+        };
+
+        requestAnimationFrame(tick);
+    })();
+</script>
