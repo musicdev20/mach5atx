@@ -6,6 +6,16 @@ import { getUpcomingShows } from '../lib/shows';
 export const prerender = false;
 
 const upcomingShows = await getUpcomingShows();
+const homepageShows = [...upcomingShows]
+    .sort((a, b) => {
+        const aTime = new Date(a.startDateTime).getTime();
+        const bTime = new Date(b.startDateTime).getTime();
+        if (Number.isNaN(aTime) && Number.isNaN(bTime)) return 0;
+        if (Number.isNaN(aTime)) return 1;
+        if (Number.isNaN(bTime)) return -1;
+        return aTime - bTime;
+    })
+    .slice(0, 3);
 const fallbackVenueLogo = '/images/logos/m5logo2.webp';
 
 const showDateFormatter = new Intl.DateTimeFormat('en-US', {
@@ -87,7 +97,7 @@ const contactLinks = {
                     <h2>Upcoming Shows</h2>
                     <div class="m5-show-grid">
                         {
-                            upcomingShows.map((show) => (
+                            homepageShows.map((show) => (
                                 <article id={show.id} class="m5-card m5-show-card">
                                     <header class="m5-show-head">
                                         <div class="m5-venue-logo-wrap" aria-hidden="true">
