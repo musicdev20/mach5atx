@@ -33,29 +33,41 @@ export const prerender = false;
 
                 <section id="editorPanel" class="m5-admin-editor" hidden>
                     <div class="m5-admin-actions">
-                        <button id="addArtistButton" type="button">Add Artist</button>
-                        <button id="addVenueButton" type="button">Add Venue</button>
-                        <button id="addShowButton" type="button">Add Show</button>
-                        <button id="saveAllButton" type="button">Save All</button>
+                        <button id="saveAllButton" type="button">Save All Changes</button>
                         <button id="logoutButton" type="button">Lock</button>
                     </div>
                     <p id="editorMessage" class="m5-admin-msg"></p>
 
-                    <section class="m5-admin-group">
-                        <h2>Venues</h2>
-                        <p class="m5-admin-hint">Shows select from this venue list.</p>
+                    <div class="m5-tab-bar" role="tablist" aria-label="Admin sections">
+                        <button type="button" role="tab" id="tabArtists" class="m5-tab-btn is-active" aria-selected="true" data-tab="artists">Artists</button>
+                        <button type="button" role="tab" id="tabVenues" class="m5-tab-btn" aria-selected="false" data-tab="venues">Venues</button>
+                        <button type="button" role="tab" id="tabShows" class="m5-tab-btn" aria-selected="false" data-tab="shows">Shows</button>
+                    </div>
+
+                    <section id="panelArtists" class="m5-tab-panel" role="tabpanel" aria-labelledby="tabArtists" data-panel="artists">
+                        <div class="m5-panel-head">
+                            <h2>Artists & Songs</h2>
+                            <button id="addArtistButton" type="button">Add Artist</button>
+                        </div>
+                        <div id="artistsList" class="m5-admin-list"></div>
+                    </section>
+
+                    <section id="panelVenues" class="m5-tab-panel" role="tabpanel" aria-labelledby="tabVenues" data-panel="venues" hidden>
+                        <div class="m5-panel-head">
+                            <h2>Venues</h2>
+                            <button id="addVenueButton" type="button">Add Venue</button>
+                        </div>
+                        <p class="m5-admin-hint">Required fields: ID, name, address, and directions URL. Logo URL is optional.</p>
                         <div id="venuesList" class="m5-admin-list"></div>
                     </section>
 
-                    <section class="m5-admin-group">
-                        <h2>Shows</h2>
-                        <p class="m5-admin-hint">Choose a venue for each show. Venue details are linked automatically.</p>
+                    <section id="panelShows" class="m5-tab-panel" role="tabpanel" aria-labelledby="tabShows" data-panel="shows" hidden>
+                        <div class="m5-panel-head">
+                            <h2>Shows</h2>
+                            <button id="addShowButton" type="button">Add Show</button>
+                        </div>
+                        <p class="m5-admin-hint">Each show must select a venue from the venues tab. Venue details are linked automatically.</p>
                         <div id="showsList" class="m5-admin-list"></div>
-                    </section>
-
-                    <section class="m5-admin-group">
-                        <h2>Artists & Songs</h2>
-                        <div id="artistsList" class="m5-admin-list"></div>
                     </section>
                 </section>
             </section>
@@ -137,6 +149,7 @@ export const prerender = false;
         margin: 0;
         color: rgb(230 233 242 / 82%);
     }
+
     .m5-admin-login {
         display: flex;
         gap: 0.6rem;
@@ -149,6 +162,7 @@ export const prerender = false;
         gap: 0.25rem;
         min-width: min(420px, 100%);
     }
+
     .m5-admin-login input,
     .m5-row input,
     .m5-row textarea,
@@ -160,8 +174,10 @@ export const prerender = false;
         padding: 0.5rem 0.6rem;
         font: inherit;
     }
+
     .m5-admin-login button,
     .m5-admin-actions button,
+    .m5-panel-head button,
     .m5-row button {
         border: 1px solid rgb(255 255 255 / 26%);
         border-radius: 0.55rem;
@@ -172,12 +188,15 @@ export const prerender = false;
         padding: 0.55rem 0.8rem;
         cursor: pointer;
     }
+
     .m5-admin-actions button:hover,
     .m5-admin-login button:hover,
+    .m5-panel-head button:hover,
     .m5-row button:hover {
         border-color: #ff4e56;
         color: #ff4e56;
     }
+
     .m5-admin-editor {
         display: grid;
         gap: 0.9rem;
@@ -187,25 +206,61 @@ export const prerender = false;
         flex-wrap: wrap;
         gap: 0.55rem;
     }
-    .m5-admin-group {
+
+    .m5-tab-bar {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .m5-tab-btn {
+        border: 1px solid rgb(255 255 255 / 20%);
+        border-radius: 0.65rem;
+        background: rgb(10 15 28 / 80%);
+        color: #f5f8ff;
+        font: inherit;
+        font-weight: 700;
+        padding: 0.45rem 0.7rem;
+        cursor: pointer;
+    }
+
+    .m5-tab-btn.is-active {
+        border-color: #ff4e56;
+        color: #ff4e56;
+        box-shadow: 0 0 0 1px rgb(255 78 86 / 20%);
+    }
+
+    .m5-tab-panel {
         border: 1px solid rgb(255 255 255 / 14%);
         border-radius: 0.8rem;
         padding: 0.8rem;
         background: rgb(7 11 21 / 45%);
     }
-    .m5-admin-group h2 {
+
+    .m5-panel-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.55rem;
+        margin-bottom: 0.55rem;
+    }
+
+    .m5-panel-head h2 {
         margin: 0;
         font-size: 1.15rem;
     }
+
     .m5-admin-hint {
-        margin: 0.2rem 0 0.5rem;
+        margin: 0 0 0.5rem;
         color: rgb(230 233 242 / 78%);
         font-size: 0.92rem;
     }
+
     .m5-admin-list {
         display: grid;
         gap: 0.75rem;
     }
+
     .m5-row {
         border: 1px solid rgb(255 255 255 / 16%);
         border-radius: 0.8rem;
@@ -214,22 +269,27 @@ export const prerender = false;
         gap: 0.6rem 0.7rem;
         align-items: end;
     }
+
     .m5-artist-row {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
     .m5-venue-row,
     .m5-show-row {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
     .m5-row label {
         display: flex;
         flex-direction: column;
         gap: 0.23rem;
         font-size: 0.92rem;
     }
+
     .m5-span-2 {
         grid-column: span 2;
     }
+
     .m5-linked-preview {
         margin: 0;
         padding: 0.45rem 0.55rem;
@@ -240,11 +300,13 @@ export const prerender = false;
         font-size: 0.9rem;
         line-height: 1.35;
     }
+
     .m5-admin-msg {
         margin: 0;
         color: rgb(230 233 242 / 86%);
         min-height: 1.25em;
     }
+
     @media (max-width: 860px) {
         .m5-checker {
             height: 32px;
@@ -262,6 +324,10 @@ export const prerender = false;
         .m5-span-2 {
             grid-column: auto;
         }
+        .m5-panel-head {
+            flex-direction: column;
+            align-items: flex-start;
+        }
     }
 </style>
 
@@ -270,11 +336,12 @@ export const prerender = false;
         const loginPanel = document.getElementById('loginPanel');
         const editorPanel = document.getElementById('editorPanel');
         const loginButton = document.getElementById('loginButton');
+        const saveAllButton = document.getElementById('saveAllButton');
+        const logoutButton = document.getElementById('logoutButton');
         const addArtistButton = document.getElementById('addArtistButton');
         const addVenueButton = document.getElementById('addVenueButton');
         const addShowButton = document.getElementById('addShowButton');
-        const saveAllButton = document.getElementById('saveAllButton');
-        const logoutButton = document.getElementById('logoutButton');
+
         const adminPassword = document.getElementById('adminPassword');
         const loginMessage = document.getElementById('loginMessage');
         const editorMessage = document.getElementById('editorMessage');
@@ -287,6 +354,9 @@ export const prerender = false;
         const venueTemplate = document.getElementById('venueRowTemplate');
         const showTemplate = document.getElementById('showRowTemplate');
 
+        const tabButtons = [...document.querySelectorAll('.m5-tab-btn')];
+        const tabPanels = [...document.querySelectorAll('.m5-tab-panel')];
+
         const setEditorVisible = (visible) => {
             loginPanel.hidden = visible;
             editorPanel.hidden = !visible;
@@ -296,20 +366,32 @@ export const prerender = false;
             el.textContent = text;
         };
 
+        const setTab = (name) => {
+            tabButtons.forEach((button) => {
+                const isActive = button.getAttribute('data-tab') === name;
+                button.classList.toggle('is-active', isActive);
+                button.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            });
+            tabPanels.forEach((panel) => {
+                panel.hidden = panel.getAttribute('data-panel') !== name;
+            });
+        };
+
+        const slug = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
         const collectVenues = () =>
             Array.from(venuesList.querySelectorAll('.m5-venue-row')).map((row, index) => {
                 const read = (field) => row.querySelector(`[data-field="${field}"]`)?.value.trim() ?? '';
                 const name = read('name');
                 const address = read('address');
-                const id =
-                    read('id') ||
-                    `${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'venue'}-${index + 1}`;
-                const directions = read('directionsUrl') || `https://maps.google.com/?q=${encodeURIComponent(address)}`;
+                const generatedId = `${slug(name) || 'venue'}-${index + 1}`;
+                const id = read('id') || generatedId;
+                const directionsUrl = read('directionsUrl') || `https://maps.google.com/?q=${encodeURIComponent(address)}`;
                 return {
                     id,
                     name,
                     address,
-                    directionsUrl: directions,
+                    directionsUrl,
                     logoUrl: read('logoUrl') || '/images/logos/m5logo2.webp'
                 };
             });
@@ -317,6 +399,7 @@ export const prerender = false;
         const populateVenueSelect = (select, selectedId = '') => {
             const venues = collectVenues();
             select.innerHTML = '';
+
             const placeholder = document.createElement('option');
             placeholder.value = '';
             placeholder.textContent = 'Select a venue';
@@ -332,22 +415,19 @@ export const prerender = false;
             select.value = selectedId && venues.some((venue) => venue.id === selectedId) ? selectedId : '';
         };
 
+        const updateShowPreview = (row) => {
+            const preview = row.querySelector('[data-field="venuePreview"]');
+            const venueId = row.querySelector('[data-field="venueId"]')?.value;
+            const venue = collectVenues().find((item) => item.id === venueId);
+            preview.textContent = venue ? `Linked Venue: ${venue.name} — ${venue.address}` : 'Linked Venue: none selected';
+        };
+
         const refreshVenueSelects = () => {
             showsList.querySelectorAll('[data-field="venueId"]').forEach((select) => {
                 const current = select.value;
                 populateVenueSelect(select, current);
                 updateShowPreview(select.closest('.m5-show-row'));
             });
-        };
-
-        const updateShowPreview = (row) => {
-            if (!row) return;
-            const preview = row.querySelector('[data-field="venuePreview"]');
-            const venueId = row.querySelector('[data-field="venueId"]')?.value;
-            const venue = collectVenues().find((item) => item.id === venueId);
-            preview.textContent = venue
-                ? `Linked Venue: ${venue.name} — ${venue.address}`
-                : 'Linked Venue: none selected';
         };
 
         const createVenueRow = (venue = {}) => {
@@ -369,22 +449,22 @@ export const prerender = false;
 
         const createShowRow = (show = {}) => {
             const node = showTemplate.content.firstElementChild.cloneNode(true);
-            const venueSelect = node.querySelector('[data-field="venueId"]');
-
             node.querySelectorAll('[data-field]').forEach((input) => {
                 const key = input.getAttribute('data-field');
-                if (key === 'venuePreview' || key === 'venueId') return;
+                if (key === 'venueId' || key === 'venuePreview') return;
                 input.value = typeof show[key] === 'string' ? show[key] : '';
             });
 
+            const venueSelect = node.querySelector('[data-field="venueId"]');
             const fallbackVenueId =
                 typeof show.venueId === 'string' && show.venueId.length > 0
                     ? show.venueId
                     : collectVenues().find((venue) => venue.name === show.venueName)?.id || '';
+
             populateVenueSelect(venueSelect, fallbackVenueId);
-            venueSelect.addEventListener('change', () => updateShowPreview(node));
             updateShowPreview(node);
 
+            venueSelect.addEventListener('change', () => updateShowPreview(node));
             node.querySelector('[data-action="remove"]').addEventListener('click', () => node.remove());
             showsList.appendChild(node);
         };
@@ -448,6 +528,8 @@ export const prerender = false;
             (venuesData.venues ?? []).forEach((venue) => createVenueRow(venue));
             (showsData.shows ?? []).forEach((show) => createShowRow(show));
             (artistsData.artists ?? []).forEach((artist) => createArtistRow(artist));
+
+            refreshVenueSelects();
         };
 
         const login = async () => {
@@ -465,6 +547,7 @@ export const prerender = false;
             }
             await loadAll();
             setEditorVisible(true);
+            setTab('artists');
         };
 
         const saveAll = async () => {
@@ -519,6 +602,10 @@ export const prerender = false;
                 event.preventDefault();
                 login();
             }
+        });
+
+        tabButtons.forEach((button) => {
+            button.addEventListener('click', () => setTab(button.getAttribute('data-tab')));
         });
 
         addArtistButton.addEventListener('click', () => createArtistRow());
