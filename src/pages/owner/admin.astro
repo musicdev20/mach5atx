@@ -73,6 +73,53 @@ export const prerender = false;
             </section>
         </main>
 
+        <dialog id="artistModal" class="m5-modal">
+            <form id="artistModalForm" class="m5-modal-form" method="dialog">
+                <h3>Add Artist</h3>
+                <label>Artist Name<input name="name" type="text" required /></label>
+                <label>Artist ID<input name="id" type="text" placeholder="journey" /></label>
+                <label>Songs (one per line)<textarea name="songs" rows="6"></textarea></label>
+                <label>Tile Image URL (optional)<input name="imageUrl" type="text" placeholder="/images/live/bandlive1.jpg" /></label>
+                <div class="m5-modal-actions">
+                    <button type="button" data-action="cancel">Cancel</button>
+                    <button type="submit" data-action="save">Save</button>
+                </div>
+            </form>
+        </dialog>
+
+        <dialog id="venueModal" class="m5-modal">
+            <form id="venueModalForm" class="m5-modal-form" method="dialog">
+                <h3>Add Venue</h3>
+                <label>Venue Name<input name="name" type="text" required /></label>
+                <label>Venue ID<input name="id" type="text" placeholder="shooters-round-rock" /></label>
+                <label>Address<input name="address" type="text" placeholder="1208 N I-35 Frontage Rd, Round Rock, TX" required /></label>
+                <label>Directions URL<input name="directionsUrl" type="url" placeholder="https://maps.google.com/?q=..." required /></label>
+                <label>Logo URL (optional)<input name="logoUrl" type="text" placeholder="/images/logos/m5logo2.webp" /></label>
+                <div class="m5-modal-actions">
+                    <button type="button" data-action="cancel">Cancel</button>
+                    <button type="submit" data-action="save">Save</button>
+                </div>
+            </form>
+        </dialog>
+
+        <dialog id="showModal" class="m5-modal">
+            <form id="showModalForm" class="m5-modal-form" method="dialog">
+                <h3>Add Show</h3>
+                <label>Event Name<input name="eventName" type="text" required /></label>
+                <label>Start Date/Time<input name="startDateTime" type="datetime-local" step="60" required /></label>
+                <label>Venue
+                    <select name="venueId" required>
+                        <option value="">Select a venue</option>
+                    </select>
+                </label>
+                <label>Show ID<input name="id" type="text" /></label>
+                <div class="m5-modal-actions">
+                    <button type="button" data-action="cancel">Cancel</button>
+                    <button type="submit" data-action="save">Save</button>
+                </div>
+            </form>
+        </dialog>
+
         <template id="artistRowTemplate">
             <article class="m5-row m5-artist-row">
                 <label>Artist Name<input data-field="name" type="text" /></label>
@@ -97,7 +144,7 @@ export const prerender = false;
         <template id="showRowTemplate">
             <article class="m5-row m5-show-row">
                 <label>Event Name<input data-field="eventName" type="text" /></label>
-                <label>Start Date/Time (ISO)<input data-field="startDateTime" type="text" placeholder="2026-03-21T20:00:00-05:00" /></label>
+                <label>Start Date/Time<input data-field="startDateTime" type="datetime-local" step="60" /></label>
                 <label>Venue
                     <select data-field="venueId"></select>
                 </label>
@@ -166,19 +213,33 @@ export const prerender = false;
     .m5-admin-login input,
     .m5-row input,
     .m5-row textarea,
-    .m5-row select {
+    .m5-row select,
+    .m5-modal-form input,
+    .m5-modal-form textarea,
+    .m5-modal-form select {
         border: 1px solid rgb(255 255 255 / 24%);
         border-radius: 0.5rem;
         background: rgb(8 12 23 / 75%);
         color: #f5f7fb;
         padding: 0.5rem 0.6rem;
         font: inherit;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .m5-modal-form input:focus,
+    .m5-modal-form textarea:focus,
+    .m5-modal-form select:focus {
+        outline: 2px solid rgb(255 78 86 / 65%);
+        outline-offset: 1px;
+        border-color: #ff4e56;
     }
 
     .m5-admin-login button,
     .m5-admin-actions button,
     .m5-panel-head button,
-    .m5-row button {
+    .m5-row button,
+    .m5-modal button {
         border: 1px solid rgb(255 255 255 / 26%);
         border-radius: 0.55rem;
         background: rgb(12 17 31 / 85%);
@@ -192,7 +253,8 @@ export const prerender = false;
     .m5-admin-actions button:hover,
     .m5-admin-login button:hover,
     .m5-panel-head button:hover,
-    .m5-row button:hover {
+    .m5-row button:hover,
+    .m5-modal button:hover {
         border-color: #ff4e56;
         color: #ff4e56;
     }
@@ -307,6 +369,45 @@ export const prerender = false;
         min-height: 1.25em;
     }
 
+    .m5-modal {
+        width: min(640px, calc(100vw - 2rem));
+        border: 1px solid rgb(255 255 255 / 22%);
+        border-radius: 0.9rem;
+        background: linear-gradient(180deg, rgb(11 14 30 / 98%) 0%, rgb(9 12 23 / 96%) 100%);
+        color: #f5f7fb;
+        padding: 0;
+    }
+
+    .m5-modal::backdrop {
+        background: rgb(3 7 16 / 70%);
+        backdrop-filter: blur(1px);
+    }
+
+    .m5-modal-form {
+        display: grid;
+        gap: 0.65rem;
+        padding: 0.95rem;
+    }
+
+    .m5-modal-form h3 {
+        margin: 0;
+        font-size: 1.2rem;
+    }
+
+    .m5-modal-form label {
+        display: flex;
+        flex-direction: column;
+        gap: 0.23rem;
+        font-size: 0.92rem;
+    }
+
+    .m5-modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        padding-top: 0.2rem;
+    }
+
     @media (max-width: 860px) {
         .m5-checker {
             height: 32px;
@@ -353,6 +454,12 @@ export const prerender = false;
         const artistTemplate = document.getElementById('artistRowTemplate');
         const venueTemplate = document.getElementById('venueRowTemplate');
         const showTemplate = document.getElementById('showRowTemplate');
+        const artistModal = document.getElementById('artistModal');
+        const venueModal = document.getElementById('venueModal');
+        const showModal = document.getElementById('showModal');
+        const artistModalForm = document.getElementById('artistModalForm');
+        const venueModalForm = document.getElementById('venueModalForm');
+        const showModalForm = document.getElementById('showModalForm');
 
         const tabButtons = [...document.querySelectorAll('.m5-tab-btn')];
         const tabPanels = [...document.querySelectorAll('.m5-tab-panel')];
@@ -378,6 +485,25 @@ export const prerender = false;
         };
 
         const slug = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        const isoToLocalInput = (isoString) => {
+            if (!isoString || typeof isoString !== 'string') return '';
+            const date = new Date(isoString);
+            if (Number.isNaN(date.getTime())) return '';
+            const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+            return local.toISOString().slice(0, 16);
+        };
+
+        const localInputToIso = (localValue) => {
+            if (!localValue) return '';
+            const date = new Date(localValue);
+            if (Number.isNaN(date.getTime())) return '';
+            const pad = (n) => String(Math.abs(n)).padStart(2, '0');
+            const tzMinutes = -date.getTimezoneOffset();
+            const sign = tzMinutes >= 0 ? '+' : '-';
+            const tzHours = pad(Math.trunc(tzMinutes / 60));
+            const tzMins = pad(tzMinutes % 60);
+            return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:00${sign}${tzHours}:${tzMins}`;
+        };
 
         const collectVenues = () =>
             Array.from(venuesList.querySelectorAll('.m5-venue-row')).map((row, index) => {
@@ -430,6 +556,28 @@ export const prerender = false;
             });
         };
 
+        const populateModalVenueSelect = (selectedId = '') => {
+            const select = showModalForm.querySelector('select[name="venueId"]');
+            populateVenueSelect(select, selectedId);
+        };
+
+        const openModal = (modal, form) => {
+            form.reset();
+            modal.showModal();
+            const firstInput = form.querySelector('input, textarea, select');
+            firstInput?.focus();
+        };
+
+        const closeModal = (modal, form) => {
+            form.reset();
+            modal.close();
+        };
+
+        const readModalForm = (form) =>
+            Object.fromEntries(
+                Array.from(new FormData(form).entries()).map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value])
+            );
+
         const createVenueRow = (venue = {}) => {
             const node = venueTemplate.content.firstElementChild.cloneNode(true);
             node.querySelectorAll('[data-field]').forEach((input) => {
@@ -451,9 +599,11 @@ export const prerender = false;
             const node = showTemplate.content.firstElementChild.cloneNode(true);
             node.querySelectorAll('[data-field]').forEach((input) => {
                 const key = input.getAttribute('data-field');
-                if (key === 'venueId' || key === 'venuePreview') return;
+                if (key === 'venueId' || key === 'venuePreview' || key === 'startDateTime') return;
                 input.value = typeof show[key] === 'string' ? show[key] : '';
             });
+            const dateInput = node.querySelector('[data-field="startDateTime"]');
+            dateInput.value = isoToLocalInput(typeof show.startDateTime === 'string' ? show.startDateTime : '');
 
             const venueSelect = node.querySelector('[data-field="venueId"]');
             const fallbackVenueId =
@@ -492,7 +642,7 @@ export const prerender = false;
                 return {
                     id: read('id') || `show-${Date.now()}-${index}`,
                     eventName: read('eventName'),
-                    startDateTime: read('startDateTime'),
+                    startDateTime: localInputToIso(read('startDateTime')),
                     venueId,
                     venueName: venue?.name ?? '',
                     venueAddress: venue?.address ?? '',
@@ -596,6 +746,62 @@ export const prerender = false;
             showsList.innerHTML = '';
         };
 
+        [artistModal, venueModal, showModal].forEach((modal) => {
+            modal.querySelector('[data-action="cancel"]').addEventListener('click', () => {
+                const form = modal.querySelector('form');
+                closeModal(modal, form);
+            });
+            modal.addEventListener('cancel', () => {
+                const form = modal.querySelector('form');
+                closeModal(modal, form);
+            });
+        });
+
+        artistModalForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const values = readModalForm(artistModalForm);
+            createArtistRow({
+                id: values.id,
+                name: values.name,
+                songs: (values.songs || '')
+                    .split('\n')
+                    .map((song) => song.trim())
+                    .filter(Boolean),
+                imageUrl: values.imageUrl
+            });
+            closeModal(artistModal, artistModalForm);
+        });
+
+        venueModalForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const values = readModalForm(venueModalForm);
+            createVenueRow({
+                id: values.id,
+                name: values.name,
+                address: values.address,
+                directionsUrl: values.directionsUrl,
+                logoUrl: values.logoUrl
+            });
+            closeModal(venueModal, venueModalForm);
+        });
+
+        showModalForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const values = readModalForm(showModalForm);
+            const venue = collectVenues().find((item) => item.id === values.venueId);
+            createShowRow({
+                id: values.id,
+                eventName: values.eventName,
+                startDateTime: localInputToIso(values.startDateTime),
+                venueId: values.venueId,
+                venueName: venue?.name ?? '',
+                venueAddress: venue?.address ?? '',
+                directionsUrl: venue?.directionsUrl ?? '',
+                venueLogo: venue?.logoUrl || '/images/logos/m5logo2.webp'
+            });
+            closeModal(showModal, showModalForm);
+        });
+
         loginButton.addEventListener('click', login);
         adminPassword.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
@@ -608,9 +814,12 @@ export const prerender = false;
             button.addEventListener('click', () => setTab(button.getAttribute('data-tab')));
         });
 
-        addArtistButton.addEventListener('click', () => createArtistRow());
-        addVenueButton.addEventListener('click', () => createVenueRow());
-        addShowButton.addEventListener('click', () => createShowRow());
+        addArtistButton.addEventListener('click', () => openModal(artistModal, artistModalForm));
+        addVenueButton.addEventListener('click', () => openModal(venueModal, venueModalForm));
+        addShowButton.addEventListener('click', () => {
+            populateModalVenueSelect();
+            openModal(showModal, showModalForm);
+        });
         saveAllButton.addEventListener('click', saveAll);
         logoutButton.addEventListener('click', logout);
     })();
