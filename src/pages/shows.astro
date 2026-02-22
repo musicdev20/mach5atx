@@ -6,7 +6,17 @@ import { defaultUpcomingShows, getUpcomingShows } from '../lib/shows';
 export const prerender = false;
 
 const initialShows = await getUpcomingShows();
-const initialShow = initialShows[0] ?? defaultUpcomingShows[0];
+const sortShowsByDate = (rows) =>
+    [...rows].sort((a, b) => {
+        const aTime = new Date(a.startDateTime).getTime();
+        const bTime = new Date(b.startDateTime).getTime();
+        if (Number.isNaN(aTime) && Number.isNaN(bTime)) return 0;
+        if (Number.isNaN(aTime)) return 1;
+        if (Number.isNaN(bTime)) return -1;
+        return aTime - bTime;
+    });
+const sortedInitialShows = sortShowsByDate(initialShows);
+const initialShow = sortedInitialShows[0] ?? defaultUpcomingShows[0];
 const fallbackVenueLogo = '/images/logos/m5logo2.webp';
 ---
 
@@ -32,6 +42,13 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
                     <div class="m5-shows-list-wrap m5-glass-card">
                         <h2>Upcoming Shows</h2>
                         <p class="m5-shows-hint">Select a show to view full details.</p>
+                        <div class="m5-shows-tools">
+                            <label for="monthFilter">Filter Month</label>
+                            <select id="monthFilter" aria-label="Filter shows by month">
+                                <option value="all">All Upcoming</option>
+                            </select>
+                        </div>
+                        <p id="showsEmpty" class="m5-shows-empty" hidden>No shows found for this month.</p>
                         <div id="showsList" class="m5-shows-list" role="list"></div>
                     </div>
 
@@ -63,7 +80,7 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
             </main>
         </div>
 
-        <script id="showsData" type="application/json" set:html={JSON.stringify(initialShows)}></script>
+        <script id="showsData" type="application/json" set:html={JSON.stringify(sortedInitialShows)}></script>
     </body>
 </html>
 
@@ -140,6 +157,43 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
         margin-top: 0.75rem;
         display: grid;
         gap: 0.78rem;
+    }
+    .m5-shows-tools {
+        margin-top: 0.65rem;
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        flex-wrap: wrap;
+    }
+    .m5-shows-tools label {
+        color: rgb(225 230 243 / 88%);
+        font-size: 0.85rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+    .m5-shows-tools select {
+        border: 1px solid rgb(255 255 255 / 24%);
+        border-radius: 0.55rem;
+        background: rgb(10 14 26 / 85%);
+        color: #f5f7fb;
+        padding: 0.45rem 0.58rem;
+        font: inherit;
+        font-size: 0.92rem;
+    }
+    .m5-shows-empty {
+        margin: 0.7rem 0 0;
+        color: rgb(228 232 243 / 82%);
+        font-size: 0.92rem;
+    }
+    .m5-month-divider {
+        margin: 0.25rem 0 0.05rem;
+        padding: 0.2rem 0.2rem 0.35rem;
+        border-bottom: 1px solid rgb(255 255 255 / 14%);
+        color: rgb(236 240 249 / 94%);
+        font-size: 0.94rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
     }
     .m5-show-row {
         appearance: none;
@@ -258,6 +312,11 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
     .m5-show-btn:hover {
         filter: brightness(1.08);
     }
+    .m5-show-btn.is-disabled {
+        opacity: 0.5;
+        pointer-events: none;
+        filter: none;
+    }
     .m5-detail-image {
         margin: 0.95rem 0 0;
         border-radius: 0.8rem;
@@ -328,8 +387,10 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
         const detailDirections = document.getElementById('detailDirections');
         const detailShare = document.getElementById('detailShare');
         const detailVenueLogo = document.getElementById('detailVenueLogo');
+        const monthFilter = document.getElementById('monthFilter');
+        const showsEmpty = document.getElementById('showsEmpty');
 
-        if (!dataNode || !listNode || !detailName || !detailVenue || !detailDate || !detailAddress || !detailDirections || !detailShare || !detailVenueLogo) return;
+        if (!dataNode || !listNode || !detailName || !detailVenue || !detailDate || !detailAddress || !detailDirections || !detailShare || !detailVenueLogo || !monthFilter || !showsEmpty) return;
 
         let shows = [];
         try {
@@ -348,6 +409,31 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
             minute: '2-digit',
             timeZone: 'America/Chicago'
         });
+        const monthPartsFmt = new Intl.DateTimeFormat('en-US', {
+            month: '2-digit',
+            year: 'numeric',
+            timeZone: 'America/Chicago'
+        });
+        const monthLabelFmt = new Intl.DateTimeFormat('en-US', {
+            month: 'long',
+            year: 'numeric',
+            timeZone: 'America/Chicago'
+        });
+        const sortShows = (rows) =>
+            [...rows].sort((a, b) => {
+                const aTime = new Date(a.startDateTime).getTime();
+                const bTime = new Date(b.startDateTime).getTime();
+                if (Number.isNaN(aTime) && Number.isNaN(bTime)) return 0;
+                if (Number.isNaN(aTime)) return 1;
+                if (Number.isNaN(bTime)) return -1;
+                return aTime - bTime;
+            });
+        const monthKeyFor = (date) => {
+            const parts = monthPartsFmt.formatToParts(date);
+            const month = parts.find((part) => part.type === 'month')?.value;
+            const year = parts.find((part) => part.type === 'year')?.value;
+            return month && year ? `${year}-${month}` : 'unknown';
+        };
 
         const locationLine = (show) => {
             const parts = String(show.venueAddress || '')
@@ -357,6 +443,19 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
             return parts.length >= 2 ? `${show.venueName} - ${parts.slice(-2).join(', ')}` : show.venueAddress;
         };
 
+        const clearDetail = () => {
+            detailName.textContent = 'No shows for selected month';
+            detailVenue.textContent = '';
+            detailDate.textContent = '';
+            detailAddress.textContent = '';
+            detailDirections.href = '#';
+            detailDirections.classList.add('is-disabled');
+            detailShare.disabled = true;
+            detailVenueLogo.src = '/images/logos/m5logo2.webp';
+            detailVenueLogo.alt = 'Mach 5 logo';
+            detailShare.onclick = null;
+        };
+
         const renderDetail = (show) => {
             const date = new Date(show.startDateTime);
             detailName.textContent = show.eventName;
@@ -364,6 +463,8 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
             detailDate.textContent = fullFmt.format(date);
             detailAddress.textContent = show.venueAddress;
             detailDirections.href = show.directionsUrl;
+            detailDirections.classList.remove('is-disabled');
+            detailShare.disabled = false;
             detailVenueLogo.src = show.venueLogo && String(show.venueLogo).trim().length > 0 ? show.venueLogo : '/images/logos/m5logo2.webp';
             detailVenueLogo.alt = `${show.venueName} logo`;
             detailShare.onclick = async () => {
@@ -389,10 +490,46 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
             });
         };
 
-        const renderList = () => {
-            listNode.innerHTML = '';
-            shows.forEach((show, index) => {
+        const renderMonthFilter = (rows) => {
+            const months = [];
+            const seen = new Set();
+            rows.forEach((show) => {
                 const date = new Date(show.startDateTime);
+                if (Number.isNaN(date.getTime())) return;
+                const key = monthKeyFor(date);
+                if (seen.has(key)) return;
+                seen.add(key);
+                months.push({ key, label: monthLabelFmt.format(date) });
+            });
+            monthFilter.innerHTML = '<option value="all">All Upcoming</option>';
+            months.forEach((month) => {
+                const option = document.createElement('option');
+                option.value = month.key;
+                option.textContent = month.label;
+                monthFilter.appendChild(option);
+            });
+        };
+
+        const renderList = (rows) => {
+            listNode.innerHTML = '';
+            if (!rows.length) {
+                showsEmpty.hidden = false;
+                clearDetail();
+                return;
+            }
+            showsEmpty.hidden = true;
+
+            let activeMonth = '';
+            rows.forEach((show, index) => {
+                const date = new Date(show.startDateTime);
+                const showMonthKey = Number.isNaN(date.getTime()) ? 'unknown' : monthKeyFor(date);
+                if (showMonthKey !== activeMonth) {
+                    activeMonth = showMonthKey;
+                    const monthHeader = document.createElement('h3');
+                    monthHeader.className = 'm5-month-divider';
+                    monthHeader.textContent = Number.isNaN(date.getTime()) ? 'Unknown Date' : monthLabelFmt.format(date);
+                    listNode.appendChild(monthHeader);
+                }
                 const row = document.createElement('button');
                 row.type = 'button';
                 row.className = 'm5-show-row';
@@ -412,18 +549,34 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
                 if (index === 0) row.classList.add('is-active');
                 listNode.appendChild(row);
             });
+            renderDetail(rows[0]);
         };
 
-        renderList();
-        renderDetail(shows[0]);
+        const applyFilter = () => {
+            const selectedMonth = monthFilter.value;
+            const filtered =
+                selectedMonth === 'all'
+                    ? shows
+                    : shows.filter((show) => {
+                          const date = new Date(show.startDateTime);
+                          if (Number.isNaN(date.getTime())) return false;
+                          return monthKeyFor(date) === selectedMonth;
+                      });
+            renderList(filtered);
+        };
+
+        shows = sortShows(shows);
+        renderMonthFilter(shows);
+        applyFilter();
+        monthFilter.addEventListener('change', applyFilter);
 
         fetch('/api/shows')
             .then((response) => (response.ok ? response.json() : null))
             .then((payload) => {
                 if (!payload || !Array.isArray(payload.shows) || !payload.shows.length) return;
-                shows = payload.shows;
-                renderList();
-                renderDetail(shows[0]);
+                shows = sortShows(payload.shows);
+                renderMonthFilter(shows);
+                applyFilter();
             })
             .catch(() => {
                 // Keep fallback list.
