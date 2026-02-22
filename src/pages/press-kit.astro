@@ -1,12 +1,13 @@
 ---
 import '../styles/globals.css';
+import { getNotableVenues } from '../lib/venues';
 
 const socialLinks = {
     instagram: 'https://instagram.com/mach5atx',
     facebook: 'https://facebook.com/mach5atx',
     youtube: 'https://youtube.com/@mach5atx',
-    email: 'booking@mach5band.com',
-    website: 'mach5band.com'
+    email: 'mach5atx@gmail.com',
+    website: 'mach5atx.com'
 };
 
 const profileCopy = [
@@ -48,27 +49,7 @@ const members = [
     }
 ];
 
-const pressQuotes = [
-    {
-        quote: 'Mach 5 delivers a relentless set with arena-level energy and sharp musicianship.',
-        source: 'Live Music Report'
-    },
-    {
-        quote: 'One of Austin’s most crowd-focused rock acts, built for packed rooms and big nights.',
-        source: 'Texas Stage Weekly'
-    },
-    {
-        quote: 'From classic anthems to modern rock staples, Mach 5 keeps the momentum at full speed.',
-        source: 'Venue Soundcheck Magazine'
-    }
-];
-
-const highlights = [
-    'Shooters Billiards & Sports Bar — Featured weekend headliner',
-    'Austin private and corporate entertainment programs',
-    'Central Texas regional festival and club circuits',
-    'High-capacity venues across the Austin metro'
-];
+const notableVenues = await getNotableVenues();
 ---
 
 <!doctype html>
@@ -76,7 +57,7 @@ const highlights = [
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="Mach 5 press kit with profile, member bios, highlights, and technical information." />
+        <meta name="description" content="Mach 5 press kit with profile, member bios, and technical information." />
         <title>Mach 5 | Press Kit</title>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -89,7 +70,7 @@ const highlights = [
                 <div class="pk-stripe" aria-hidden="true"></div>
                 <h1>MACH 5</h1>
                 <p class="pk-subheader">Full-Throttle Rock Experience</p>
-                <img class="pk-hero-image" src="/images/hero/group1.webp" alt="Mach 5 band group photo" loading="eager" decoding="async" />
+                <img class="pk-hero-image" src="/images/hero/group1.webp" alt="Mach 5 promotional photo" loading="eager" decoding="async" />
                 <footer class="pk-footer">
                     <div class="pk-contact">
                         <span>{socialLinks.website}</span>
@@ -97,19 +78,13 @@ const highlights = [
                     </div>
                     <div class="pk-icons">
                         <a href={socialLinks.instagram} target="_blank" rel="noreferrer" aria-label="Instagram">
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M7.3 3h9.4A4.3 4.3 0 0 1 21 7.3v9.4a4.3 4.3 0 0 1-4.3 4.3H7.3A4.3 4.3 0 0 1 3 16.7V7.3A4.3 4.3 0 0 1 7.3 3zm0 1.9A2.4 2.4 0 0 0 4.9 7.3v9.4a2.4 2.4 0 0 0 2.4 2.4h9.4a2.4 2.4 0 0 0 2.4-2.4V7.3a2.4 2.4 0 0 0-2.4-2.4H7.3zm9.9 1.4a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4zM12 7.6a4.4 4.4 0 1 1 0 8.8 4.4 4.4 0 0 1 0-8.8zm0 1.9a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path>
-                            </svg>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.3 3h9.4A4.3 4.3 0 0 1 21 7.3v9.4a4.3 4.3 0 0 1-4.3 4.3H7.3A4.3 4.3 0 0 1 3 16.7V7.3A4.3 4.3 0 0 1 7.3 3zm0 1.9A2.4 2.4 0 0 0 4.9 7.3v9.4a2.4 2.4 0 0 0 2.4 2.4h9.4a2.4 2.4 0 0 0 2.4-2.4V7.3a2.4 2.4 0 0 0-2.4-2.4H7.3zm9.9 1.4a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4zM12 7.6a4.4 4.4 0 1 1 0 8.8 4.4 4.4 0 0 1 0-8.8zm0 1.9a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path></svg>
                         </a>
                         <a href={socialLinks.facebook} target="_blank" rel="noreferrer" aria-label="Facebook">
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M13.5 8.5V6.9c0-.8.5-1.3 1.4-1.3H16V3h-2c-2.3 0-3.8 1.5-3.8 3.9v1.6H8v2.6h2.2V21h3.3v-9.9H16l.4-2.6h-2.9z"></path>
-                            </svg>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 8.5V6.9c0-.8.5-1.3 1.4-1.3H16V3h-2c-2.3 0-3.8 1.5-3.8 3.9v1.6H8v2.6h2.2V21h3.3v-9.9H16l.4-2.6h-2.9z"></path></svg>
                         </a>
                         <a href={socialLinks.youtube} target="_blank" rel="noreferrer" aria-label="YouTube">
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M21 8.2c-.2-1.3-1.2-2.2-2.5-2.4C16.6 5.5 14.3 5.4 12 5.4s-4.6.1-6.5.4A2.9 2.9 0 0 0 3 8.2c-.2 1.3-.3 2.5-.3 3.8s.1 2.5.3 3.8c.2 1.3 1.2 2.2 2.5 2.4 1.9.3 4.2.4 6.5.4s4.6-.1 6.5-.4a2.9 2.9 0 0 0 2.5-2.4c.2-1.3.3-2.5.3-3.8s-.1-2.5-.3-3.8zM10 15.5v-7l6 3.5-6 3.5z"></path>
-                            </svg>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.2c-.2-1.3-1.2-2.2-2.5-2.4C16.6 5.5 14.3 5.4 12 5.4s-4.6.1-6.5.4A2.9 2.9 0 0 0 3 8.2c-.2 1.3-.3 2.5-.3 3.8s.1 2.5.3 3.8c.2 1.3 1.2 2.2 2.5 2.4 1.9.3 4.2.4 6.5.4s4.6-.1 6.5-.4a2.9 2.9 0 0 0 2.5-2.4c.2-1.3.3-2.5.3-3.8s-.1-2.5-.3-3.8zM10 15.5v-7l6 3.5-6 3.5z"></path></svg>
                         </a>
                     </div>
                 </footer>
@@ -122,6 +97,12 @@ const highlights = [
                 <div class="pk-copy">
                     {profileCopy.map((paragraph) => <p>{paragraph}</p>)}
                 </div>
+                <section class="pk-venues">
+                    <h3>Notable Venues</h3>
+                    <ul>
+                        {notableVenues.map((venue) => <li>{venue.name} - {venue.city}</li>)}
+                    </ul>
+                </section>
                 <img class="pk-feature-image" src="/images/hero/hero3.webp" alt="Mach 5 performing live" loading="lazy" decoding="async" />
                 <footer class="pk-footer">
                     <div class="pk-contact">
@@ -168,70 +149,30 @@ const highlights = [
 
             <section class="pk-page">
                 <div class="pk-stripe" aria-hidden="true"></div>
-                <h2>Press &amp; Highlights</h2>
-                <div class="pk-quotes">
-                    {
-                        pressQuotes.map((item) => (
-                            <blockquote>
-                                <p>{item.quote}</p>
-                                <cite>{item.source}</cite>
-                            </blockquote>
-                        ))
-                    }
-                </div>
-                <section class="pk-highlights">
-                    <h3>Notable Venues &amp; Events</h3>
-                    <ul>
-                        {highlights.map((item) => <li>{item}</li>)}
-                    </ul>
-                </section>
-                <img class="pk-feature-image" src="/images/live/crowd.jpg" alt="Crowd enjoying a Mach 5 show" loading="lazy" decoding="async" />
-                <footer class="pk-footer">
-                    <div class="pk-contact">
-                        <span>{socialLinks.website}</span>
-                        <a href={`mailto:${socialLinks.email}`}>{socialLinks.email}</a>
-                    </div>
-                    <div class="pk-icons">
-                        <a href={socialLinks.instagram} target="_blank" rel="noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.3 3h9.4A4.3 4.3 0 0 1 21 7.3v9.4a4.3 4.3 0 0 1-4.3 4.3H7.3A4.3 4.3 0 0 1 3 16.7V7.3A4.3 4.3 0 0 1 7.3 3zm0 1.9A2.4 2.4 0 0 0 4.9 7.3v9.4a2.4 2.4 0 0 0 2.4 2.4h9.4a2.4 2.4 0 0 0 2.4-2.4V7.3a2.4 2.4 0 0 0-2.4-2.4H7.3zm9.9 1.4a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4zM12 7.6a4.4 4.4 0 1 1 0 8.8 4.4 4.4 0 0 1 0-8.8zm0 1.9a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path></svg></a>
-                        <a href={socialLinks.facebook} target="_blank" rel="noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 8.5V6.9c0-.8.5-1.3 1.4-1.3H16V3h-2c-2.3 0-3.8 1.5-3.8 3.9v1.6H8v2.6h2.2V21h3.3v-9.9H16l.4-2.6h-2.9z"></path></svg></a>
-                        <a href={socialLinks.youtube} target="_blank" rel="noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.2c-.2-1.3-1.2-2.2-2.5-2.4C16.6 5.5 14.3 5.4 12 5.4s-4.6.1-6.5.4A2.9 2.9 0 0 0 3 8.2c-.2 1.3-.3 2.5-.3 3.8s.1 2.5.3 3.8c.2 1.3 1.2 2.2 2.5 2.4 1.9.3 4.2.4 6.5.4s4.6-.1 6.5-.4a2.9 2.9 0 0 0 2.5-2.4c.2-1.3.3-2.5.3-3.8s-.1-2.5-.3-3.8zM10 15.5v-7l6 3.5-6 3.5z"></path></svg></a>
-                    </div>
-                </footer>
-            </section>
-
-            <section class="pk-page">
-                <div class="pk-stripe" aria-hidden="true"></div>
                 <h2>Technical Info</h2>
                 <div class="pk-tech-grid">
                     <section class="pk-panel">
                         <h3>Stage Plot</h3>
-                        <div class="pk-placeholder">Stage Plot Placeholder</div>
+                        <div class="pk-stage-wrap">
+                            <p class="pk-stage-label">Audience</p>
+                            <div class="pk-stage-plot">
+                                <div class="pk-position pk-front-left">Guitar<br />Stage Left</div>
+                                <div class="pk-position pk-front-center">Lead Vocal<br />Center</div>
+                                <div class="pk-position pk-front-right">Bass<br />Stage Right</div>
+                                <div class="pk-position pk-back-left">Drums<br />Stage Left Back</div>
+                                <div class="pk-position pk-back-right">Keyboards<br />Stage Right Back</div>
+                            </div>
+                            <p class="pk-stage-label pk-stage-label-back">Upstage</p>
+                        </div>
                     </section>
                     <section class="pk-panel">
-                        <h3>Input List</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Ch</th>
-                                    <th>Source</th>
-                                    <th>Notes</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>1</td><td>Kick</td><td>Mic</td></tr>
-                                <tr><td>2</td><td>Snare</td><td>Mic</td></tr>
-                                <tr><td>3</td><td>Bass DI</td><td>Active DI</td></tr>
-                                <tr><td>4</td><td>Guitar</td><td>Mic/Modeler</td></tr>
-                                <tr><td>5</td><td>Keys L/R</td><td>Stereo DI</td></tr>
-                                <tr><td>6</td><td>Lead Vocal</td><td>Wireless</td></tr>
-                                <tr><td>7</td><td>Backing Vocal 1</td><td>Wired</td></tr>
-                                <tr><td>8</td><td>Backing Vocal 2</td><td>Wired</td></tr>
-                            </tbody>
-                        </table>
+                        <h3>Booking / Contact</h3>
                         <div class="pk-booking">
-                            <p class="pk-label">Booking / Contact</p>
-                            <p>Email: <a href={`mailto:${socialLinks.email}`}>{socialLinks.email}</a></p>
-                            <p>Website: {socialLinks.website}</p>
+                            <p class="pk-label">Booking Email</p>
+                            <p><a href={`mailto:${socialLinks.email}`}>{socialLinks.email}</a></p>
+                            <p class="pk-label">Website</p>
+                            <p>{socialLinks.website}</p>
+                            <p class="pk-label">Location</p>
                             <p>Austin, Texas</p>
                         </div>
                     </section>
@@ -253,6 +194,8 @@ const highlights = [
 </html>
 
 <style>
+    @import url('https://fonts.cdnfonts.com/css/speed-race');
+
     @page {
         size: letter;
         margin: 0;
@@ -293,7 +236,7 @@ const highlights = [
         right: 0.8in;
         height: 0.16in;
         border: 1px solid rgb(255 255 255 / 20%);
-        background: url('/images/checkerboard.svg') center / cover no-repeat;
+        background: url('/images/checkerboardheader.png') center 42% / cover no-repeat;
     }
 
     h1,
@@ -322,9 +265,7 @@ const highlights = [
     }
 
     p,
-    li,
-    td,
-    th {
+    li {
         margin: 0;
         font-size: 12px;
         line-height: 1.58;
@@ -339,21 +280,46 @@ const highlights = [
         text-transform: uppercase;
     }
 
+    .pk-page:first-child h1,
+    .pk-page:first-child .pk-subheader {
+        font-family: 'Speed Race', 'Impact', 'Arial Black', 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+    }
+
     .pk-hero-image,
     .pk-feature-image {
         width: 100%;
         border: 1px solid rgb(255 255 255 / 20%);
-        object-fit: cover;
     }
 
     .pk-hero-image {
         margin-top: 0.25in;
-        height: 6.7in;
+        height: auto;
+        display: block;
+        margin-inline: auto;
     }
 
     .pk-feature-image {
         margin-top: 0.2in;
-        height: 5.1in;
+        height: 3.9in;
+        object-fit: cover;
+    }
+
+    .pk-venues {
+        margin-top: 0.11in;
+        border: 1px solid rgb(255 255 255 / 20%);
+        background: rgb(255 255 255 / 3%);
+        padding: 0.09in 0.11in;
+    }
+
+    .pk-venues h3 {
+        margin-bottom: 0.05in;
+    }
+
+    .pk-venues ul {
+        margin: 0;
+        padding-left: 0.18in;
+        display: grid;
+        gap: 0.03in;
     }
 
     .pk-footer {
@@ -447,56 +413,10 @@ const highlights = [
         font-weight: 800;
     }
 
-    .pk-quotes {
-        margin-top: 0.18in;
-        display: grid;
-        gap: 0.1in;
-    }
-
-    blockquote {
-        margin: 0;
-        border-left: 3px solid #e10600;
-        padding: 0.07in 0.11in;
-        background: rgb(255 255 255 / 3%);
-    }
-
-    blockquote p {
-        color: #fff;
-        font-size: 13px;
-    }
-
-    blockquote cite {
-        display: block;
-        margin-top: 0.04in;
-        color: rgb(218 222 235 / 90%);
-        font-size: 10px;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        font-style: normal;
-    }
-
-    .pk-highlights {
-        margin-top: 0.12in;
-        border: 1px solid rgb(255 255 255 / 20%);
-        background: rgb(255 255 255 / 3%);
-        padding: 0.1in 0.12in;
-    }
-
-    .pk-highlights h3 {
-        margin-bottom: 0.06in;
-    }
-
-    .pk-highlights ul {
-        margin: 0;
-        padding-left: 0.18in;
-        display: grid;
-        gap: 0.04in;
-    }
-
     .pk-tech-grid {
         margin-top: 0.2in;
         display: grid;
-        grid-template-columns: 1.35fr 1fr;
+        grid-template-columns: 1.45fr 1fr;
         gap: 0.12in;
     }
 
@@ -506,36 +426,67 @@ const highlights = [
         padding: 0.1in;
     }
 
-    .pk-placeholder {
-        margin-top: 0.08in;
-        height: 3.68in;
-        border: 1px dashed rgb(255 255 255 / 40%);
-        display: grid;
-        place-items: center;
-        color: rgb(255 255 255 / 70%);
-        font-size: 10px;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
+    .pk-stage-wrap {
         margin-top: 0.08in;
     }
 
-    th,
-    td {
-        text-align: left;
-        padding: 0.04in 0.03in;
-        border-bottom: 1px solid rgb(255 255 255 / 16%);
-    }
-
-    th {
+    .pk-stage-label {
         color: #fff;
         font-size: 10px;
-        letter-spacing: 0.06em;
+        font-weight: 800;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
+        margin-bottom: 0.06in;
+    }
+
+    .pk-stage-label-back {
+        margin-top: 0.06in;
+        margin-bottom: 0;
+    }
+
+    .pk-stage-plot {
+        height: 3.64in;
+        border: 1px dashed rgb(255 255 255 / 40%);
+        position: relative;
+        background: linear-gradient(180deg, rgb(225 6 0 / 6%) 0%, rgb(255 255 255 / 2%) 100%);
+    }
+
+    .pk-position {
+        position: absolute;
+        min-width: 1.35in;
+        padding: 0.06in 0.07in;
+        border: 1px solid rgb(255 255 255 / 24%);
+        background: rgb(10 10 14 / 80%);
+        color: #fff;
+        font-size: 10px;
+        line-height: 1.35;
+        text-align: center;
+    }
+
+    .pk-front-left {
+        left: 0.16in;
+        top: 2.7in;
+    }
+
+    .pk-front-center {
+        left: 50%;
+        transform: translateX(-50%);
+        top: 2.7in;
+    }
+
+    .pk-front-right {
+        right: 0.16in;
+        top: 2.7in;
+    }
+
+    .pk-back-left {
+        left: 0.22in;
+        top: 0.55in;
+    }
+
+    .pk-back-right {
+        right: 0.22in;
+        top: 0.55in;
     }
 
     .pk-booking {
@@ -550,6 +501,11 @@ const highlights = [
         letter-spacing: 0.06em;
         text-transform: uppercase;
         font-weight: 800;
+        margin-top: 0.08in;
+    }
+
+    .pk-label:first-child {
+        margin-top: 0;
     }
 
     .pk-booking a {

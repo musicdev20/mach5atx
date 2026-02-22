@@ -1,0 +1,602 @@
+---
+import '../styles/globals.css';
+import Mach5Header from '../components/Mach5Header.astro';
+
+const liveVideos = [
+    {
+        title: 'MACH 5 Promo',
+        event: 'Main Promo',
+        description: 'Official MACH 5 promo video.',
+        thumbnail: 'https://i.ytimg.com/vi/uZjI3LWaCeg/hqdefault.jpg',
+        href: 'https://youtu.be/uZjI3LWaCeg?si=WvqXpOVbTHzqrmuo'
+    },
+    {
+        title: 'MACH 5 Promo Short 1',
+        event: 'Short',
+        description: 'Live short performance clip.',
+        thumbnail: 'https://i.ytimg.com/vi/JCtQcf04MLo/hqdefault.jpg',
+        href: 'https://youtu.be/JCtQcf04MLo?si=2CI0yAup_mzV9yW0'
+    },
+    {
+        title: 'MACH 5 Promo Short 2',
+        event: 'Short',
+        description: 'Live short performance clip.',
+        thumbnail: 'https://i.ytimg.com/vi/_q7RxuSEb7M/hqdefault.jpg',
+        href: 'https://youtu.be/_q7RxuSEb7M?si=ygWZooIxjl0OYqLc'
+    },
+    {
+        title: 'MACH 5 Promo Short 3',
+        event: 'Short',
+        description: 'Live short performance clip.',
+        thumbnail: 'https://i.ytimg.com/vi/0ZWf8kcQQV0/hqdefault.jpg',
+        href: 'https://youtu.be/0ZWf8kcQQV0?si=oBI3_mhdD2b7EnYc'
+    },
+    {
+        title: 'MACH 5 Promo Short 4',
+        event: 'Short',
+        description: 'Live short performance clip.',
+        thumbnail: 'https://i.ytimg.com/vi/3nBtxP-CYqc/hqdefault.jpg',
+        href: 'https://youtu.be/3nBtxP-CYqc?si=M8GqfhdZm-MS4Viw'
+    },
+    {
+        title: 'MACH 5 Promo Short 5',
+        event: 'Short',
+        description: 'Live short performance clip.',
+        thumbnail: 'https://i.ytimg.com/vi/oV7aUxPhEy8/hqdefault.jpg',
+        href: 'https://youtu.be/oV7aUxPhEy8?si=2pzZyOsPyYRXTIzf'
+    }
+];
+const youtubeEmbedUrl = (url) => {
+    const match = url.match(/(?:youtu\.be\/|v=)([A-Za-z0-9_-]{11})/);
+    const videoId = match?.[1];
+    return videoId ? `https://www.youtube-nocookie.com/embed/${videoId}?rel=0` : null;
+};
+
+const liveImages = [
+    { src: '/images/live/bandlive1.jpg', alt: 'Mach 5 performing live under stage lighting' },
+    { src: '/images/live/crowd.jpg', alt: 'Crowd reacting to a Mach 5 performance' },
+    { src: '/images/live/randylive1.jpg', alt: 'Drummer performing live for Mach 5' },
+    { src: '/images/live/lanae1.webp', alt: 'Lead singer performing on stage' },
+    { src: '/images/live/chucklive1.jpg', alt: 'Guitarist performing live set' },
+    { src: '/images/live/joelive1.jpg', alt: 'Bassist performing live on stage' }
+];
+
+const liveAudioRecordings = [
+    {
+        title: 'AC/DC - You Shook Me All Night Long / Highway to Hell',
+        src: '/audio/01-you-shook-me-all-night-long-highway-to-hell.mp3'
+    },
+    {
+        title: 'Journey - Stone in Love / Any Way You Want It / Separate Ways',
+        src: '/audio/02-journey-stone-in-love-any-way-you-want-it-separate-ways.mp3'
+    },
+    {
+        title: '3 Doors Down - Kryptonite',
+        src: '/audio/03-3-doors-down-kryptonite.mp3'
+    },
+    {
+        title: 'Lady Gaga - Just Dance',
+        src: '/audio/04-lady-gaga-just-dance.mp3'
+    },
+    {
+        title: 'No Doubt - Hella Good',
+        src: '/audio/05-no-doubt-hella-good.mp3'
+    },
+    {
+        title: 'Miley Cyrus - Heart of Glass',
+        src: '/audio/06-heart-of-glass.mp3'
+    },
+    {
+        title: 'Heart - Barracuda',
+        src: '/audio/07-barracuda.mp3'
+    },
+    {
+        title: 'Gary Numan / Nine Inch Nails - Cars',
+        src: '/audio/08-gary-numan-nine-inch-nails-cars.mp3'
+    },
+    {
+        title: 'Soft Cell - Tainted Love',
+        src: '/audio/09-tainted-love.mp3'
+    },
+    {
+        title: 'Metallica - Enter Sandman',
+        src: '/audio/10-enter-sandman.mp3'
+    },
+    {
+        title: 'Billy Idol - Rebel Yell',
+        src: '/audio/11-rebel-yell.mp3'
+    },
+    {
+        title: 'Alice in Chains - Man in the Box',
+        src: '/audio/12-man-in-the-box.mp3'
+    }
+];
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Mach 5 media: live videos, photo gallery, and live audio recordings." />
+        <title>Mach 5 | Media</title>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    </head>
+    <body class="m5-media-body">
+        <div class="m5-media-page">
+            <Mach5Header />
+
+            <main class="m5-shell m5-media-main">
+                <section class="m5-media-hero m5-glass-card">
+                    <h1>Media</h1>
+                    <p>Live video, photo moments, and live audio recordings from MACH 5 shows.</p>
+                </section>
+
+                <section class="m5-media-section m5-glass-card" aria-labelledby="live-video-heading">
+                    <div class="m5-section-head">
+                        <h2 id="live-video-heading">Live Video</h2>
+                        <a href="https://www.youtube.com/@mach5atx" target="_blank" rel="noreferrer">View Channel</a>
+                    </div>
+                    <div class="m5-video-grid">
+                        {
+                            liveVideos.map((video) => (
+                                <article class="m5-video-card">
+                                    <div class="m5-video-frame-wrap">
+                                        <iframe
+                                            src={youtubeEmbedUrl(video.href) ?? undefined}
+                                            title={video.title}
+                                            loading="lazy"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                            referrerpolicy="strict-origin-when-cross-origin"
+                                            allowfullscreen
+                                        ></iframe>
+                                    </div>
+                                    <div class="m5-video-copy">
+                                        <h3>{video.title}</h3>
+                                        <p class="m5-kicker">{video.event}</p>
+                                        <p>{video.description}</p>
+                                    </div>
+                                </article>
+                            ))
+                        }
+                    </div>
+                </section>
+
+                <section class="m5-media-section m5-glass-card" aria-labelledby="live-images-heading">
+                    <div class="m5-section-head">
+                        <h2 id="live-images-heading">Live Images</h2>
+                    </div>
+                    <div class="m5-image-grid">
+                        {
+                            liveImages.map((image) => (
+                                <figure class="m5-image-card">
+                                    <button class="m5-image-open" type="button" data-full-src={image.src} data-full-alt={image.alt} aria-label={`Expand ${image.alt}`}>
+                                        <img src={image.src} alt={image.alt} loading="lazy" decoding="async" />
+                                    </button>
+                                </figure>
+                            ))
+                        }
+                    </div>
+                </section>
+
+                <section class="m5-media-section m5-glass-card" aria-labelledby="live-audio-heading">
+                    <div class="m5-section-head">
+                        <h2 id="live-audio-heading">Live Audio Recordings</h2>
+                    </div>
+                    <div class="m5-audio-deck">
+                        <p class="m5-audio-now-label">Now Playing</p>
+                        <p class="m5-audio-now-title" id="m5AudioNowTitle">{liveAudioRecordings[0]?.title}</p>
+                        <audio controls preload="none" src={liveAudioRecordings[0]?.src} class="m5-audio-player" id="m5AudioPlayer">
+                            Your browser does not support the audio element.
+                        </audio>
+                        <div class="m5-audio-actions">
+                            <button type="button" id="m5AudioPrev" class="m5-audio-nav">Previous</button>
+                            <button type="button" id="m5AudioNext" class="m5-audio-nav">Next</button>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <div class="m5-lightbox" id="m5Lightbox" hidden>
+            <button class="m5-lightbox-backdrop" id="m5LightboxBackdrop" type="button" aria-label="Close expanded image"></button>
+            <div class="m5-lightbox-inner" role="dialog" aria-modal="true" aria-label="Expanded live image">
+                <button class="m5-lightbox-close" id="m5LightboxClose" type="button" aria-label="Close image">Close</button>
+                <img id="m5LightboxImage" src="" alt="" />
+            </div>
+        </div>
+
+        <script id="m5AudioTracks" type="application/json" set:html={JSON.stringify(liveAudioRecordings)}></script>
+
+        <script>
+            const lightbox = document.getElementById('m5Lightbox');
+            const lightboxImage = document.getElementById('m5LightboxImage');
+            const lightboxClose = document.getElementById('m5LightboxClose');
+            const lightboxBackdrop = document.getElementById('m5LightboxBackdrop');
+            const imageButtons = document.querySelectorAll('.m5-image-open');
+            const audioPlayer = document.getElementById('m5AudioPlayer');
+            const audioNowTitle = document.getElementById('m5AudioNowTitle');
+            const audioPrev = document.getElementById('m5AudioPrev');
+            const audioNext = document.getElementById('m5AudioNext');
+            const audioTracksNode = document.getElementById('m5AudioTracks');
+            const audioTracks = JSON.parse(audioTracksNode?.textContent ?? '[]');
+            let activeTrackIndex = 0;
+
+            const openLightbox = (src, alt) => {
+                if (!lightbox || !lightboxImage) return;
+                lightboxImage.src = src;
+                lightboxImage.alt = alt;
+                lightbox.hidden = false;
+                document.body.style.overflow = 'hidden';
+            };
+
+            const closeLightbox = () => {
+                if (!lightbox || !lightboxImage) return;
+                lightbox.hidden = true;
+                lightboxImage.src = '';
+                lightboxImage.alt = '';
+                document.body.style.overflow = '';
+            };
+
+            imageButtons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    const src = button.getAttribute('data-full-src');
+                    const alt = button.getAttribute('data-full-alt') ?? '';
+                    if (src) openLightbox(src, alt);
+                });
+            });
+
+            lightboxClose?.addEventListener('click', closeLightbox);
+            lightboxBackdrop?.addEventListener('click', closeLightbox);
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && lightbox && !lightbox.hidden) {
+                    closeLightbox();
+                }
+            });
+
+            const setActiveTrack = (nextIndex, shouldPlay = true) => {
+                if (!audioPlayer || !audioNowTitle || !audioTracks.length) return;
+                const boundedIndex = ((nextIndex % audioTracks.length) + audioTracks.length) % audioTracks.length;
+                const nextTrack = audioTracks[boundedIndex];
+                const src = nextTrack?.src;
+                const title = nextTrack?.title ?? '';
+                if (!src) return;
+
+                activeTrackIndex = boundedIndex;
+                audioPlayer.src = src;
+                audioNowTitle.textContent = title;
+                if (shouldPlay) {
+                    audioPlayer.play().catch(() => {});
+                }
+            };
+
+            audioPrev?.addEventListener('click', () => setActiveTrack(activeTrackIndex - 1, true));
+            audioNext?.addEventListener('click', () => setActiveTrack(activeTrackIndex + 1, true));
+            audioPlayer?.addEventListener('ended', () => setActiveTrack(activeTrackIndex + 1, true));
+        </script>
+    </body>
+</html>
+
+<style>
+    @import url('https://fonts.cdnfonts.com/css/speed-race');
+
+    .m5-media-body {
+        margin: 0;
+        color: #f5f7fb;
+        font-family: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+        background: #02050f;
+    }
+
+    .m5-media-page {
+        min-height: 100vh;
+        background:
+            radial-gradient(120% 120% at 50% 0%, #121b31 0%, #060b18 58%, #02050f 100%),
+            url('/images/noise.png') repeat;
+        padding-bottom: 2.5rem;
+    }
+
+    .m5-shell {
+        width: min(1200px, 100% - 3.25rem);
+        margin-inline: auto;
+    }
+
+    .m5-media-main {
+        margin-top: 1rem;
+        display: grid;
+        gap: 1rem;
+    }
+
+    .m5-glass-card {
+        background: linear-gradient(180deg, rgb(11 14 30 / 96%) 0%, rgb(9 12 23 / 94%) 100%);
+        border: 1px solid rgb(63 72 101 / 36%);
+        border-radius: 1.1rem;
+        box-shadow: 0 14px 34px rgb(2 4 12 / 30%);
+    }
+
+    .m5-media-hero {
+        padding: 1.05rem 1.2rem;
+    }
+
+    .m5-media-hero h1 {
+        margin: 0;
+        font-size: clamp(2.2rem, 1.8rem + 1.6vw, 3.8rem);
+        font-family: 'Speed Race', 'Impact', 'Arial Black', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+    }
+
+    .m5-media-hero p {
+        margin: 0.25rem 0 0;
+        color: rgb(229 233 244 / 88%);
+        font-size: clamp(1rem, 0.95rem + 0.3vw, 1.2rem);
+        font-family: 'Speed Race', 'Impact', 'Arial Black', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+        letter-spacing: 0.015em;
+    }
+
+    .m5-media-section {
+        padding: 1rem;
+    }
+
+    .m5-section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .m5-section-head h2 {
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 1.18rem;
+        color: rgb(233 237 247 / 95%);
+        font-family: 'Speed Race', 'Impact', 'Arial Black', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+    }
+
+    .m5-section-head a {
+        color: #ff4e56;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.95rem;
+    }
+
+    .m5-section-head a:hover {
+        color: #ff7a80;
+    }
+
+    .m5-video-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.85rem;
+    }
+
+    .m5-video-card {
+        overflow: hidden;
+        border-radius: 0.9rem;
+        border: 1px solid rgb(255 255 255 / 16%);
+        background: rgb(8 12 22 / 70%);
+    }
+
+    .m5-video-frame-wrap {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background: #05080f;
+        border-bottom: 1px solid rgb(255 255 255 / 12%);
+    }
+
+    .m5-video-frame-wrap iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        display: block;
+    }
+
+    .m5-video-copy {
+        padding: 0.7rem 0.75rem 0.8rem;
+        display: grid;
+        gap: 0.28rem;
+    }
+
+    .m5-video-copy h3,
+    .m5-audio-card h3 {
+        margin: 0;
+        font-size: 1.03rem;
+        line-height: 1.3;
+    }
+
+    .m5-kicker {
+        margin: 0;
+        color: rgb(255 88 99 / 94%);
+        font-weight: 700;
+        font-size: 0.84rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .m5-video-copy p,
+    .m5-audio-card p {
+        margin: 0;
+        color: rgb(225 230 243 / 84%);
+        font-size: 0.92rem;
+        line-height: 1.5;
+    }
+
+    .m5-image-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.75rem;
+    }
+
+    .m5-image-card {
+        margin: 0;
+        border-radius: 0.85rem;
+        overflow: hidden;
+        border: 1px solid rgb(255 255 255 / 16%);
+        background: rgb(8 12 22 / 60%);
+    }
+
+    .m5-image-open {
+        appearance: none;
+        width: 100%;
+        border: 0;
+        background: transparent;
+        padding: 0;
+        margin: 0;
+        cursor: zoom-in;
+        line-height: 0;
+    }
+
+    .m5-image-card img {
+        width: 100%;
+        height: 240px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .m5-lightbox {
+        position: fixed;
+        inset: 0;
+        z-index: 1200;
+    }
+
+    .m5-lightbox-backdrop {
+        position: absolute;
+        inset: 0;
+        border: 0;
+        background: rgb(0 0 0 / 82%);
+    }
+
+    .m5-lightbox-inner {
+        position: absolute;
+        inset: 5vh 4vw;
+        display: grid;
+        place-items: center;
+    }
+
+    .m5-lightbox-inner img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        border: 1px solid rgb(255 255 255 / 20%);
+        box-shadow: 0 16px 40px rgb(0 0 0 / 45%);
+        background: #02050f;
+    }
+
+    .m5-lightbox-close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translateY(-120%);
+        border: 1px solid rgb(255 255 255 / 25%);
+        background: rgb(10 15 28 / 92%);
+        color: #fff;
+        border-radius: 0.55rem;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        padding: 0.35rem 0.52rem;
+        cursor: pointer;
+    }
+
+    .m5-audio-deck {
+        border-radius: 0.85rem;
+        border: 1px solid rgb(255 255 255 / 16%);
+        background: rgb(8 12 22 / 66%);
+        padding: 0.8rem;
+        margin-bottom: 0.7rem;
+        display: grid;
+        gap: 0.45rem;
+    }
+
+    .m5-audio-now-label {
+        margin: 0;
+        color: rgb(255 88 99 / 94%);
+        font-weight: 700;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .m5-audio-now-title {
+        margin: 0;
+        font-size: 1rem;
+        line-height: 1.3;
+        color: #f5f7fb;
+    }
+
+    .m5-audio-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .m5-audio-nav {
+        border: 1px solid rgb(255 255 255 / 24%);
+        background: rgb(10 15 28 / 92%);
+        color: #fff;
+        border-radius: 0.55rem;
+        text-transform: uppercase;
+        font-size: 0.74rem;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        padding: 0.36rem 0.56rem;
+        cursor: pointer;
+    }
+
+    .m5-audio-nav:hover {
+        border-color: rgb(255 78 86 / 60%);
+    }
+
+    .m5-audio-player {
+        width: min(680px, 100%);
+        height: 36px;
+    }
+
+    @media (max-width: 980px) {
+        .m5-video-grid,
+        .m5-image-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .m5-image-card img {
+            height: 210px;
+        }
+    }
+
+    @media (max-width: 700px) {
+        .m5-shell {
+            width: min(1200px, 100% - 1rem);
+        }
+
+        .m5-media-main {
+            margin-top: 0.6rem;
+        }
+
+        .m5-media-hero,
+        .m5-media-section {
+            padding: 0.8rem;
+        }
+
+        .m5-section-head {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.3rem;
+            margin-bottom: 0.65rem;
+        }
+
+        .m5-video-grid,
+        .m5-image-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .m5-audio-player {
+            width: 100%;
+        }
+    }
+</style>

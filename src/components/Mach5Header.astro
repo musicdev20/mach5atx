@@ -2,9 +2,10 @@
 const navItems = [
     { label: 'Home', href: '/' },
     { label: 'Bio', href: '/bio' },
+    { label: 'Media', href: '/media' },
     { label: 'Shows', href: '/shows' },
     { label: 'The Songs', href: '/the-songs' },
-    { label: 'Press Kit', href: '/press-kit' }
+    { label: 'Press Kit', href: '/press-kit', newTab: true }
 ];
 
 const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
@@ -26,7 +27,13 @@ const isActive = (href) => {
                 {
                     navItems.map((item) => (
                         <li>
-                            <a href={item.href} class={isActive(item.href) ? 'is-active' : undefined} aria-current={isActive(item.href) ? 'page' : undefined}>
+                            <a
+                                href={item.href}
+                                target={item.newTab ? '_blank' : undefined}
+                                rel={item.newTab ? 'noopener noreferrer' : undefined}
+                                class={isActive(item.href) ? 'is-active' : undefined}
+                                aria-current={isActive(item.href) ? 'page' : undefined}
+                            >
                                 {item.label}
                             </a>
                         </li>
@@ -45,7 +52,13 @@ const isActive = (href) => {
                 {
                     navItems.map((item) => (
                         <li>
-                            <a href={item.href} class={isActive(item.href) ? 'is-active' : undefined} aria-current={isActive(item.href) ? 'page' : undefined}>
+                            <a
+                                href={item.href}
+                                target={item.newTab ? '_blank' : undefined}
+                                rel={item.newTab ? 'noopener noreferrer' : undefined}
+                                class={isActive(item.href) ? 'is-active' : undefined}
+                                aria-current={isActive(item.href) ? 'page' : undefined}
+                            >
                                 {item.label}
                             </a>
                         </li>
@@ -58,6 +71,8 @@ const isActive = (href) => {
 </header>
 
 <style>
+    @import url('https://fonts.cdnfonts.com/css/speed-race');
+
     .m5-top-header {
         position: relative;
         z-index: 4;
@@ -133,6 +148,7 @@ const isActive = (href) => {
         letter-spacing: 0.05em;
         font-size: clamp(1.02rem, 0.93rem + 0.3vw, 1.23rem);
         font-weight: 760;
+        font-family: 'Speed Race', 'Impact', 'Arial Black', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
     }
     .m5-nav-links a:hover {
         color: #ff3f4b;
@@ -148,6 +164,7 @@ const isActive = (href) => {
         font-size: 0.93rem;
         font-weight: 800;
         letter-spacing: 0.04em;
+        font-family: 'Speed Race', 'Impact', 'Arial Black', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
         color: #fff;
         border: 1px solid rgb(225 6 0 / 68%);
         border-radius: 0.62rem;
@@ -222,6 +239,7 @@ const isActive = (href) => {
             letter-spacing: 0.05em;
             font-weight: 740;
             font-size: 1.02rem;
+            font-family: 'Speed Race', 'Impact', 'Arial Black', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
             display: inline-flex;
             padding: 0.35rem 0.2rem;
         }
