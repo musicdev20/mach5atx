@@ -4,6 +4,7 @@ import Mach5Header from '../components/Mach5Header.astro';
 import { defaultUpcomingShows } from '../lib/shows';
 
 const upcomingShows = defaultUpcomingShows;
+const fallbackVenueLogo = '/images/logos/m5logo2.webp';
 
 const showDateFormatter = new Intl.DateTimeFormat('en-US', {
     weekday: 'short',
@@ -15,14 +16,6 @@ const showDateFormatter = new Intl.DateTimeFormat('en-US', {
 });
 
 const formatShowDate = (dateTime) => showDateFormatter.format(new Date(dateTime));
-const venueInitials = (name) =>
-    name
-        .split(/\s+/)
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((part) => part[0]?.toUpperCase() ?? '')
-        .join('');
-
 const liveEnergyImages = [
     { src: '/images/live/lanae1.webp', alt: 'Lead singer performing live on stage' },
     { src: '/images/live/joechuck1.webp', alt: 'Two guitarists performing together on stage' },
@@ -86,7 +79,7 @@ const contactLinks = {
                                 <article id={show.id} class="m5-card m5-show-card">
                                     <header class="m5-show-head">
                                         <div class="m5-venue-logo-wrap" aria-hidden="true">
-                                            {show.venueLogo ? <img src={show.venueLogo} alt="" loading="lazy" decoding="async" /> : <span>{venueInitials(show.venueName)}</span>}
+                                            <img src={show.venueLogo || fallbackVenueLogo} alt="" loading="lazy" decoding="async" />
                                         </div>
                                         <div>
                                             <p class="m5-date">
