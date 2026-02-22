@@ -1,6 +1,8 @@
 ---
 import '../styles/globals.css';
 import { getNotableVenues } from '../lib/venues';
+import { ClientRouter } from 'astro:transitions';
+import Mach5Header from '../components/Mach5Header.astro';
 
 export const prerender = false;
 
@@ -62,15 +64,14 @@ const notableVenues = await getNotableVenues();
         <meta name="description" content="Mach 5 press kit with profile, member bios, and technical information." />
         <title>Mach 5 | Press Kit</title>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;800&display=swap" rel="stylesheet" />
+        <ClientRouter />
     </head>
     <body class="pk-body">
+        <Mach5Header />
         <main class="pk-doc">
             <section class="pk-page">
                 <div class="pk-stripe" aria-hidden="true"></div>
-                <h1>MACH 5</h1>
+                <h1>MACH <span class="pk-fallback">5</span></h1>
                 <p class="pk-subheader">Full-Throttle Rock Experience</p>
                 <img class="pk-hero-image" src="/images/hero/group1.webp" alt="Mach 5 promotional photo" loading="eager" decoding="async" />
                 <footer class="pk-footer">
@@ -95,7 +96,7 @@ const notableVenues = await getNotableVenues();
             <section class="pk-page">
                 <div class="pk-stripe" aria-hidden="true"></div>
                 <h2>Band Profile</h2>
-                <p class="pk-tagline">MACH 5 — Catch us if you can!</p>
+                <p class="pk-tagline">MACH <span class="pk-fallback">5</span> <span class="pk-fallback">-</span> CATCH US IF YOU CAN</p>
                 <div class="pk-copy">
                     {profileCopy.map((paragraph) => <p>{paragraph}</p>)}
                 </div>
@@ -156,7 +157,7 @@ const notableVenues = await getNotableVenues();
                     <section class="pk-panel">
                         <h3>Stage Plot</h3>
                         <div class="pk-stage-wrap">
-                            <p class="pk-stage-label">Audience</p>
+                            <p class="pk-stage-label">Upstage</p>
                             <div class="pk-stage-plot">
                                 <div class="pk-position pk-front-left">Guitar<br />Stage Left</div>
                                 <div class="pk-position pk-front-center">Lead Vocal<br />Center</div>
@@ -164,7 +165,7 @@ const notableVenues = await getNotableVenues();
                                 <div class="pk-position pk-back-left">Drums<br />Stage Left Back</div>
                                 <div class="pk-position pk-back-right">Keyboards<br />Stage Right Back</div>
                             </div>
-                            <p class="pk-stage-label pk-stage-label-back">Upstage</p>
+                            <p class="pk-stage-label pk-stage-label-back">Audience</p>
                         </div>
                     </section>
                     <section class="pk-panel">
@@ -196,7 +197,11 @@ const notableVenues = await getNotableVenues();
 </html>
 
 <style>
-    @import url('https://fonts.cdnfonts.com/css/speed-race');
+    @font-face {
+        font-family: 'Speedrace Local';
+        src: url('/fonts/speedrace.ttf') format('truetype');
+        font-display: swap;
+    }
 
     @page {
         size: letter;
@@ -206,7 +211,7 @@ const notableVenues = await getNotableVenues();
     .pk-body {
         margin: 0;
         color: #fff;
-        font-family: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+        font-family: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
         background: #0b0b10;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
@@ -214,6 +219,7 @@ const notableVenues = await getNotableVenues();
 
     .pk-doc {
         background: #0b0b10;
+        margin-top: 0.4rem;
     }
 
     .pk-page {
@@ -249,6 +255,7 @@ const notableVenues = await getNotableVenues();
         font-weight: 800;
         letter-spacing: 0.02em;
         text-transform: uppercase;
+        font-family: 'Speedrace Local', 'Impact', 'Arial Black', sans-serif;
     }
 
     h1 {
@@ -280,11 +287,7 @@ const notableVenues = await getNotableVenues();
         font-size: 18px;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-    }
-
-    .pk-page:first-child h1,
-    .pk-page:first-child .pk-subheader {
-        font-family: 'Speed Race', 'Impact', 'Arial Black', 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+        font-family: 'Speedrace Local', 'Impact', 'Arial Black', sans-serif;
     }
 
     .pk-hero-image,
@@ -372,6 +375,7 @@ const notableVenues = await getNotableVenues();
         font-size: 14px;
         font-weight: 800;
         letter-spacing: 0.03em;
+        font-family: 'Speedrace Local', 'Impact', 'Arial Black', sans-serif;
     }
 
     .pk-copy {
@@ -413,6 +417,7 @@ const notableVenues = await getNotableVenues();
         margin-top: 0.03in;
         margin-bottom: 0.04in;
         font-weight: 800;
+        font-family: 'Speedrace Local', 'Impact', 'Arial Black', sans-serif;
     }
 
     .pk-tech-grid {
@@ -439,6 +444,7 @@ const notableVenues = await getNotableVenues();
         letter-spacing: 0.08em;
         text-transform: uppercase;
         margin-bottom: 0.06in;
+        font-family: 'Speedrace Local', 'Impact', 'Arial Black', sans-serif;
     }
 
     .pk-stage-label-back {
@@ -504,6 +510,7 @@ const notableVenues = await getNotableVenues();
         text-transform: uppercase;
         font-weight: 800;
         margin-top: 0.08in;
+        font-family: 'Speedrace Local', 'Impact', 'Arial Black', sans-serif;
     }
 
     .pk-label:first-child {
@@ -513,6 +520,11 @@ const notableVenues = await getNotableVenues();
     .pk-booking a {
         color: #fff;
         text-decoration: none;
+    }
+
+    .pk-fallback {
+        font-family: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+        font-weight: 800;
     }
 
     @media (max-width: 900px) {

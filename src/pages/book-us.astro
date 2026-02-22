@@ -1,6 +1,8 @@
 ---
 import '../styles/globals.css';
 import Mach5Header from '../components/Mach5Header.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { ClientRouter } from 'astro:transitions';
 ---
 
 <!doctype html>
@@ -14,6 +16,7 @@ import Mach5Header from '../components/Mach5Header.astro';
         />
         <title>Book Mach 5</title>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <ClientRouter />
     </head>
     <body class="m5-book-body">
         <main class="m5-book-page">
@@ -132,6 +135,7 @@ import Mach5Header from '../components/Mach5Header.astro';
                     </div>
                 </form>
             </section>
+            <SiteFooter />
         </main>
     </body>
 </html>

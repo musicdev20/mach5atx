@@ -1,7 +1,9 @@
 ---
 import '../styles/globals.css';
 import Mach5Header from '../components/Mach5Header.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import { defaultUpcomingShows, getUpcomingShows } from '../lib/shows';
+import { ClientRouter } from 'astro:transitions';
 
 export const prerender = false;
 
@@ -28,14 +30,15 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
         <meta name="description" content="Mach 5 upcoming shows and live calendar." />
         <title>Mach 5 | Shows</title>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <ClientRouter />
     </head>
     <body class="m5-shows-body">
         <div class="m5-shows-page">
             <Mach5Header />
             <main class="m5-shell m5-shows-main">
                 <section class="m5-shows-head m5-glass-card">
-                    <h1>Shows</h1>
-                    <p>Catch us live - updated weekly</p>
+                    <h1>Tour</h1>
+                    <p>CATCH US LIVE<span class="m5-punct">.</span> UPDATED WEEKLY</p>
                 </section>
 
                 <section class="m5-shows-grid">
@@ -78,6 +81,7 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
                     </aside>
                 </section>
             </main>
+            <SiteFooter />
         </div>
 
         <script id="showsData" type="application/json" set:html={JSON.stringify(sortedInitialShows)}></script>
@@ -85,7 +89,11 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
 </html>
 
 <style is:global>
-    @import url('https://fonts.cdnfonts.com/css/speed-race');
+    @font-face {
+        font-family: 'Speedrace Local';
+        src: url('/fonts/speedrace.ttf') format('truetype');
+        font-display: swap;
+    }
 
     .m5-shows-body {
         margin: 0;
@@ -120,7 +128,7 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
     .m5-shows-head h1 {
         margin: 0;
         font-size: clamp(2.2rem, 1.8rem + 1.7vw, 3.8rem);
-        font-family: 'Speed Race', 'Impact', 'Arial Black', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+        font-family: 'Speedrace Local', 'Impact', 'Arial Black', sans-serif;
         letter-spacing: 0.02em;
         text-transform: uppercase;
     }
@@ -128,7 +136,7 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
         margin: 0.25rem 0 0;
         color: rgb(229 233 244 / 88%);
         font-size: clamp(1rem, 0.95rem + 0.3vw, 1.22rem);
-        font-family: 'Speed Race', 'Impact', 'Arial Black', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+        font-family: 'Speedrace Local', 'Impact', 'Arial Black', sans-serif;
         letter-spacing: 0.01em;
     }
     .m5-shows-grid {
