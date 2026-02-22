@@ -1,7 +1,9 @@
 ---
 import '../styles/globals.css';
 import Mach5Header from '../components/Mach5Header.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import { getUpcomingShows } from '../lib/shows';
+import { ClientRouter } from 'astro:transitions';
 
 export const prerender = false;
 
@@ -59,6 +61,7 @@ const contactLinks = {
         <meta name="description" content="Mach 5 - high-energy 70s/80s/90s/00s rock covers in Austin, Texas." />
         <title>Mach 5 | Full-Throttle Rock Covers</title>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <ClientRouter />
     </head>
     <body class="m5-body">
         <div class="m5-page">
@@ -71,23 +74,42 @@ const contactLinks = {
                     tabindex="-1"
                 ></iframe>
             </div>
-            <div class="m5-bg-tint" aria-hidden="true"></div>
             <Mach5Header />
+
+            <section class="m5-section m5-connect-strip m5-connect-strip-top m5-shell" aria-label="Connect with Mach 5">
+                <div class="m5-connect-links">
+                    <a href={contactLinks.facebook} target="_blank" rel="noreferrer" aria-label="Facebook">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M13.5 8.5V6.9c0-.8.5-1.3 1.4-1.3H16V3h-2c-2.3 0-3.8 1.5-3.8 3.9v1.6H8v2.6h2.2V21h3.3v-9.9H16l.4-2.6h-2.9z"></path>
+                        </svg>
+                    </a>
+                    <a href={contactLinks.instagram} target="_blank" rel="noreferrer" aria-label="Instagram">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M7.3 3h9.4A4.3 4.3 0 0 1 21 7.3v9.4a4.3 4.3 0 0 1-4.3 4.3H7.3A4.3 4.3 0 0 1 3 16.7V7.3A4.3 4.3 0 0 1 7.3 3zm0 1.9A2.4 2.4 0 0 0 4.9 7.3v9.4a2.4 2.4 0 0 0 2.4 2.4h9.4a2.4 2.4 0 0 0 2.4-2.4V7.3a2.4 2.4 0 0 0-2.4-2.4H7.3zm9.9 1.4a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4zM12 7.6a4.4 4.4 0 1 1 0 8.8 4.4 4.4 0 0 1 0-8.8zm0 1.9a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path>
+                        </svg>
+                    </a>
+                    <a href={contactLinks.youtube} target="_blank" rel="noreferrer" aria-label="YouTube">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M21 8.2c-.2-1.3-1.2-2.2-2.5-2.4C16.6 5.5 14.3 5.4 12 5.4s-4.6.1-6.5.4A2.9 2.9 0 0 0 3 8.2c-.2 1.3-.3 2.5-.3 3.8s.1 2.5.3 3.8c.2 1.3 1.2 2.2 2.5 2.4 1.9.3 4.2.4 6.5.4s4.6-.1 6.5-.4a2.9 2.9 0 0 0 2.5-2.4c.2-1.3.3-2.5.3-3.8s-.1-2.5-.3-3.8zM10 15.5v-7l6 3.5-6 3.5z"></path>
+                        </svg>
+                    </a>
+                    <a href={`mailto:${contactLinks.email}`} aria-label="Email">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2 8 5 8-5H4zm0 10h16V9l-8 5-8-5v8z"></path>
+                        </svg>
+                    </a>
+                </div>
+            </section>
 
             <header class="m5-hero">
                 <div class="m5-shell">
                     <div class="m5-hero-grid">
                         <div class="m5-hero-copy">
-                            <div class="m5-hero-panel">
-                                <h1>Full-Throttle Rock That Packs the Dance Floor</h1>
-                                <p>High-energy 70s/80s/90s/00s rock covers - Austin, TX - Bookable for clubs and events</p>
-                                <div class="m5-hero-actions">
-                                    <a href="/book-us" class="m5-btn m5-btn-primary">Book Us</a>
-                                    <a href="/shows" class="m5-btn m5-btn-outline">See Shows</a>
-                                </div>
-                            </div>
+                            <img class="m5-hero-title-art" src="/images/home/full-throttle.png" alt="Full-Throttle Rock That Packs the Dance Floor" loading="eager" decoding="async" />
+                            <a class="m5-hero-book-link" href="/book-us" aria-label="Book Us Now">
+                                <img class="m5-hero-book-art" src="/images/home/book-us-now.png" alt="Book Us Now" loading="eager" decoding="async" />
+                            </a>
                         </div>
-                        <div class="m5-hero-media" aria-hidden="true"></div>
                     </div>
                 </div>
             </header>
@@ -155,43 +177,26 @@ const contactLinks = {
                             <ul>
                                 {whyMach5Points.map((item) => <li>{item}</li>)}
                             </ul>
-                            <a href="/press-kit" target="_blank" rel="noopener noreferrer" class="m5-btn m5-btn-primary m5-press-btn">
+                            <a href="/press-kit" target="_blank" rel="noopener noreferrer" class="m5-press-btn">
                                 Get the Press Kit
                             </a>
                         </div>
                     </div>
                 </section>
 
-                <section class="m5-section m5-connect-strip" aria-label="Connect with Mach 5">
-                    <div class="m5-connect-links">
-                        <a href={contactLinks.facebook} target="_blank" rel="noreferrer" aria-label="Facebook">
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M13.5 8.5V6.9c0-.8.5-1.3 1.4-1.3H16V3h-2c-2.3 0-3.8 1.5-3.8 3.9v1.6H8v2.6h2.2V21h3.3v-9.9H16l.4-2.6h-2.9z"></path>
-                            </svg>
-                        </a>
-                        <a href={contactLinks.instagram} target="_blank" rel="noreferrer" aria-label="Instagram">
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M7.3 3h9.4A4.3 4.3 0 0 1 21 7.3v9.4a4.3 4.3 0 0 1-4.3 4.3H7.3A4.3 4.3 0 0 1 3 16.7V7.3A4.3 4.3 0 0 1 7.3 3zm0 1.9A2.4 2.4 0 0 0 4.9 7.3v9.4a2.4 2.4 0 0 0 2.4 2.4h9.4a2.4 2.4 0 0 0 2.4-2.4V7.3a2.4 2.4 0 0 0-2.4-2.4H7.3zm9.9 1.4a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4zM12 7.6a4.4 4.4 0 1 1 0 8.8 4.4 4.4 0 0 1 0-8.8zm0 1.9a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path>
-                            </svg>
-                        </a>
-                        <a href={contactLinks.youtube} target="_blank" rel="noreferrer" aria-label="YouTube">
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M21 8.2c-.2-1.3-1.2-2.2-2.5-2.4C16.6 5.5 14.3 5.4 12 5.4s-4.6.1-6.5.4A2.9 2.9 0 0 0 3 8.2c-.2 1.3-.3 2.5-.3 3.8s.1 2.5.3 3.8c.2 1.3 1.2 2.2 2.5 2.4 1.9.3 4.2.4 6.5.4s4.6-.1 6.5-.4a2.9 2.9 0 0 0 2.5-2.4c.2-1.3.3-2.5.3-3.8s-.1-2.5-.3-3.8zM10 15.5v-7l6 3.5-6 3.5z"></path>
-                            </svg>
-                        </a>
-                        <a href={`mailto:${contactLinks.email}`} aria-label="Email">
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2 8 5 8-5H4zm0 10h16V9l-8 5-8-5v8z"></path>
-                            </svg>
-                        </a>
-                    </div>
-                </section>
             </main>
+            <SiteFooter />
         </div>
     </body>
 </html>
 
 <style>
+    @font-face {
+        font-family: 'Speedrace Local';
+        src: url('/fonts/speedrace.ttf') format('truetype');
+        font-display: swap;
+    }
+
     .m5-body {
         margin: 0;
         color: #f5f7fb;
@@ -226,17 +231,7 @@ const contactLinks = {
         filter: saturate(0.9) contrast(0.96) brightness(0.86);
     }
 
-    .m5-bg-tint {
-        position: fixed;
-        inset: 0;
-        z-index: 1;
-        pointer-events: none;
-        background:
-            radial-gradient(120% 120% at 50% 0%, rgb(13 18 34 / 24%) 0%, rgb(2 5 15 / 40%) 58%, rgb(1 3 10 / 50%) 100%),
-            linear-gradient(180deg, rgb(2 5 15 / 12%) 0%, rgb(2 5 15 / 24%) 100%);
-    }
-
-    .m5-page > *:not(.m5-bg-video):not(.m5-bg-tint) {
+    .m5-page > *:not(.m5-bg-video) {
         position: relative;
         z-index: 2;
     }
@@ -246,9 +241,6 @@ const contactLinks = {
             display: none;
         }
 
-        .m5-bg-tint {
-            background: radial-gradient(120% 120% at 50% 0%, #0d1222 0%, #02050f 58%, #01030a 100%);
-        }
     }
 
     .m5-shell {
@@ -260,125 +252,52 @@ const contactLinks = {
         position: relative;
         isolation: isolate;
         padding-bottom: clamp(2.1rem, 4vw, 3.1rem);
-        background: radial-gradient(110% 120% at 24% 0%, rgb(26 36 63 / 40%) 0%, rgb(7 13 26 / 44%) 48%, rgb(3 7 18 / 48%) 100%);
+        background: transparent;
     }
 
     .m5-hero-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        gap: clamp(1rem, 2.6vw, 2.2rem);
-        align-items: stretch;
+        display: flex;
+        justify-content: center;
         padding-top: clamp(1.8rem, 4vw, 2.8rem);
-    }
-
-    .m5-hero-media {
-        position: relative;
-        min-height: clamp(320px, 36vw, 520px);
-        border-radius: 1.15rem;
-        border: 1px solid rgb(255 255 255 / 16%);
-        overflow: hidden;
-        background: url('/images/hero/hero2.webp') 58% 20% / cover no-repeat;
-        box-shadow: 0 18px 38px rgb(0 0 0 / 35%);
-    }
-
-    .m5-hero-media::before,
-    .m5-hero-media::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-    }
-
-    .m5-hero-media::before {
-        background: linear-gradient(110deg, rgb(3 6 14 / 65%) 2%, transparent 46%, rgb(3 6 14 / 62%) 100%);
-    }
-
-    .m5-hero-media::after {
-        background:
-            linear-gradient(170deg, rgb(255 255 255 / 0%) 0%, rgb(255 255 255 / 15%) 42%, rgb(255 255 255 / 0%) 78%),
-            linear-gradient(185deg, rgb(0 0 0 / 0%) 0%, rgb(0 0 0 / 20%) 72%, rgb(0 0 0 / 28%) 100%);
-        mix-blend-mode: soft-light;
     }
 
     .m5-hero-copy {
         position: relative;
         display: flex;
-    }
-
-    .m5-hero-panel {
-        width: 100%;
-        display: flex;
         flex-direction: column;
         justify-content: center;
-        padding: clamp(1.3rem, 1.8vw, 2.1rem) clamp(1.2rem, 1.8vw, 2.2rem) clamp(1.5rem, 1.9vw, 2.3rem);
-        border: 1px solid rgb(255 255 255 / 15%);
-        border-radius: 1.1rem;
-        background: linear-gradient(165deg, rgb(6 10 20 / 98%) 0%, rgb(6 10 20 / 95%) 65%, rgb(8 13 25 / 93%) 100%);
-        box-shadow: 0 16px 34px rgb(0 0 0 / 30%);
-    }
-
-    .m5-hero-copy h1 {
-        margin: 0;
-        font-size: clamp(2.35rem, 1.95rem + 2vw, 4.6rem);
-        line-height: 1.06;
-        text-wrap: balance;
-        letter-spacing: 0.01em;
-    }
-
-    .m5-hero-copy p {
-        margin: 1.6rem 0 0;
-        font-size: clamp(1.3rem, 1.05rem + 0.62vw, 1.75rem);
-        line-height: 1.35;
-        color: rgb(240 242 248 / 92%);
-        max-width: 28ch;
-    }
-
-    .m5-hero-actions {
-        margin-top: 2.2rem;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
-
-    .m5-btn {
-        display: inline-flex;
         align-items: center;
+        width: min(980px, 100%);
+        align-items: center;
+        padding: clamp(0.8rem, 1.2vw, 1.25rem);
+    }
+
+    .m5-hero-title-art {
+        width: min(100%, 780px);
+        height: auto;
+        display: block;
+        filter: drop-shadow(0 10px 22px rgb(0 0 0 / 68%)) drop-shadow(0 0 24px rgb(255 255 255 / 16%));
+    }
+
+    .m5-hero-book-link {
+        margin-top: clamp(1.1rem, 2vw, 1.8rem);
+        display: inline-flex;
+        width: min(100%, 390px);
         justify-content: center;
-        border-radius: 0.95rem;
-        padding: 0.88rem 1.8rem;
         text-decoration: none;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        font-size: 1.1rem;
-        font-weight: 800;
-        transition: transform 180ms ease, background-color 180ms ease, color 180ms ease, border-color 180ms ease;
     }
 
-    .m5-btn:hover {
+    .m5-hero-book-art {
+        width: 100%;
+        height: auto;
+        display: block;
+        filter: drop-shadow(0 12px 26px rgb(0 0 0 / 72%)) drop-shadow(0 0 24px rgb(225 6 0 / 30%));
+        transition: transform 180ms ease, filter 180ms ease;
+    }
+
+    .m5-hero-book-link:hover .m5-hero-book-art {
         transform: translateY(-1px);
-    }
-
-    .m5-btn-primary {
-        background: #f61417;
-        color: #fff;
-        border: 2px solid #f61417;
-    }
-
-    .m5-btn-primary:hover {
-        background: #ff3538;
-        border-color: #ff3538;
-    }
-
-    .m5-btn-outline {
-        color: #fff;
-        border: 2px solid rgb(255 255 255 / 82%);
-        background: rgb(9 11 18 / 28%);
-        backdrop-filter: blur(2px);
-    }
-
-    .m5-btn-outline:hover {
-        border-color: #ff4e56;
-        color: #ff4e56;
+        filter: brightness(1.07);
     }
 
     .m5-content {
@@ -396,7 +315,9 @@ const contactLinks = {
         margin: 0 0 1.35rem;
         font-size: clamp(2.2rem, 1.7rem + 1.6vw, 4rem);
         line-height: 1.1;
-        letter-spacing: 0.01em;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        font-family: 'Speedrace Local', 'Impact', 'Arial Black', sans-serif;
     }
 
     .m5-show-grid {
@@ -607,12 +528,38 @@ const contactLinks = {
     }
 
     .m5-press-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.66rem 1.35rem;
+        border-radius: 999px;
+        border: 2px solid #ff1118;
+        background: rgb(5 8 16 / 92%);
+        color: #fff;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-family: 'Speedrace Local', 'Impact', 'Arial Black', sans-serif;
+        font-size: 1.02rem;
+        letter-spacing: 0.04em;
+        line-height: 1;
         white-space: nowrap;
         align-self: start;
+        box-shadow: 0 0 0 1px rgb(255 17 24 / 35%), 0 8px 18px rgb(0 0 0 / 30%);
+        transition: transform 160ms ease, filter 160ms ease, border-color 160ms ease;
+    }
+
+    .m5-press-btn:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.08);
+        border-color: #ff3036;
     }
 
     .m5-connect-strip {
         margin-top: 2.2rem;
+    }
+
+    .m5-connect-strip-top {
+        margin-top: 0.6rem;
     }
 
     .m5-connect-links {
@@ -656,8 +603,6 @@ const contactLinks = {
         }
 
         .m5-hero-grid {
-            grid-template-columns: 1fr;
-            gap: 1rem;
             padding-top: 3.1rem;
         }
 
@@ -665,40 +610,13 @@ const contactLinks = {
             max-width: 100%;
         }
 
-        .m5-hero-panel {
-            max-width: 100%;
-            padding: 0.95rem 0.9rem 1.1rem;
-            border-radius: 0.95rem;
-            background: linear-gradient(145deg, rgb(6 10 20 / 98%) 0%, rgb(7 12 22 / 95%) 100%);
+        .m5-hero-title-art {
+            width: 100%;
         }
 
-        .m5-hero-media {
-            min-height: 340px;
-            border-radius: 0.95rem;
-            background-position: 56% 16%;
-        }
-
-        .m5-hero-copy h1 {
-            font-size: clamp(2.65rem, 10.1vw, 5.1rem);
-            max-width: 12ch;
-        }
-
-        .m5-hero-copy p {
-            margin-top: 0.95rem;
-            font-size: clamp(1.85rem, 5.5vw, 2.7rem);
-            max-width: 18ch;
-        }
-
-        .m5-hero-actions {
-            margin-top: 1.7rem;
-            gap: 0.8rem;
-        }
-
-        .m5-btn {
-            flex: 1 1 170px;
-            padding: 0.85rem 1.2rem;
-            font-size: 1.8rem;
-            border-radius: 0.9rem;
+        .m5-hero-book-link {
+            margin-top: 0.9rem;
+            width: min(100%, 320px);
         }
 
         .m5-content {
@@ -794,6 +712,7 @@ const contactLinks = {
 
         .m5-press-btn {
             align-self: stretch;
+            padding: 0.7rem 1rem;
         }
 
         .m5-connect-links {

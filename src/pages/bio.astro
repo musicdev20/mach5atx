@@ -1,6 +1,8 @@
 ---
 import '../styles/globals.css';
 import Mach5Header from '../components/Mach5Header.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { ClientRouter } from 'astro:transitions';
 
 const bandDescriptionTitle = 'Mach 5: The Ultimate High-Octane Rock Experience';
 const bandDescription = [
@@ -50,6 +52,7 @@ const members = [
         <meta name="description" content="Meet Mach 5: the full-throttle five-piece high-energy Austin rock cover band." />
         <title>Mach 5 | Bio</title>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <ClientRouter />
     </head>
     <body class="m5-bio-body">
         <div class="m5-bio-page">
@@ -93,6 +96,7 @@ const members = [
                     </div>
                 </section>
             </div>
+            <SiteFooter />
         </div>
     </body>
 </html>

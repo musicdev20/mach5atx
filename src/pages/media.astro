@@ -1,6 +1,8 @@
 ---
 import '../styles/globals.css';
 import Mach5Header from '../components/Mach5Header.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { ClientRouter } from 'astro:transitions';
 
 const liveVideos = [
     {
@@ -119,8 +121,9 @@ const liveAudioRecordings = [
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="Mach 5 media: live videos, photo gallery, and live audio recordings." />
-        <title>Mach 5 | Media</title>
+        <title>Mach 5 | Videos</title>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <ClientRouter />
     </head>
     <body class="m5-media-body">
         <div class="m5-media-page">
@@ -128,8 +131,8 @@ const liveAudioRecordings = [
 
             <main class="m5-shell m5-media-main">
                 <section class="m5-media-hero m5-glass-card">
-                    <h1>Media</h1>
-                    <p>Live video, photo moments, and live audio recordings from MACH 5 shows.</p>
+                    <h1>Videos</h1>
+                    <p>LIVE VIDEO AND AUDIO RECORDINGS</p>
                 </section>
 
                 <section class="m5-media-section m5-glass-card" aria-labelledby="live-video-heading">
@@ -196,6 +199,7 @@ const liveAudioRecordings = [
                     </div>
                 </section>
             </main>
+            <SiteFooter />
         </div>
 
         <div class="m5-lightbox" id="m5Lightbox" hidden>
@@ -279,7 +283,11 @@ const liveAudioRecordings = [
 </html>
 
 <style>
-    @import url('https://fonts.cdnfonts.com/css/speed-race');
+    @font-face {
+        font-family: 'Speedrace Local';
+        src: url('/fonts/speedrace.ttf') format('truetype');
+        font-display: swap;
+    }
 
     .m5-media-body {
         margin: 0;
@@ -321,7 +329,7 @@ const liveAudioRecordings = [
     .m5-media-hero h1 {
         margin: 0;
         font-size: clamp(2.2rem, 1.8rem + 1.6vw, 3.8rem);
-        font-family: 'Speed Race', 'Impact', 'Arial Black', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+        font-family: 'Speedrace Local', 'Impact', 'Arial Black', sans-serif;
         letter-spacing: 0.03em;
         text-transform: uppercase;
     }
@@ -330,7 +338,7 @@ const liveAudioRecordings = [
         margin: 0.25rem 0 0;
         color: rgb(229 233 244 / 88%);
         font-size: clamp(1rem, 0.95rem + 0.3vw, 1.2rem);
-        font-family: 'Speed Race', 'Impact', 'Arial Black', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+        font-family: 'Speedrace Local', 'Impact', 'Arial Black', sans-serif;
         letter-spacing: 0.015em;
     }
 

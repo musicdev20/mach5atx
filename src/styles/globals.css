@@ -37,6 +37,11 @@
 }
 
 @layer components {
+    .m5-punct {
+        font-family: 'Inter Variable', ui-sans-serif, system-ui, sans-serif !important;
+        font-weight: 700;
+    }
+
     .markdown {
         > * {
             @apply my-6;
