@@ -3,7 +3,8 @@ import '../styles/globals.css';
 import Mach5Header from '../components/Mach5Header.astro';
 import { defaultCoveredArtists } from '../lib/artists';
 
-const artists = defaultCoveredArtists;
+const sortArtistsByNameAsc = (rows) => [...rows].sort((a, b) => a.name.localeCompare(b.name));
+const artists = sortArtistsByNameAsc(defaultCoveredArtists);
 ---
 
 <!doctype html>
@@ -30,7 +31,18 @@ const artists = defaultCoveredArtists;
                 </section>
 
                 <section class="m5-artists-section">
-                    <p class="m5-label">ARTISTS WE COVER</p>
+                    <div class="m5-artists-toolbar">
+                        <p class="m5-label">ARTISTS WE COVER</p>
+                        <label class="m5-sort-control">
+                            Sort
+                            <select id="artistsSort" aria-label="Sort artists">
+                                <option value="name-asc" selected>Artist Name (A-Z)</option>
+                                <option value="name-desc">Artist Name (Z-A)</option>
+                                <option value="songs-desc">Most Songs</option>
+                                <option value="songs-asc">Fewest Songs</option>
+                            </select>
+                        </label>
+                    </div>
                     <div id="artistsGrid" class="m5-artists-grid">
                         {
                             artists.map((artist, index) => (
@@ -145,6 +157,32 @@ const artists = defaultCoveredArtists;
     .m5-artists-section {
         margin-top: 1.15rem;
     }
+    .m5-artists-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 0.9rem;
+        flex-wrap: wrap;
+    }
+    .m5-sort-control {
+        display: grid;
+        gap: 0.24rem;
+        color: rgb(230 235 246 / 86%);
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+    .m5-sort-control select {
+        border: 1px solid rgb(255 255 255 / 24%);
+        border-radius: 0.55rem;
+        background: rgb(10 14 26 / 84%);
+        color: #f5f7fb;
+        padding: 0.46rem 0.58rem;
+        font: inherit;
+        text-transform: none;
+        letter-spacing: 0.01em;
+    }
     .m5-artists-grid {
         margin-top: 0.55rem;
         display: grid;
@@ -249,7 +287,8 @@ const artists = defaultCoveredArtists;
     (() => {
         const grid = document.getElementById('artistsGrid');
         const dataNode = document.getElementById('artistsData');
-        if (!grid || !dataNode) return;
+        const sortSelect = document.getElementById('artistsSort');
+        if (!grid || !dataNode || !sortSelect) return;
 
         let artists = [];
         try {
@@ -298,15 +337,38 @@ const artists = defaultCoveredArtists;
                 .join('');
         };
 
-        if (Array.isArray(artists) && artists.length) {
-            renderArtists(artists);
+        const collator = new Intl.Collator('en', { sensitivity: 'base' });
+        const sortArtists = (rows, mode) => {
+            const list = Array.isArray(rows) ? [...rows] : [];
+            if (mode === 'name-desc') {
+                return list.sort((a, b) => collator.compare(String(b?.name ?? ''), String(a?.name ?? '')));
+            }
+            if (mode === 'songs-desc') {
+                return list.sort((a, b) => (Array.isArray(b?.songs) ? b.songs.length : 0) - (Array.isArray(a?.songs) ? a.songs.length : 0));
+            }
+            if (mode === 'songs-asc') {
+                return list.sort((a, b) => (Array.isArray(a?.songs) ? a.songs.length : 0) - (Array.isArray(b?.songs) ? b.songs.length : 0));
+            }
+            return list.sort((a, b) => collator.compare(String(a?.name ?? ''), String(b?.name ?? '')));
+        };
+
+        let currentRows = Array.isArray(artists) ? artists : [];
+        const applySortAndRender = () => {
+            renderArtists(sortArtists(currentRows, sortSelect.value));
+        };
+
+        sortSelect.addEventListener('change', applySortAndRender);
+
+        if (currentRows.length) {
+            applySortAndRender();
         }
 
         fetch('/api/artists')
             .then((response) => (response.ok ? response.json() : null))
             .then((payload) => {
                 if (!payload || !Array.isArray(payload.artists) || !payload.artists.length) return;
-                renderArtists(payload.artists);
+                currentRows = payload.artists;
+                applySortAndRender();
             })
             .catch(() => {
                 // Keep fallback list.
