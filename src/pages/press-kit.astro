@@ -516,9 +516,125 @@ const notableVenues = await getNotableVenues();
     }
 
     @media (max-width: 900px) {
+        .pk-doc {
+            display: grid;
+            gap: 0.85rem;
+            padding: 0.65rem;
+        }
+
         .pk-page {
             width: 100%;
-            min-height: 11in;
+            height: auto;
+            min-height: 0;
+            padding: 1.25rem 0.85rem 0.95rem;
+            overflow: visible;
+            border: 1px solid rgb(255 255 255 / 14%);
+            border-radius: 0.75rem;
+        }
+
+        .pk-stripe {
+            top: 0.6rem;
+            left: 0.85rem;
+            right: 0.85rem;
+            height: 0.32rem;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 9vw, 2.8rem);
+            line-height: 1.05;
+        }
+
+        h2 {
+            font-size: clamp(1.5rem, 7vw, 2rem);
+        }
+
+        .pk-subheader {
+            font-size: clamp(0.95rem, 3.7vw, 1.15rem);
+            line-height: 1.35;
+        }
+
+        .pk-feature-image {
+            height: auto;
+            max-height: none;
+            object-fit: contain;
+        }
+
+        .pk-copy {
+            max-width: 100%;
+        }
+
+        .pk-members-grid,
+        .pk-tech-grid {
+            grid-template-columns: 1fr;
+            gap: 0.65rem;
+        }
+
+        .pk-member-card {
+            grid-template-columns: 92px 1fr;
+        }
+
+        .pk-member-card img {
+            width: 92px;
+            height: 92px;
+        }
+
+        .pk-stage-plot {
+            height: auto;
+            min-height: 0;
+            display: grid;
+            gap: 0.45rem;
+            padding: 0.55rem;
+        }
+
+        .pk-position {
+            position: static;
+            min-width: 0;
+            width: 100%;
+            box-sizing: border-box;
+            transform: none;
+        }
+
+        .pk-footer {
+            position: static;
+            margin-top: 0.85rem;
+            display: grid;
+            gap: 0.45rem;
+            justify-items: start;
+        }
+
+        .pk-contact {
+            gap: 0.3rem 0.65rem;
+        }
+    }
+
+    @media (max-width: 560px) {
+        .pk-doc {
+            padding: 0.5rem;
+        }
+
+        .pk-page {
+            padding: 1.15rem 0.75rem 0.85rem;
+        }
+
+        .pk-stripe {
+            left: 0.75rem;
+            right: 0.75rem;
+        }
+
+        .pk-member-card {
+            grid-template-columns: 1fr;
+        }
+
+        .pk-member-card img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1 / 1;
+            max-width: 180px;
+        }
+
+        .pk-icons a {
+            width: 20px;
+            height: 20px;
         }
     }
 </style>
