@@ -3,6 +3,7 @@ import { getStore } from '@netlify/blobs';
 export type UpcomingShow = {
     id: string;
     eventName: string;
+    venueId?: string;
     venueName: string;
     venueAddress: string;
     startDateTime: string;
@@ -17,6 +18,7 @@ export const defaultUpcomingShows: UpcomingShow[] = [
     {
         id: 'shooters-round-rock-2026-03-21',
         eventName: 'Mach 5 Live at Shooters',
+        venueId: 'shooters-round-rock',
         venueName: 'Shooters',
         venueAddress: '1208 N I-35 Frontage Rd, Round Rock, TX',
         startDateTime: '2026-03-21T20:00:00-05:00',
@@ -26,6 +28,7 @@ export const defaultUpcomingShows: UpcomingShow[] = [
     {
         id: 'round-rock-tavern-2026-04-12',
         eventName: 'Saturday Night Rock Set',
+        venueId: 'round-rock-tavern',
         venueName: 'Round Rock Tavern',
         venueAddress: '113 W Main St, Round Rock, TX',
         startDateTime: '2026-04-12T21:00:00-05:00',
@@ -35,6 +38,7 @@ export const defaultUpcomingShows: UpcomingShow[] = [
     {
         id: 'private-event-austin-2026-05-09',
         eventName: 'Private Event',
+        venueId: 'austin-private-venue',
         venueName: 'Private Venue',
         venueAddress: 'Austin, TX',
         startDateTime: '2026-05-09T19:30:00-05:00',
@@ -60,6 +64,7 @@ const normalizeShows = (raw: unknown): UpcomingShow[] => {
     if (!Array.isArray(raw)) return defaultUpcomingShows;
     const cleaned = raw.filter(isValidShow).map((show) => ({
         ...show,
+        venueId: typeof show.venueId === 'string' && show.venueId.trim().length > 0 ? show.venueId.trim() : undefined,
         venueLogo: typeof show.venueLogo === 'string' ? show.venueLogo : '/images/logos/m5logo2.webp'
     }));
     return cleaned.length > 0 ? cleaned : defaultUpcomingShows;

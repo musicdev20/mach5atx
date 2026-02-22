@@ -3,23 +3,42 @@ import { getStore } from '@netlify/blobs';
 export type NotableVenue = {
     id: string;
     name: string;
-    city: string;
+    address: string;
+    directionsUrl: string;
+    logoUrl?: string;
 };
 
 const STORE_NAME = 'mach5';
 const STORE_KEY = 'notable-venues';
 
 export const defaultNotableVenues: NotableVenue[] = [
-    { id: 'shooters-round-rock', name: 'Shooters', city: 'Round Rock, TX' },
-    { id: 'round-rock-tavern', name: 'Round Rock Tavern', city: 'Round Rock, TX' },
-    { id: 'austin-private-events', name: 'Austin Private Events', city: 'Austin, TX' },
-    { id: 'central-texas-festival-circuit', name: 'Central Texas Festival Circuit', city: 'Central Texas' }
+    {
+        id: 'shooters-round-rock',
+        name: 'Shooters',
+        address: '1208 N I-35 Frontage Rd, Round Rock, TX',
+        directionsUrl: 'https://maps.google.com/?q=Shooters+Round+Rock+TX',
+        logoUrl: '/images/logos/m5logo2.webp'
+    },
+    {
+        id: 'round-rock-tavern',
+        name: 'Round Rock Tavern',
+        address: '113 W Main St, Round Rock, TX',
+        directionsUrl: 'https://maps.google.com/?q=Round+Rock+Tavern+Round+Rock+TX',
+        logoUrl: '/images/logos/m5logo2.webp'
+    },
+    {
+        id: 'austin-private-venue',
+        name: 'Private Venue',
+        address: 'Austin, TX',
+        directionsUrl: 'https://maps.google.com/?q=Austin+TX',
+        logoUrl: '/images/logos/m5logo2.webp'
+    }
 ];
 
 const isVenue = (value: unknown): value is NotableVenue => {
     if (!value || typeof value !== 'object') return false;
     const venue = value as Record<string, unknown>;
-    return typeof venue.id === 'string' && typeof venue.name === 'string' && typeof venue.city === 'string';
+    return typeof venue.id === 'string' && typeof venue.name === 'string' && (typeof venue.address === 'string' || typeof venue.city === 'string');
 };
 
 const normalizeVenues = (raw: unknown): NotableVenue[] => {
@@ -29,9 +48,16 @@ const normalizeVenues = (raw: unknown): NotableVenue[] => {
         .map((venue) => ({
             id: venue.id.trim(),
             name: venue.name.trim(),
-            city: venue.city.trim()
+            address: typeof venue.address === 'string' ? venue.address.trim() : String((venue as unknown as { city?: string }).city ?? '').trim(),
+            directionsUrl:
+                typeof venue.directionsUrl === 'string' && venue.directionsUrl.trim().length > 0
+                    ? venue.directionsUrl.trim()
+                    : `https://maps.google.com/?q=${encodeURIComponent(
+                          (typeof venue.address === 'string' ? venue.address : String((venue as unknown as { city?: string }).city ?? '')).trim()
+                      )}`,
+            logoUrl: typeof venue.logoUrl === 'string' && venue.logoUrl.trim().length > 0 ? venue.logoUrl.trim() : '/images/logos/m5logo2.webp'
         }))
-        .filter((venue) => venue.id.length > 0 && venue.name.length > 0 && venue.city.length > 0);
+        .filter((venue) => venue.id.length > 0 && venue.name.length > 0 && venue.address.length > 0);
     return cleaned.length > 0 ? cleaned : defaultNotableVenues;
 };
 
