@@ -102,7 +102,7 @@ const notableVenues = await getNotableVenues();
                 <section class="pk-venues">
                     <h3>Notable Venues</h3>
                     <ul>
-                        {notableVenues.map((venue) => <li>{venue.name} - {venue.city}</li>)}
+                        {notableVenues.map((venue) => <li>{venue.name} - {venue.address}</li>)}
                     </ul>
                 </section>
                 <img class="pk-feature-image" src="/images/hero/hero3.webp" alt="Mach 5 performing live" loading="lazy" decoding="async" />
