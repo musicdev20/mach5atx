@@ -1,9 +1,12 @@
 ---
 import '../styles/globals.css';
 import Mach5Header from '../components/Mach5Header.astro';
-import { defaultUpcomingShows } from '../lib/shows';
+import { defaultUpcomingShows, getUpcomingShows } from '../lib/shows';
 
-const initialShow = defaultUpcomingShows[0];
+export const prerender = false;
+
+const initialShows = await getUpcomingShows();
+const initialShow = initialShows[0] ?? defaultUpcomingShows[0];
 const fallbackVenueLogo = '/images/logos/m5logo2.webp';
 ---
 
@@ -60,7 +63,7 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
             </main>
         </div>
 
-        <script id="showsData" type="application/json" set:html={JSON.stringify(defaultUpcomingShows)}></script>
+        <script id="showsData" type="application/json" set:html={JSON.stringify(initialShows)}></script>
     </body>
 </html>
 
