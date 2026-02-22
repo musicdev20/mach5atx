@@ -1,0 +1,522 @@
+---
+import '../styles/globals.css';
+import { getNotableVenues } from '../lib/venues';
+
+const socialLinks = {
+    instagram: 'https://instagram.com/mach5atx',
+    facebook: 'https://facebook.com/mach5atx',
+    youtube: 'https://youtube.com/@mach5atx',
+    email: 'mach5atx@gmail.com',
+    website: 'mach5atx.com'
+};
+
+const profileCopy = [
+    'Mach 5 is an Austin, Texas rock powerhouse delivering high-energy performances built for packed dance floors and nonstop momentum.',
+    "The band blends iconic anthems from the '70s, '80s, '90s, and 2000s into tightly crafted sets that keep audiences engaged from the first downbeat to the final encore.",
+    'Known for bold stage presence, polished musicianship, and crowd-first pacing, Mach 5 is a trusted choice for clubs, festivals, private events, and corporate stages that need a premium live show with real impact.'
+];
+
+const members = [
+    {
+        name: 'Lanae Donovan',
+        role: 'Lead Vocals',
+        image: '/images/bio/lanaebio.webp',
+        bio: 'Powerhouse vocalist with dynamic stage presence and wide range that anchors the band sound.'
+    },
+    {
+        name: 'Joe "G" Giordino',
+        role: 'Bass, Vocals',
+        image: '/images/bio/joebio.webp',
+        bio: 'Veteran performer delivering thunderous low-end and seasoned harmonies with national touring experience.'
+    },
+    {
+        name: 'Chuck Imperato',
+        role: 'Guitar, Vocals',
+        image: '/images/bio/chuckbio.webp',
+        bio: 'High-energy guitarist bringing signature tone, precision, and audience connection to every set.'
+    },
+    {
+        name: 'Mark "Byrdawg" Dillon',
+        role: 'Keys, Vocals',
+        image: '/images/bio/bdbio.webp',
+        bio: 'Multi-instrumentalist and vocalist adding harmonic depth, textures, and big-song dynamics.'
+    },
+    {
+        name: 'Randy "Bam Bam" Erwin',
+        role: 'Drums',
+        image: '/images/bio/randybio.webp',
+        bio: 'The rhythmic engine of Mach 5, known for explosive power and locked-in groove.'
+    }
+];
+
+const notableVenues = await getNotableVenues();
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Mach 5 press kit with profile, member bios, and technical information." />
+        <title>Mach 5 | Press Kit</title>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;800&display=swap" rel="stylesheet" />
+    </head>
+    <body class="pk-body">
+        <main class="pk-doc">
+            <section class="pk-page">
+                <div class="pk-stripe" aria-hidden="true"></div>
+                <h1>MACH 5</h1>
+                <p class="pk-subheader">Full-Throttle Rock Experience</p>
+                <img class="pk-hero-image" src="/images/hero/group1.webp" alt="Mach 5 promotional photo" loading="eager" decoding="async" />
+                <footer class="pk-footer">
+                    <div class="pk-contact">
+                        <span>{socialLinks.website}</span>
+                        <a href={`mailto:${socialLinks.email}`}>{socialLinks.email}</a>
+                    </div>
+                    <div class="pk-icons">
+                        <a href={socialLinks.instagram} target="_blank" rel="noreferrer" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.3 3h9.4A4.3 4.3 0 0 1 21 7.3v9.4a4.3 4.3 0 0 1-4.3 4.3H7.3A4.3 4.3 0 0 1 3 16.7V7.3A4.3 4.3 0 0 1 7.3 3zm0 1.9A2.4 2.4 0 0 0 4.9 7.3v9.4a2.4 2.4 0 0 0 2.4 2.4h9.4a2.4 2.4 0 0 0 2.4-2.4V7.3a2.4 2.4 0 0 0-2.4-2.4H7.3zm9.9 1.4a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4zM12 7.6a4.4 4.4 0 1 1 0 8.8 4.4 4.4 0 0 1 0-8.8zm0 1.9a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path></svg>
+                        </a>
+                        <a href={socialLinks.facebook} target="_blank" rel="noreferrer" aria-label="Facebook">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 8.5V6.9c0-.8.5-1.3 1.4-1.3H16V3h-2c-2.3 0-3.8 1.5-3.8 3.9v1.6H8v2.6h2.2V21h3.3v-9.9H16l.4-2.6h-2.9z"></path></svg>
+                        </a>
+                        <a href={socialLinks.youtube} target="_blank" rel="noreferrer" aria-label="YouTube">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.2c-.2-1.3-1.2-2.2-2.5-2.4C16.6 5.5 14.3 5.4 12 5.4s-4.6.1-6.5.4A2.9 2.9 0 0 0 3 8.2c-.2 1.3-.3 2.5-.3 3.8s.1 2.5.3 3.8c.2 1.3 1.2 2.2 2.5 2.4 1.9.3 4.2.4 6.5.4s4.6-.1 6.5-.4a2.9 2.9 0 0 0 2.5-2.4c.2-1.3.3-2.5.3-3.8s-.1-2.5-.3-3.8zM10 15.5v-7l6 3.5-6 3.5z"></path></svg>
+                        </a>
+                    </div>
+                </footer>
+            </section>
+
+            <section class="pk-page">
+                <div class="pk-stripe" aria-hidden="true"></div>
+                <h2>Band Profile</h2>
+                <p class="pk-tagline">MACH 5 — Catch us if you can!</p>
+                <div class="pk-copy">
+                    {profileCopy.map((paragraph) => <p>{paragraph}</p>)}
+                </div>
+                <section class="pk-venues">
+                    <h3>Notable Venues</h3>
+                    <ul>
+                        {notableVenues.map((venue) => <li>{venue.name} - {venue.city}</li>)}
+                    </ul>
+                </section>
+                <img class="pk-feature-image" src="/images/hero/hero3.webp" alt="Mach 5 performing live" loading="lazy" decoding="async" />
+                <footer class="pk-footer">
+                    <div class="pk-contact">
+                        <span>{socialLinks.website}</span>
+                        <a href={`mailto:${socialLinks.email}`}>{socialLinks.email}</a>
+                    </div>
+                    <div class="pk-icons">
+                        <a href={socialLinks.instagram} target="_blank" rel="noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.3 3h9.4A4.3 4.3 0 0 1 21 7.3v9.4a4.3 4.3 0 0 1-4.3 4.3H7.3A4.3 4.3 0 0 1 3 16.7V7.3A4.3 4.3 0 0 1 7.3 3zm0 1.9A2.4 2.4 0 0 0 4.9 7.3v9.4a2.4 2.4 0 0 0 2.4 2.4h9.4a2.4 2.4 0 0 0 2.4-2.4V7.3a2.4 2.4 0 0 0-2.4-2.4H7.3zm9.9 1.4a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4zM12 7.6a4.4 4.4 0 1 1 0 8.8 4.4 4.4 0 0 1 0-8.8zm0 1.9a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path></svg></a>
+                        <a href={socialLinks.facebook} target="_blank" rel="noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 8.5V6.9c0-.8.5-1.3 1.4-1.3H16V3h-2c-2.3 0-3.8 1.5-3.8 3.9v1.6H8v2.6h2.2V21h3.3v-9.9H16l.4-2.6h-2.9z"></path></svg></a>
+                        <a href={socialLinks.youtube} target="_blank" rel="noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.2c-.2-1.3-1.2-2.2-2.5-2.4C16.6 5.5 14.3 5.4 12 5.4s-4.6.1-6.5.4A2.9 2.9 0 0 0 3 8.2c-.2 1.3-.3 2.5-.3 3.8s.1 2.5.3 3.8c.2 1.3 1.2 2.2 2.5 2.4 1.9.3 4.2.4 6.5.4s4.6-.1 6.5-.4a2.9 2.9 0 0 0 2.5-2.4c.2-1.3.3-2.5.3-3.8s-.1-2.5-.3-3.8zM10 15.5v-7l6 3.5-6 3.5z"></path></svg></a>
+                    </div>
+                </footer>
+            </section>
+
+            <section class="pk-page">
+                <div class="pk-stripe" aria-hidden="true"></div>
+                <h2>Meet the Band</h2>
+                <div class="pk-members-grid">
+                    {
+                        members.map((member) => (
+                            <article class="pk-member-card">
+                                <img src={member.image} alt={member.name} loading="lazy" decoding="async" />
+                                <div>
+                                    <h3>{member.name}</h3>
+                                    <p class="pk-role">{member.role}</p>
+                                    <p>{member.bio}</p>
+                                </div>
+                            </article>
+                        ))
+                    }
+                </div>
+                <footer class="pk-footer">
+                    <div class="pk-contact">
+                        <span>{socialLinks.website}</span>
+                        <a href={`mailto:${socialLinks.email}`}>{socialLinks.email}</a>
+                    </div>
+                    <div class="pk-icons">
+                        <a href={socialLinks.instagram} target="_blank" rel="noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.3 3h9.4A4.3 4.3 0 0 1 21 7.3v9.4a4.3 4.3 0 0 1-4.3 4.3H7.3A4.3 4.3 0 0 1 3 16.7V7.3A4.3 4.3 0 0 1 7.3 3zm0 1.9A2.4 2.4 0 0 0 4.9 7.3v9.4a2.4 2.4 0 0 0 2.4 2.4h9.4a2.4 2.4 0 0 0 2.4-2.4V7.3a2.4 2.4 0 0 0-2.4-2.4H7.3zm9.9 1.4a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4zM12 7.6a4.4 4.4 0 1 1 0 8.8 4.4 4.4 0 0 1 0-8.8zm0 1.9a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path></svg></a>
+                        <a href={socialLinks.facebook} target="_blank" rel="noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 8.5V6.9c0-.8.5-1.3 1.4-1.3H16V3h-2c-2.3 0-3.8 1.5-3.8 3.9v1.6H8v2.6h2.2V21h3.3v-9.9H16l.4-2.6h-2.9z"></path></svg></a>
+                        <a href={socialLinks.youtube} target="_blank" rel="noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.2c-.2-1.3-1.2-2.2-2.5-2.4C16.6 5.5 14.3 5.4 12 5.4s-4.6.1-6.5.4A2.9 2.9 0 0 0 3 8.2c-.2 1.3-.3 2.5-.3 3.8s.1 2.5.3 3.8c.2 1.3 1.2 2.2 2.5 2.4 1.9.3 4.2.4 6.5.4s4.6-.1 6.5-.4a2.9 2.9 0 0 0 2.5-2.4c.2-1.3.3-2.5.3-3.8s-.1-2.5-.3-3.8zM10 15.5v-7l6 3.5-6 3.5z"></path></svg></a>
+                    </div>
+                </footer>
+            </section>
+
+            <section class="pk-page">
+                <div class="pk-stripe" aria-hidden="true"></div>
+                <h2>Technical Info</h2>
+                <div class="pk-tech-grid">
+                    <section class="pk-panel">
+                        <h3>Stage Plot</h3>
+                        <div class="pk-stage-wrap">
+                            <p class="pk-stage-label">Audience</p>
+                            <div class="pk-stage-plot">
+                                <div class="pk-position pk-front-left">Guitar<br />Stage Left</div>
+                                <div class="pk-position pk-front-center">Lead Vocal<br />Center</div>
+                                <div class="pk-position pk-front-right">Bass<br />Stage Right</div>
+                                <div class="pk-position pk-back-left">Drums<br />Stage Left Back</div>
+                                <div class="pk-position pk-back-right">Keyboards<br />Stage Right Back</div>
+                            </div>
+                            <p class="pk-stage-label pk-stage-label-back">Upstage</p>
+                        </div>
+                    </section>
+                    <section class="pk-panel">
+                        <h3>Booking / Contact</h3>
+                        <div class="pk-booking">
+                            <p class="pk-label">Booking Email</p>
+                            <p><a href={`mailto:${socialLinks.email}`}>{socialLinks.email}</a></p>
+                            <p class="pk-label">Website</p>
+                            <p>{socialLinks.website}</p>
+                            <p class="pk-label">Location</p>
+                            <p>Austin, Texas</p>
+                        </div>
+                    </section>
+                </div>
+                <footer class="pk-footer">
+                    <div class="pk-contact">
+                        <span>{socialLinks.website}</span>
+                        <a href={`mailto:${socialLinks.email}`}>{socialLinks.email}</a>
+                    </div>
+                    <div class="pk-icons">
+                        <a href={socialLinks.instagram} target="_blank" rel="noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.3 3h9.4A4.3 4.3 0 0 1 21 7.3v9.4a4.3 4.3 0 0 1-4.3 4.3H7.3A4.3 4.3 0 0 1 3 16.7V7.3A4.3 4.3 0 0 1 7.3 3zm0 1.9A2.4 2.4 0 0 0 4.9 7.3v9.4a2.4 2.4 0 0 0 2.4 2.4h9.4a2.4 2.4 0 0 0 2.4-2.4V7.3a2.4 2.4 0 0 0-2.4-2.4H7.3zm9.9 1.4a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4zM12 7.6a4.4 4.4 0 1 1 0 8.8 4.4 4.4 0 0 1 0-8.8zm0 1.9a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path></svg></a>
+                        <a href={socialLinks.facebook} target="_blank" rel="noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 8.5V6.9c0-.8.5-1.3 1.4-1.3H16V3h-2c-2.3 0-3.8 1.5-3.8 3.9v1.6H8v2.6h2.2V21h3.3v-9.9H16l.4-2.6h-2.9z"></path></svg></a>
+                        <a href={socialLinks.youtube} target="_blank" rel="noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.2c-.2-1.3-1.2-2.2-2.5-2.4C16.6 5.5 14.3 5.4 12 5.4s-4.6.1-6.5.4A2.9 2.9 0 0 0 3 8.2c-.2 1.3-.3 2.5-.3 3.8s.1 2.5.3 3.8c.2 1.3 1.2 2.2 2.5 2.4 1.9.3 4.2.4 6.5.4s4.6-.1 6.5-.4a2.9 2.9 0 0 0 2.5-2.4c.2-1.3.3-2.5.3-3.8s-.1-2.5-.3-3.8zM10 15.5v-7l6 3.5-6 3.5z"></path></svg></a>
+                    </div>
+                </footer>
+            </section>
+        </main>
+    </body>
+</html>
+
+<style>
+    @import url('https://fonts.cdnfonts.com/css/speed-race');
+
+    @page {
+        size: letter;
+        margin: 0;
+    }
+
+    .pk-body {
+        margin: 0;
+        color: #fff;
+        font-family: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+        background: #0b0b10;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .pk-doc {
+        background: #0b0b10;
+    }
+
+    .pk-page {
+        position: relative;
+        width: 8.5in;
+        height: 11in;
+        margin-inline: auto;
+        padding: calc(0.8in + 0.2in) 0.8in 0.8in;
+        background: #0b0b10;
+        page-break-after: always;
+        overflow: hidden;
+    }
+
+    .pk-page:last-child {
+        page-break-after: auto;
+    }
+
+    .pk-stripe {
+        position: absolute;
+        top: 0.34in;
+        left: 0.8in;
+        right: 0.8in;
+        height: 0.16in;
+        border: 1px solid rgb(255 255 255 / 20%);
+        background: url('/images/checkerboardheader.png') center 42% / cover no-repeat;
+    }
+
+    h1,
+    h2,
+    h3 {
+        margin: 0;
+        color: #fff;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+
+    h1 {
+        font-size: 56px;
+        line-height: 1.04;
+    }
+
+    h2 {
+        font-size: 34px;
+        line-height: 1.08;
+    }
+
+    h3 {
+        font-size: 15px;
+        line-height: 1.18;
+    }
+
+    p,
+    li {
+        margin: 0;
+        font-size: 12px;
+        line-height: 1.58;
+        color: rgb(224 227 238 / 92%);
+    }
+
+    .pk-subheader {
+        margin-top: 0.12in;
+        color: #fff;
+        font-size: 18px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .pk-page:first-child h1,
+    .pk-page:first-child .pk-subheader {
+        font-family: 'Speed Race', 'Impact', 'Arial Black', 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+    }
+
+    .pk-hero-image,
+    .pk-feature-image {
+        width: 100%;
+        border: 1px solid rgb(255 255 255 / 20%);
+    }
+
+    .pk-hero-image {
+        margin-top: 0.25in;
+        height: auto;
+        display: block;
+        margin-inline: auto;
+    }
+
+    .pk-feature-image {
+        margin-top: 0.2in;
+        height: 3.9in;
+        object-fit: cover;
+    }
+
+    .pk-venues {
+        margin-top: 0.11in;
+        border: 1px solid rgb(255 255 255 / 20%);
+        background: rgb(255 255 255 / 3%);
+        padding: 0.09in 0.11in;
+    }
+
+    .pk-venues h3 {
+        margin-bottom: 0.05in;
+    }
+
+    .pk-venues ul {
+        margin: 0;
+        padding-left: 0.18in;
+        display: grid;
+        gap: 0.03in;
+    }
+
+    .pk-footer {
+        position: absolute;
+        left: 0.8in;
+        right: 0.8in;
+        bottom: 0.45in;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.4in;
+    }
+
+    .pk-contact {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.12in 0.22in;
+        align-items: center;
+        font-size: 11px;
+        color: #fff;
+    }
+
+    .pk-contact a {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .pk-icons {
+        display: flex;
+        align-items: center;
+        gap: 0.1in;
+    }
+
+    .pk-icons a {
+        display: inline-flex;
+        width: 18px;
+        height: 18px;
+        color: #fff;
+    }
+
+    .pk-icons svg {
+        fill: currentcolor;
+    }
+
+    .pk-tagline {
+        margin-top: 0.14in;
+        color: #e10600;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.03em;
+    }
+
+    .pk-copy {
+        margin-top: 0.13in;
+        display: grid;
+        gap: 0.09in;
+        max-width: 6.8in;
+    }
+
+    .pk-members-grid {
+        margin-top: 0.2in;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.12in;
+    }
+
+    .pk-member-card {
+        border: 1px solid rgb(255 255 255 / 20%);
+        background: rgb(255 255 255 / 3%);
+        padding: 0.08in;
+        display: grid;
+        grid-template-columns: 0.94in 1fr;
+        gap: 0.08in;
+        align-items: start;
+    }
+
+    .pk-member-card img {
+        width: 0.94in;
+        height: 0.94in;
+        object-fit: cover;
+        border: 1px solid rgb(255 255 255 / 20%);
+    }
+
+    .pk-role {
+        color: #e10600;
+        font-size: 10px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-top: 0.03in;
+        margin-bottom: 0.04in;
+        font-weight: 800;
+    }
+
+    .pk-tech-grid {
+        margin-top: 0.2in;
+        display: grid;
+        grid-template-columns: 1.45fr 1fr;
+        gap: 0.12in;
+    }
+
+    .pk-panel {
+        border: 1px solid rgb(255 255 255 / 20%);
+        background: rgb(255 255 255 / 3%);
+        padding: 0.1in;
+    }
+
+    .pk-stage-wrap {
+        margin-top: 0.08in;
+    }
+
+    .pk-stage-label {
+        color: #fff;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 0.06in;
+    }
+
+    .pk-stage-label-back {
+        margin-top: 0.06in;
+        margin-bottom: 0;
+    }
+
+    .pk-stage-plot {
+        height: 3.64in;
+        border: 1px dashed rgb(255 255 255 / 40%);
+        position: relative;
+        background: linear-gradient(180deg, rgb(225 6 0 / 6%) 0%, rgb(255 255 255 / 2%) 100%);
+    }
+
+    .pk-position {
+        position: absolute;
+        min-width: 1.35in;
+        padding: 0.06in 0.07in;
+        border: 1px solid rgb(255 255 255 / 24%);
+        background: rgb(10 10 14 / 80%);
+        color: #fff;
+        font-size: 10px;
+        line-height: 1.35;
+        text-align: center;
+    }
+
+    .pk-front-left {
+        left: 0.16in;
+        top: 2.7in;
+    }
+
+    .pk-front-center {
+        left: 50%;
+        transform: translateX(-50%);
+        top: 2.7in;
+    }
+
+    .pk-front-right {
+        right: 0.16in;
+        top: 2.7in;
+    }
+
+    .pk-back-left {
+        left: 0.22in;
+        top: 0.55in;
+    }
+
+    .pk-back-right {
+        right: 0.22in;
+        top: 0.55in;
+    }
+
+    .pk-booking {
+        margin-top: 0.1in;
+        display: grid;
+        gap: 0.03in;
+    }
+
+    .pk-label {
+        color: #fff;
+        font-size: 10px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-weight: 800;
+        margin-top: 0.08in;
+    }
+
+    .pk-label:first-child {
+        margin-top: 0;
+    }
+
+    .pk-booking a {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    @media (max-width: 900px) {
+        .pk-page {
+            width: 100%;
+            min-height: 11in;
+        }
+    }
+</style>

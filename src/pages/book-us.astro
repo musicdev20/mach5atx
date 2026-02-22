@@ -1,0 +1,321 @@
+---
+import '../styles/globals.css';
+import Mach5Header from '../components/Mach5Header.astro';
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Book Mach 5 for clubs, private parties, corporate events, and festivals in Austin and Central Texas."
+        />
+        <title>Book Mach 5</title>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    </head>
+    <body class="m5-book-body">
+        <main class="m5-book-page">
+            <Mach5Header />
+            <section class="m5-book-wrap m5-book-panel">
+                <header class="m5-book-header">
+                    <p>Book Mach 5 for your venue or event.</p>
+                </header>
+
+                <form
+                    name="book-mach5"
+                    method="POST"
+                    data-netlify="true"
+                    netlify-honeypot="bot-field"
+                    class="m5-book-form"
+                >
+                    <input type="hidden" name="form-name" value="book-mach5" />
+                    <p class="m5-bot-field">
+                        <label>
+                            Do not fill this out:
+                            <input name="bot-field" />
+                        </label>
+                    </p>
+
+                    <fieldset class="m5-fieldset">
+                        <legend>Contact Information</legend>
+                        <div class="m5-grid">
+                            <label class="m5-field">
+                                <span>Full Name *</span>
+                                <input type="text" name="full_name" required />
+                            </label>
+                            <label class="m5-field">
+                                <span>Email Address *</span>
+                                <input type="email" name="email" required />
+                            </label>
+                            <label class="m5-field">
+                                <span>Phone Number</span>
+                                <input type="tel" name="phone" />
+                            </label>
+                            <label class="m5-field">
+                                <span>Organization / Venue</span>
+                                <input type="text" name="organization" />
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="m5-fieldset">
+                        <legend>Event Details</legend>
+                        <div class="m5-grid">
+                            <label class="m5-field">
+                                <span>Event Type *</span>
+                                <select name="event_type" required>
+                                    <option value="">Select an event type</option>
+                                    <option>Club / Bar</option>
+                                    <option>Festival</option>
+                                    <option>Corporate Event</option>
+                                    <option>Private Party</option>
+                                    <option>Wedding</option>
+                                    <option>Other</option>
+                                </select>
+                            </label>
+                            <label class="m5-field">
+                                <span>Backup / Flexible Date</span>
+                                <input type="date" name="backup_date" />
+                            </label>
+                            <label class="m5-field">
+                                <span>Event Date *</span>
+                                <input type="date" name="event_date" required />
+                            </label>
+                            <div class="m5-field m5-time-row">
+                                <span>Start / End Time</span>
+                                <div>
+                                    <input type="time" name="start_time" />
+                                    <input type="time" name="end_time" />
+                                </div>
+                            </div>
+                            <label class="m5-field m5-field-full">
+                                <span>City / Venue Location *</span>
+                                <input type="text" name="city_location" required />
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="m5-fieldset">
+                        <legend>Production & Budget</legend>
+                        <div class="m5-grid">
+                            <label class="m5-field">
+                                <span>Estimated Attendance</span>
+                                <input type="number" min="0" name="attendance" />
+                            </label>
+                            <label class="m5-field">
+                                <span>Budget Range *</span>
+                                <select name="budget_range" required>
+                                    <option value="">Select a range</option>
+                                    <option>Under $1,000</option>
+                                    <option>$1,000 - $2,500</option>
+                                    <option>$2,500 - $5,000</option>
+                                    <option>$5,000+</option>
+                                </select>
+                            </label>
+                            <label class="m5-field m5-field-full">
+                                <span>Notes</span>
+                                <textarea name="notes" rows="4" placeholder="Tell us about your event and what you need."></textarea>
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <label class="m5-consent">
+                        <input type="checkbox" name="consent" required />
+                        <span>I understand Mach 5 is a high-energy rock cover band.</span>
+                    </label>
+
+                    <div class="m5-form-actions">
+                        <button type="submit" class="m5-submit">Book Mach 5</button>
+                        <a href="/" class="m5-back-link">Back to Home</a>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </body>
+</html>
+
+<style>
+    .m5-book-body {
+        margin: 0;
+        color: #f5f7fb;
+        font-family: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+        background:
+            linear-gradient(180deg, rgb(2 7 20 / 90%) 0%, rgb(2 7 20 / 92%) 100%),
+            url('/images/hero/hero1.webp') center / cover fixed no-repeat;
+    }
+
+    .m5-book-page {
+        min-height: 100vh;
+    }
+
+    .m5-book-wrap {
+        width: min(1080px, 100% - 2rem);
+        margin: 1.15rem auto 2rem;
+    }
+
+    .m5-book-panel {
+        border: 1px solid rgb(255 255 255 / 20%);
+        border-radius: 1.1rem;
+        background: linear-gradient(160deg, rgb(8 13 28 / 93%) 0%, rgb(6 10 22 / 90%) 100%);
+        box-shadow: 0 22px 50px rgb(0 0 0 / 42%);
+        overflow: hidden;
+    }
+
+    .m5-book-header {
+        padding: 1.25rem 1.4rem 0.8rem;
+        text-align: center;
+    }
+
+    .m5-book-header p {
+        margin: 0;
+        color: rgb(228 232 244 / 88%);
+        font-size: clamp(1rem, 0.9rem + 0.35vw, 1.2rem);
+    }
+
+    .m5-book-form {
+        padding: 0 1.4rem 1.4rem;
+    }
+
+    .m5-bot-field {
+        display: none;
+    }
+
+    .m5-fieldset {
+        margin: 0.95rem 0 0;
+        border: 1px solid rgb(255 255 255 / 14%);
+        border-radius: 0.85rem;
+        padding: 0.8rem;
+    }
+
+    .m5-fieldset legend {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #f6f8fd;
+        padding: 0 0.45rem;
+    }
+
+    .m5-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem 0.9rem;
+    }
+
+    .m5-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+
+    .m5-field-full {
+        grid-column: 1 / -1;
+    }
+
+    .m5-field span {
+        color: rgb(237 240 249 / 92%);
+        font-size: 0.9rem;
+        font-weight: 650;
+    }
+
+    .m5-field input,
+    .m5-field select,
+    .m5-field textarea {
+        border: 1px solid rgb(255 255 255 / 20%);
+        border-radius: 0.6rem;
+        background: rgb(6 10 20 / 70%);
+        color: #f5f7fb;
+        padding: 0.55rem 0.65rem;
+        font-size: 0.95rem;
+        font-family: inherit;
+    }
+
+    .m5-field input:focus,
+    .m5-field select:focus,
+    .m5-field textarea:focus {
+        outline: none;
+        border-color: #ff4e56;
+        box-shadow: 0 0 0 2px rgb(255 78 86 / 24%);
+    }
+
+    .m5-time-row > div {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.55rem;
+    }
+
+    .m5-consent {
+        margin-top: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+        color: rgb(230 233 242 / 88%);
+    }
+
+    .m5-consent input {
+        width: 18px;
+        height: 18px;
+        accent-color: #ff2126;
+    }
+
+    .m5-form-actions {
+        margin-top: 1.2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+    }
+
+    .m5-submit {
+        appearance: none;
+        border: 1px solid #f61417;
+        background: linear-gradient(180deg, #ff2a30 0%, #cc0e14 100%);
+        color: #fff;
+        border-radius: 0.6rem;
+        text-transform: uppercase;
+        font-weight: 800;
+        letter-spacing: 0.03em;
+        padding: 0.7rem 1.35rem;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+
+    .m5-submit:hover {
+        filter: brightness(1.08);
+    }
+
+    .m5-back-link {
+        color: rgb(236 240 249 / 92%);
+        text-decoration: none;
+        font-weight: 650;
+    }
+
+    .m5-back-link:hover {
+        color: #ff4e56;
+    }
+
+    @media (max-width: 860px) {
+        .m5-book-wrap {
+            width: min(1080px, 100% - 1rem);
+            margin-top: 0.7rem;
+        }
+
+        .m5-book-header {
+            padding: 0.9rem 0.8rem 0.65rem;
+        }
+
+        .m5-book-form {
+            padding: 0 0.8rem 0.9rem;
+        }
+
+        .m5-fieldset {
+            padding: 0.65rem;
+        }
+
+        .m5-grid {
+            grid-template-columns: 1fr;
+            gap: 0.62rem;
+        }
+    }
+</style>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" preserveAspectRatio="none" role="img" aria-label="Checkerboard pattern">
+  <defs>
+    <pattern id="checker" width="32" height="32" patternUnits="userSpaceOnUse">
+      <rect width="32" height="32" fill="#ffffff"/>
+      <rect width="16" height="16" fill="#111111"/>
+      <rect x="16" y="16" width="16" height="16" fill="#111111"/>
+    </pattern>
+  </defs>
+  <rect width="320" height="64" fill="url(#checker)"/>
+</svg>

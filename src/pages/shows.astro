@@ -1,0 +1,425 @@
+---
+import '../styles/globals.css';
+import Mach5Header from '../components/Mach5Header.astro';
+import { defaultUpcomingShows } from '../lib/shows';
+
+const initialShow = defaultUpcomingShows[0];
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Mach 5 upcoming shows and live calendar." />
+        <title>Mach 5 | Shows</title>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    </head>
+    <body class="m5-shows-body">
+        <div class="m5-shows-page">
+            <Mach5Header />
+            <main class="m5-shell m5-shows-main">
+                <section class="m5-shows-head m5-glass-card">
+                    <h1>Shows</h1>
+                    <p>Catch us live - updated weekly</p>
+                </section>
+
+                <section class="m5-shows-grid">
+                    <div class="m5-shows-list-wrap m5-glass-card">
+                        <h2>Upcoming Shows</h2>
+                        <p class="m5-shows-hint">Select a show to view full details.</p>
+                        <div id="showsList" class="m5-shows-list" role="list"></div>
+                    </div>
+
+                    <aside class="m5-shows-detail m5-glass-card" aria-live="polite">
+                        <p class="m5-detail-kicker">Event Details</p>
+                        <h3 id="detailName">{initialShow.eventName}</h3>
+                        <p id="detailVenue" class="m5-detail-venue">{initialShow.venueName}</p>
+
+                        <div class="m5-detail-block">
+                            <p class="m5-detail-label">Date & Time</p>
+                            <p id="detailDate"></p>
+                        </div>
+
+                        <div class="m5-detail-block">
+                            <p class="m5-detail-label">Address</p>
+                            <p id="detailAddress">{initialShow.venueAddress}</p>
+                        </div>
+
+                        <div class="m5-detail-actions">
+                            <a id="detailDirections" class="m5-show-btn" href={initialShow.directionsUrl} target="_blank" rel="noreferrer">Get Directions</a>
+                            <button id="detailShare" type="button" class="m5-show-btn m5-show-btn-outline">Share</button>
+                        </div>
+
+                        <figure class="m5-detail-image">
+                            <img src="/images/live/bandlive1.jpg" alt="Mach 5 performing live" loading="lazy" decoding="async" />
+                        </figure>
+                    </aside>
+                </section>
+            </main>
+        </div>
+
+        <script id="showsData" type="application/json" set:html={JSON.stringify(defaultUpcomingShows)}></script>
+    </body>
+</html>
+
+<style is:global>
+    @import url('https://fonts.cdnfonts.com/css/speed-race');
+
+    .m5-shows-body {
+        margin: 0;
+        color: #f5f7fb;
+        font-family: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+        background: #02050f;
+    }
+    .m5-shows-page {
+        min-height: 100vh;
+        background:
+            radial-gradient(120% 120% at 50% 0%, #111a30 0%, #050a16 58%, #02050f 100%),
+            url('/images/noise.png') repeat;
+        padding-bottom: 3rem;
+    }
+    .m5-shell {
+        width: min(1200px, 100% - 3.25rem);
+        margin-inline: auto;
+    }
+    .m5-shows-main {
+        margin-top: 0.95rem;
+    }
+    .m5-glass-card {
+        background: linear-gradient(180deg, rgb(11 14 30 / 96%) 0%, rgb(9 12 23 / 94%) 100%);
+        border: 1px solid rgb(63 72 101 / 36%);
+        border-radius: 1.1rem;
+        box-shadow: 0 14px 34px rgb(2 4 12 / 30%);
+    }
+    .m5-shows-head {
+        padding: 1.05rem 1.2rem;
+        margin-bottom: 1rem;
+    }
+    .m5-shows-head h1 {
+        margin: 0;
+        font-size: clamp(2.2rem, 1.8rem + 1.7vw, 3.8rem);
+        font-family: 'Speed Race', 'Impact', 'Arial Black', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+    .m5-shows-head p {
+        margin: 0.25rem 0 0;
+        color: rgb(229 233 244 / 88%);
+        font-size: clamp(1rem, 0.95rem + 0.3vw, 1.22rem);
+        font-family: 'Speed Race', 'Impact', 'Arial Black', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+        letter-spacing: 0.01em;
+    }
+    .m5-shows-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.9fr);
+        gap: 1rem;
+        align-items: start;
+    }
+    .m5-shows-list-wrap,
+    .m5-shows-detail {
+        padding: 1rem;
+    }
+    .m5-shows-list-wrap h2 {
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 1.2rem;
+        color: rgb(233 237 247 / 95%);
+    }
+    .m5-shows-hint {
+        margin: 0.35rem 0 0;
+        color: rgb(225 230 243 / 72%);
+        font-size: 0.92rem;
+    }
+    .m5-shows-list {
+        margin-top: 0.75rem;
+        display: grid;
+        gap: 0.78rem;
+    }
+    .m5-show-row {
+        appearance: none;
+        width: 100%;
+        margin: 0;
+        padding: 0.95rem;
+        font: inherit;
+        color: inherit;
+        text-align: left;
+        cursor: pointer;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.55rem;
+        align-items: start;
+        justify-items: stretch;
+        border: 1px solid rgb(255 255 255 / 28%);
+        border-radius: 0.88rem;
+        background: linear-gradient(180deg, rgb(17 24 44 / 97%) 0%, rgb(10 14 27 / 97%) 100%);
+        box-shadow: 0 10px 22px rgb(0 0 0 / 32%), inset 0 1px 0 rgb(255 255 255 / 9%);
+        transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+    }
+    .m5-show-row:hover {
+        border-color: rgb(255 78 86 / 60%);
+        box-shadow: 0 0 0 1px rgb(255 78 86 / 16%), 0 14px 26px rgb(0 0 0 / 35%), inset 0 1px 0 rgb(255 255 255 / 10%);
+        transform: translateY(-1px);
+    }
+    .m5-show-row:focus-visible {
+        outline: 2px solid rgb(255 78 86 / 80%);
+        outline-offset: 2px;
+    }
+    .m5-show-date {
+        margin: 0;
+        color: rgb(255 88 99 / 94%);
+        font-weight: 700;
+        font-size: 0.95rem;
+        line-height: 1.34;
+        letter-spacing: 0.01em;
+    }
+    .m5-show-meta {
+        min-width: 0;
+        width: 100%;
+        text-align: left;
+    }
+    .m5-show-meta h3 {
+        margin: 0.1rem 0 0;
+        font-size: clamp(1.28rem, 1.05rem + 0.4vw, 1.6rem);
+        line-height: 1.22;
+    }
+    .m5-show-meta p {
+        margin: 0.2rem 0 0;
+        color: rgb(227 231 242 / 84%);
+        font-size: 1.12rem;
+    }
+    .m5-detail-kicker {
+        margin: 0;
+        color: rgb(234 238 247 / 82%);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.92rem;
+    }
+    .m5-shows-detail h3 {
+        margin: 0.5rem 0 0;
+        font-size: clamp(1.55rem, 1.3rem + 0.6vw, 2rem);
+        line-height: 1.2;
+    }
+    .m5-detail-venue {
+        margin: 0.25rem 0 0;
+        color: rgb(227 231 242 / 86%);
+        font-size: 1.2rem;
+    }
+    .m5-detail-block {
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid rgb(255 255 255 / 10%);
+    }
+    .m5-detail-label {
+        margin: 0;
+        color: #ff4b56;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 0.88rem;
+        font-weight: 700;
+    }
+    .m5-detail-block p:last-child {
+        margin: 0.3rem 0 0;
+        color: rgb(238 241 249 / 95%);
+        font-size: 1.05rem;
+        line-height: 1.4;
+    }
+    .m5-detail-actions {
+        margin-top: 1rem;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.6rem;
+    }
+    .m5-show-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.65rem;
+        border: 1px solid #f61417;
+        background: #f61417;
+        color: #fff;
+        text-decoration: none;
+        font-size: 0.92rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        font-weight: 800;
+        padding: 0.62rem;
+        cursor: pointer;
+    }
+    .m5-show-btn-outline {
+        border-color: rgb(255 255 255 / 28%);
+        background: rgb(12 16 30 / 60%);
+    }
+    .m5-show-btn:hover {
+        filter: brightness(1.08);
+    }
+    .m5-detail-image {
+        margin: 0.95rem 0 0;
+        border-radius: 0.8rem;
+        overflow: hidden;
+        border: 1px solid rgb(255 255 255 / 12%);
+        aspect-ratio: 16 / 10;
+        background: #050913;
+    }
+    .m5-detail-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+    .m5-show-row.is-active {
+        border-color: rgb(255 78 86 / 55%);
+        box-shadow: 0 0 0 1px rgb(255 78 86 / 20%), 0 14px 28px rgb(0 0 0 / 35%), inset 0 1px 0 rgb(255 255 255 / 6%);
+    }
+
+    @media (max-width: 980px) {
+        .m5-shows-grid {
+            grid-template-columns: 1fr;
+        }
+        .m5-shows-detail {
+            order: -1;
+        }
+    }
+    @media (max-width: 860px) {
+        .m5-shell {
+            width: min(1200px, 100% - 1.75rem);
+        }
+        .m5-shows-main {
+            margin-top: 0.7rem;
+        }
+        .m5-shows-list-wrap,
+        .m5-shows-detail,
+        .m5-shows-head {
+            padding: 0.85rem;
+        }
+        .m5-show-row {
+            gap: 0.55rem;
+            padding: 0.92rem;
+            transform: none;
+        }
+        .m5-show-date {
+            font-size: 0.9rem;
+            line-height: 1.2;
+        }
+        .m5-show-meta h3 {
+            font-size: 1.16rem;
+            line-height: 1.28;
+        }
+        .m5-show-meta p {
+            font-size: 1rem;
+            line-height: 1.35;
+        }
+    }
+</style>
+
+<script is:inline>
+    (() => {
+        const dataNode = document.getElementById('showsData');
+        const listNode = document.getElementById('showsList');
+        const detailName = document.getElementById('detailName');
+        const detailVenue = document.getElementById('detailVenue');
+        const detailDate = document.getElementById('detailDate');
+        const detailAddress = document.getElementById('detailAddress');
+        const detailDirections = document.getElementById('detailDirections');
+        const detailShare = document.getElementById('detailShare');
+
+        if (!dataNode || !listNode || !detailName || !detailVenue || !detailDate || !detailAddress || !detailDirections || !detailShare) return;
+
+        let shows = [];
+        try {
+            shows = JSON.parse(dataNode.textContent || '[]');
+        } catch {
+            shows = [];
+        }
+        if (!Array.isArray(shows) || !shows.length) return;
+
+        const fullFmt = new Intl.DateTimeFormat('en-US', {
+            weekday: 'short',
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            timeZone: 'America/Chicago'
+        });
+
+        const locationLine = (show) => {
+            const parts = String(show.venueAddress || '')
+                .split(',')
+                .map((part) => part.trim())
+                .filter(Boolean);
+            return parts.length >= 2 ? `${show.venueName} - ${parts.slice(-2).join(', ')}` : show.venueAddress;
+        };
+
+        const renderDetail = (show) => {
+            const date = new Date(show.startDateTime);
+            detailName.textContent = show.eventName;
+            detailVenue.textContent = show.venueName;
+            detailDate.textContent = fullFmt.format(date);
+            detailAddress.textContent = show.venueAddress;
+            detailDirections.href = show.directionsUrl;
+            detailShare.onclick = async () => {
+                const text = `${show.eventName} at ${show.venueName} on ${fullFmt.format(date)}. ${show.venueAddress}`;
+                const url = `${window.location.origin}/shows`;
+                try {
+                    if (navigator.share) {
+                        await navigator.share({ title: `Mach 5 - ${show.eventName}`, text, url });
+                        return;
+                    }
+                    if (navigator.clipboard?.writeText) {
+                        await navigator.clipboard.writeText(`${text}\n${show.directionsUrl}`);
+                    }
+                } catch {
+                    // Ignore share cancel/no-op.
+                }
+            };
+        };
+
+        const setActiveRow = (id) => {
+            listNode.querySelectorAll('.m5-show-row').forEach((row) => {
+                row.classList.toggle('is-active', row.getAttribute('data-show-id') === id);
+            });
+        };
+
+        const renderList = () => {
+            listNode.innerHTML = '';
+            shows.forEach((show, index) => {
+                const date = new Date(show.startDateTime);
+                const row = document.createElement('button');
+                row.type = 'button';
+                row.className = 'm5-show-row';
+                row.setAttribute('role', 'listitem');
+                row.setAttribute('data-show-id', show.id);
+                row.innerHTML = `
+                    <div class="m5-show-meta">
+                        <p class="m5-show-date">${fullFmt.format(date)}</p>
+                        <h3>${show.eventName}</h3>
+                        <p>${locationLine(show)}</p>
+                    </div>
+                `;
+                row.addEventListener('click', () => {
+                    renderDetail(show);
+                    setActiveRow(show.id);
+                });
+                if (index === 0) row.classList.add('is-active');
+                listNode.appendChild(row);
+            });
+        };
+
+        renderList();
+        renderDetail(shows[0]);
+
+        fetch('/api/shows')
+            .then((response) => (response.ok ? response.json() : null))
+            .then((payload) => {
+                if (!payload || !Array.isArray(payload.shows) || !payload.shows.length) return;
+                shows = payload.shows;
+                renderList();
+                renderDetail(shows[0]);
+            })
+            .catch(() => {
+                // Keep fallback list.
+            });
+    })();
+</script>
