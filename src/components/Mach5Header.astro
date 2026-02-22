@@ -83,7 +83,7 @@ const isActive = (href) => {
         position: absolute;
         inset: 0 0 auto 0;
         height: clamp(132px, 16vw, 190px);
-        background: url('/images/checkerboardheader.png') center 42% / cover no-repeat;
+        background: url('/images/checkerboardheader.png') center 42% / auto 100% repeat-x;
         z-index: -2;
     }
     .m5-top-header::after {
@@ -102,7 +102,7 @@ const isActive = (href) => {
         box-shadow: inset 0 -1px 0 rgb(255 255 255 / 11%);
     }
     .m5-shell {
-        width: min(1200px, 100% - 3.25rem);
+        width: min(1320px, 100% - 3.25rem);
         margin-inline: auto;
     }
     .m5-nav {

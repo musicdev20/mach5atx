@@ -1,9 +1,13 @@
 ---
 import '../styles/globals.css';
 import Mach5Header from '../components/Mach5Header.astro';
-import { defaultUpcomingShows } from '../lib/shows';
+import { defaultUpcomingShows, getUpcomingShows } from '../lib/shows';
 
-const initialShow = defaultUpcomingShows[0];
+export const prerender = false;
+
+const initialShows = await getUpcomingShows();
+const initialShow = initialShows[0] ?? defaultUpcomingShows[0];
+const fallbackVenueLogo = '/images/logos/m5logo2.webp';
 ---
 
 <!doctype html>
@@ -52,14 +56,14 @@ const initialShow = defaultUpcomingShows[0];
                         </div>
 
                         <figure class="m5-detail-image">
-                            <img src="/images/live/bandlive1.jpg" alt="Mach 5 performing live" loading="lazy" decoding="async" />
+                            <img id="detailVenueLogo" src={initialShow.venueLogo || fallbackVenueLogo} alt={`${initialShow.venueName} logo`} loading="lazy" decoding="async" />
                         </figure>
                     </aside>
                 </section>
             </main>
         </div>
 
-        <script id="showsData" type="application/json" set:html={JSON.stringify(defaultUpcomingShows)}></script>
+        <script id="showsData" type="application/json" set:html={JSON.stringify(initialShows)}></script>
     </body>
 </html>
 
@@ -323,8 +327,9 @@ const initialShow = defaultUpcomingShows[0];
         const detailAddress = document.getElementById('detailAddress');
         const detailDirections = document.getElementById('detailDirections');
         const detailShare = document.getElementById('detailShare');
+        const detailVenueLogo = document.getElementById('detailVenueLogo');
 
-        if (!dataNode || !listNode || !detailName || !detailVenue || !detailDate || !detailAddress || !detailDirections || !detailShare) return;
+        if (!dataNode || !listNode || !detailName || !detailVenue || !detailDate || !detailAddress || !detailDirections || !detailShare || !detailVenueLogo) return;
 
         let shows = [];
         try {
@@ -359,6 +364,8 @@ const initialShow = defaultUpcomingShows[0];
             detailDate.textContent = fullFmt.format(date);
             detailAddress.textContent = show.venueAddress;
             detailDirections.href = show.directionsUrl;
+            detailVenueLogo.src = show.venueLogo && String(show.venueLogo).trim().length > 0 ? show.venueLogo : '/images/logos/m5logo2.webp';
+            detailVenueLogo.alt = `${show.venueName} logo`;
             detailShare.onclick = async () => {
                 const text = `${show.eventName} at ${show.venueName} on ${fullFmt.format(date)}. ${show.venueAddress}`;
                 const url = `${window.location.origin}/shows`;
