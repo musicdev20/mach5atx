@@ -450,6 +450,15 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
                 .filter(Boolean);
             return parts.length >= 2 ? `${show.venueName} - ${parts.slice(-2).join(', ')}` : show.venueAddress;
         };
+        const defaultShareLabel = detailShare.textContent || 'Share';
+        let shareFeedbackTimer = null;
+        const setShareFeedback = (label, restoreMs = 1800) => {
+            detailShare.textContent = label;
+            if (shareFeedbackTimer) window.clearTimeout(shareFeedbackTimer);
+            shareFeedbackTimer = window.setTimeout(() => {
+                detailShare.textContent = defaultShareLabel;
+            }, restoreMs);
+        };
 
         const clearDetail = () => {
             detailName.textContent = 'No shows for selected month';
@@ -477,17 +486,32 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
             detailVenueLogo.alt = `${show.venueName} logo`;
             detailShare.onclick = async () => {
                 const text = `${show.eventName} at ${show.venueName} on ${fullFmt.format(date)}. ${show.venueAddress}`;
-                const url = `${window.location.origin}/shows`;
+                const showUrl = `${window.location.origin}/shows?show=${encodeURIComponent(show.id || '')}`;
+                const copyText = `${text}\n${showUrl}`;
                 try {
                     if (navigator.share) {
-                        await navigator.share({ title: `Mach 5 - ${show.eventName}`, text, url });
+                        await navigator.share({ title: `Mach 5 - ${show.eventName}`, text, url: showUrl });
                         return;
                     }
                     if (navigator.clipboard?.writeText) {
-                        await navigator.clipboard.writeText(`${text}\n${show.directionsUrl}`);
+                        await navigator.clipboard.writeText(copyText);
+                        setShareFeedback('Copied');
+                        return;
                     }
-                } catch {
-                    // Ignore share cancel/no-op.
+                    window.prompt('Copy this show info:', copyText);
+                } catch (error) {
+                    // Ignore share cancel/no-op from native share.
+                    if (error?.name === 'AbortError') return;
+                    try {
+                        if (navigator.clipboard?.writeText) {
+                            await navigator.clipboard.writeText(copyText);
+                            setShareFeedback('Copied');
+                            return;
+                        }
+                    } catch {
+                        // Fall back to prompt.
+                    }
+                    window.prompt('Copy this show info:', copyText);
                 }
             };
         };
