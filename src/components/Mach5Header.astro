@@ -37,7 +37,7 @@ const isActive = (href) => {
                         ))
                     }
                 </ul>
-                <button class="m5-menu-toggle" id="m5MenuToggle" type="button" aria-expanded="false" aria-controls="m5MobileMenu" aria-label="Toggle menu">
+                <button class="m5-menu-toggle" data-m5-menu-toggle type="button" aria-expanded="false" aria-label="Toggle menu">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -46,7 +46,7 @@ const isActive = (href) => {
         </div>
     </div>
     <div class="m5-shell">
-        <div class="m5-mobile-menu" id="m5MobileMenu" hidden>
+        <div class="m5-mobile-menu" data-m5-mobile-menu hidden>
             <ul>
                 {
                     navItems.map((item) => (
@@ -78,7 +78,9 @@ const isActive = (href) => {
     .m5-top-header {
         position: sticky;
         top: 0;
-        z-index: 8;
+        z-index: 1200;
+        isolation: isolate;
+        pointer-events: auto;
     }
     .m5-shell {
         width: min(1600px, 100% - 2rem);
@@ -142,8 +144,8 @@ const isActive = (href) => {
     .m5-menu-toggle {
         display: none;
         position: absolute;
-        top: 0.65rem;
-        right: 0.65rem;
+        top: 0.75rem;
+        right: 0.75rem;
         width: 44px;
         height: 44px;
         border-radius: 0.55rem;
@@ -151,6 +153,9 @@ const isActive = (href) => {
         background: rgb(10 15 28 / 78%);
         padding: 0;
         cursor: pointer;
+        z-index: 1250;
+        pointer-events: auto;
+        touch-action: manipulation;
     }
     .m5-menu-toggle span {
         display: block;
@@ -177,6 +182,9 @@ const isActive = (href) => {
         border: 1px solid rgb(255 255 255 / 13%);
         border-radius: 0.9rem;
         padding: 0.82rem;
+        position: relative;
+        z-index: 1240;
+        pointer-events: auto;
     }
     @media (max-width: 980px) {
         .m5-header-art {
@@ -184,14 +192,30 @@ const isActive = (href) => {
             max-height: 170px;
             background-position: center;
         }
+        .m5-nav {
+            position: static;
+            height: 100%;
+        }
         .m5-nav-links {
             display: none;
         }
         .m5-menu-toggle {
             display: block;
+            position: fixed;
+            top: calc(env(safe-area-inset-top, 0px) + 0.7rem);
+            right: 0.8rem;
+            z-index: 2147483646;
         }
         .m5-mobile-menu {
             display: block;
+            position: fixed;
+            top: calc(env(safe-area-inset-top, 0px) + 3.9rem);
+            left: 0.8rem;
+            right: 0.8rem;
+            margin-top: 0;
+            max-height: min(70vh, 560px);
+            overflow: auto;
+            z-index: 2147483645;
         }
         .m5-mobile-menu ul {
             list-style: none;
@@ -224,26 +248,43 @@ const isActive = (href) => {
 
 <script is:inline>
     (() => {
-        const toggle = document.getElementById('m5MenuToggle');
-        const menu = document.getElementById('m5MobileMenu');
-        if (!toggle || !menu) return;
+        const initHeaderMenu = () => {
+            document.querySelectorAll('.m5-top-header').forEach((header) => {
+                if (header.dataset.menuBound === 'true') return;
+                const toggle = header.querySelector('[data-m5-menu-toggle]');
+                const menu = header.querySelector('[data-m5-mobile-menu]');
+                if (!toggle || !menu) return;
 
-        const closeMenu = () => {
-            toggle.classList.remove('is-open');
-            toggle.setAttribute('aria-expanded', 'false');
-            menu.hidden = true;
+                const closeMenu = () => {
+                    toggle.classList.remove('is-open');
+                    toggle.setAttribute('aria-expanded', 'false');
+                    menu.hidden = true;
+                };
+
+                toggle.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    const isOpen = toggle.classList.toggle('is-open');
+                    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                    menu.hidden = !isOpen;
+                });
+
+                menu.querySelectorAll('a').forEach((link) => {
+                    link.addEventListener('click', closeMenu);
+                });
+
+                document.addEventListener('click', (event) => {
+                    const target = event.target;
+                    if (!(target instanceof Element)) return;
+                    if (!header.contains(target)) closeMenu();
+                });
+
+                closeMenu();
+                header.dataset.menuBound = 'true';
+            });
         };
 
-        toggle.addEventListener('click', () => {
-            const isOpen = toggle.classList.toggle('is-open');
-            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-            menu.hidden = !isOpen;
-        });
-
-        menu.querySelectorAll('a').forEach((link) => {
-            link.addEventListener('click', closeMenu);
-        });
-
-        closeMenu();
+        initHeaderMenu();
+        document.addEventListener('astro:page-load', initHeaderMenu);
     })();
 </script>

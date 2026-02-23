@@ -212,72 +212,84 @@ const liveAudioRecordings = [
 
         <script id="m5AudioTracks" type="application/json" set:html={JSON.stringify(liveAudioRecordings)}></script>
 
-        <script>
-            const lightbox = document.getElementById('m5Lightbox');
-            const lightboxImage = document.getElementById('m5LightboxImage');
-            const lightboxClose = document.getElementById('m5LightboxClose');
-            const lightboxBackdrop = document.getElementById('m5LightboxBackdrop');
-            const imageButtons = document.querySelectorAll('.m5-image-open');
-            const audioPlayer = document.getElementById('m5AudioPlayer');
-            const audioNowTitle = document.getElementById('m5AudioNowTitle');
-            const audioPrev = document.getElementById('m5AudioPrev');
-            const audioNext = document.getElementById('m5AudioNext');
-            const audioTracksNode = document.getElementById('m5AudioTracks');
-            const audioTracks = JSON.parse(audioTracksNode?.textContent ?? '[]');
-            let activeTrackIndex = 0;
+        <script is:inline>
+            (() => {
+                const initMediaPage = () => {
+                    const mediaPage = document.querySelector('.m5-media-page');
+                    if (!mediaPage || mediaPage.dataset.mediaBound === 'true') return;
 
-            const openLightbox = (src, alt) => {
-                if (!lightbox || !lightboxImage) return;
-                lightboxImage.src = src;
-                lightboxImage.alt = alt;
-                lightbox.hidden = false;
-                document.body.style.overflow = 'hidden';
-            };
+                    const lightbox = document.getElementById('m5Lightbox');
+                    const lightboxImage = document.getElementById('m5LightboxImage');
+                    const lightboxClose = document.getElementById('m5LightboxClose');
+                    const lightboxBackdrop = document.getElementById('m5LightboxBackdrop');
+                    const imageButtons = mediaPage.querySelectorAll('.m5-image-open');
+                    const audioPlayer = document.getElementById('m5AudioPlayer');
+                    const audioNowTitle = document.getElementById('m5AudioNowTitle');
+                    const audioPrev = document.getElementById('m5AudioPrev');
+                    const audioNext = document.getElementById('m5AudioNext');
+                    const audioTracksNode = document.getElementById('m5AudioTracks');
+                    const audioTracks = JSON.parse(audioTracksNode?.textContent ?? '[]');
+                    let activeTrackIndex = 0;
 
-            const closeLightbox = () => {
-                if (!lightbox || !lightboxImage) return;
-                lightbox.hidden = true;
-                lightboxImage.src = '';
-                lightboxImage.alt = '';
-                document.body.style.overflow = '';
-            };
+                    const openLightbox = (src, alt) => {
+                        if (!lightbox || !lightboxImage) return;
+                        lightboxImage.src = src;
+                        lightboxImage.alt = alt;
+                        lightbox.hidden = false;
+                        document.body.style.overflow = 'hidden';
+                    };
 
-            imageButtons.forEach((button) => {
-                button.addEventListener('click', () => {
-                    const src = button.getAttribute('data-full-src');
-                    const alt = button.getAttribute('data-full-alt') ?? '';
-                    if (src) openLightbox(src, alt);
-                });
-            });
+                    const closeLightbox = () => {
+                        if (!lightbox || !lightboxImage) return;
+                        lightbox.hidden = true;
+                        lightboxImage.src = '';
+                        lightboxImage.alt = '';
+                        document.body.style.overflow = '';
+                    };
 
-            lightboxClose?.addEventListener('click', closeLightbox);
-            lightboxBackdrop?.addEventListener('click', closeLightbox);
+                    imageButtons.forEach((button) => {
+                        button.addEventListener('click', () => {
+                            const src = button.getAttribute('data-full-src');
+                            const alt = button.getAttribute('data-full-alt') ?? '';
+                            if (src) openLightbox(src, alt);
+                        });
+                    });
 
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape' && lightbox && !lightbox.hidden) {
-                    closeLightbox();
-                }
-            });
+                    lightboxClose?.addEventListener('click', closeLightbox);
+                    lightboxBackdrop?.addEventListener('click', closeLightbox);
 
-            const setActiveTrack = (nextIndex, shouldPlay = true) => {
-                if (!audioPlayer || !audioNowTitle || !audioTracks.length) return;
-                const boundedIndex = ((nextIndex % audioTracks.length) + audioTracks.length) % audioTracks.length;
-                const nextTrack = audioTracks[boundedIndex];
-                const src = nextTrack?.src;
-                const title = nextTrack?.title ?? '';
-                if (!src) return;
+                    document.addEventListener('keydown', (event) => {
+                        if (event.key === 'Escape' && lightbox && !lightbox.hidden) {
+                            closeLightbox();
+                        }
+                    });
 
-                activeTrackIndex = boundedIndex;
-                audioPlayer.src = src;
-                audioNowTitle.textContent = title;
-                if (shouldPlay) {
-                    audioPlayer.play().catch(() => {});
-                }
-            };
+                    const setActiveTrack = (nextIndex, shouldPlay = true) => {
+                        if (!audioPlayer || !audioNowTitle || !audioTracks.length) return;
+                        const boundedIndex = ((nextIndex % audioTracks.length) + audioTracks.length) % audioTracks.length;
+                        const nextTrack = audioTracks[boundedIndex];
+                        const src = nextTrack?.src;
+                        const title = nextTrack?.title ?? '';
+                        if (!src) return;
 
-            audioPrev?.addEventListener('click', () => setActiveTrack(activeTrackIndex - 1, true));
-            audioNext?.addEventListener('click', () => setActiveTrack(activeTrackIndex + 1, true));
-            audioPlayer?.addEventListener('ended', () => setActiveTrack(activeTrackIndex + 1, true));
+                        activeTrackIndex = boundedIndex;
+                        audioPlayer.src = src;
+                        audioNowTitle.textContent = title;
+                        if (shouldPlay) {
+                            audioPlayer.play().catch(() => {});
+                        }
+                    };
+
+                    audioPrev?.addEventListener('click', () => setActiveTrack(activeTrackIndex - 1, true));
+                    audioNext?.addEventListener('click', () => setActiveTrack(activeTrackIndex + 1, true));
+                    audioPlayer?.addEventListener('ended', () => setActiveTrack(activeTrackIndex + 1, true));
+
+                    mediaPage.dataset.mediaBound = 'true';
+                };
+
+                initMediaPage();
+                document.addEventListener('astro:page-load', initMediaPage);
+            })();
         </script>
     </body>
 </html>
