@@ -231,9 +231,15 @@ const contactLinks = {
         filter: saturate(0.9) contrast(0.96) brightness(0.86);
     }
 
-    .m5-page > *:not(.m5-bg-video) {
+    .m5-page > *:not(.m5-bg-video):not(.m5-top-header) {
         position: relative;
         z-index: 2;
+    }
+
+    .m5-page > .m5-top-header {
+        position: sticky;
+        top: 0;
+        z-index: 30;
     }
 
     @media (prefers-reduced-motion: reduce) {
