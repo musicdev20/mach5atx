@@ -2,7 +2,7 @@
 import '../styles/globals.css';
 import Mach5Header from '../components/Mach5Header.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import { defaultUpcomingShows, getUpcomingShows } from '../lib/shows';
+import { getUpcomingShows } from '../lib/shows';
 import { ClientRouter } from 'astro:transitions';
 
 export const prerender = false;
@@ -18,7 +18,7 @@ const sortShowsByDate = (rows) =>
         return aTime - bTime;
     });
 const sortedInitialShows = sortShowsByDate(initialShows);
-const initialShow = sortedInitialShows[0] ?? defaultUpcomingShows[0];
+const initialShow = sortedInitialShows[0] ?? null;
 const fallbackVenueLogo = '/images/logos/m5logo2.webp';
 ---
 
@@ -57,8 +57,8 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
 
                     <aside class="m5-shows-detail m5-glass-card" aria-live="polite">
                         <p class="m5-detail-kicker">Event Details</p>
-                        <h3 id="detailName">{initialShow.eventName}</h3>
-                        <p id="detailVenue" class="m5-detail-venue">{initialShow.venueName}</p>
+                        <h3 id="detailName">{initialShow?.eventName ?? 'No upcoming shows'}</h3>
+                        <p id="detailVenue" class="m5-detail-venue">{initialShow?.venueName ?? ''}</p>
 
                         <div class="m5-detail-block">
                             <p class="m5-detail-label">Date & Time</p>
@@ -67,16 +67,33 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
 
                         <div class="m5-detail-block">
                             <p class="m5-detail-label">Address</p>
-                            <p id="detailAddress">{initialShow.venueAddress}</p>
+                            <p id="detailAddress">{initialShow?.venueAddress ?? ''}</p>
                         </div>
 
                         <div class="m5-detail-actions">
-                            <a id="detailDirections" class="m5-show-btn" href={initialShow.directionsUrl} target="_blank" rel="noreferrer">Get Directions</a>
-                            <button id="detailShare" type="button" class="m5-show-btn m5-show-btn-outline">Share</button>
+                            <a
+                                id="detailDirections"
+                                class={`m5-show-btn ${initialShow ? '' : 'is-disabled'}`}
+                                href={initialShow?.directionsUrl ?? '#'}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-disabled={initialShow ? 'false' : 'true'}
+                            >
+                                Get Directions
+                            </a>
+                            <button id="detailShare" type="button" class="m5-show-btn m5-show-btn-outline" disabled={!initialShow}>
+                                Share
+                            </button>
                         </div>
 
                         <figure class="m5-detail-image">
-                            <img id="detailVenueLogo" src={initialShow.venueLogo || fallbackVenueLogo} alt={`${initialShow.venueName} logo`} loading="lazy" decoding="async" />
+                            <img
+                                id="detailVenueLogo"
+                                src={initialShow?.venueLogo || fallbackVenueLogo}
+                                alt={initialShow ? `${initialShow.venueName} logo` : 'Mach 5 logo'}
+                                loading="lazy"
+                                decoding="async"
+                            />
                         </figure>
                     </aside>
                 </section>

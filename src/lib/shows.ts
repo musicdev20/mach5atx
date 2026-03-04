@@ -70,13 +70,21 @@ const normalizeShows = (raw: unknown): UpcomingShow[] => {
     return cleaned.length > 0 ? cleaned : defaultUpcomingShows;
 };
 
+const filterFutureShows = (shows: UpcomingShow[]): UpcomingShow[] => {
+    const now = Date.now();
+    return shows.filter((show) => {
+        const start = new Date(show.startDateTime).getTime();
+        return !Number.isNaN(start) && start >= now;
+    });
+};
+
 export const getUpcomingShows = async (): Promise<UpcomingShow[]> => {
     try {
         const store = getStore({ name: STORE_NAME, consistency: 'strong' });
         const stored = await store.get(STORE_KEY, { type: 'json' });
-        return normalizeShows(stored);
+        return filterFutureShows(normalizeShows(stored));
     } catch {
-        return defaultUpcomingShows;
+        return filterFutureShows(defaultUpcomingShows);
     }
 };
 
