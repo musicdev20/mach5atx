@@ -3,51 +3,12 @@ import '../styles/globals.css';
 import Mach5Header from '../components/Mach5Header.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { ClientRouter } from 'astro:transitions';
+import { getLiveAudioRecordings } from '../lib/mediaRecordings';
+import { getLiveVideos } from '../lib/mediaVideos';
 
-const liveVideos = [
-    {
-        title: 'MACH 5 Promo',
-        event: 'Main Promo',
-        description: 'Official MACH 5 promo video.',
-        thumbnail: 'https://i.ytimg.com/vi/uZjI3LWaCeg/hqdefault.jpg',
-        href: 'https://youtu.be/uZjI3LWaCeg?si=WvqXpOVbTHzqrmuo'
-    },
-    {
-        title: 'MACH 5 Promo Short 1',
-        event: 'Short',
-        description: 'Live short performance clip.',
-        thumbnail: 'https://i.ytimg.com/vi/JCtQcf04MLo/hqdefault.jpg',
-        href: 'https://youtu.be/JCtQcf04MLo?si=2CI0yAup_mzV9yW0'
-    },
-    {
-        title: 'MACH 5 Promo Short 2',
-        event: 'Short',
-        description: 'Live short performance clip.',
-        thumbnail: 'https://i.ytimg.com/vi/_q7RxuSEb7M/hqdefault.jpg',
-        href: 'https://youtu.be/_q7RxuSEb7M?si=ygWZooIxjl0OYqLc'
-    },
-    {
-        title: 'MACH 5 Promo Short 3',
-        event: 'Short',
-        description: 'Live short performance clip.',
-        thumbnail: 'https://i.ytimg.com/vi/0ZWf8kcQQV0/hqdefault.jpg',
-        href: 'https://youtu.be/0ZWf8kcQQV0?si=oBI3_mhdD2b7EnYc'
-    },
-    {
-        title: 'MACH 5 Promo Short 4',
-        event: 'Short',
-        description: 'Live short performance clip.',
-        thumbnail: 'https://i.ytimg.com/vi/3nBtxP-CYqc/hqdefault.jpg',
-        href: 'https://youtu.be/3nBtxP-CYqc?si=M8GqfhdZm-MS4Viw'
-    },
-    {
-        title: 'MACH 5 Promo Short 5',
-        event: 'Short',
-        description: 'Live short performance clip.',
-        thumbnail: 'https://i.ytimg.com/vi/oV7aUxPhEy8/hqdefault.jpg',
-        href: 'https://youtu.be/oV7aUxPhEy8?si=2pzZyOsPyYRXTIzf'
-    }
-];
+export const prerender = false;
+
+const liveVideos = await getLiveVideos();
 const youtubeEmbedUrl = (url) => {
     const match = url.match(/(?:youtu\.be\/|v=)([A-Za-z0-9_-]{11})/);
     const videoId = match?.[1];
@@ -63,56 +24,8 @@ const liveImages = [
     { src: '/images/live/joelive1.jpg', alt: 'Bassist performing live on stage' }
 ];
 
-const liveAudioRecordings = [
-    {
-        title: 'AC/DC - You Shook Me All Night Long / Highway to Hell',
-        src: '/audio/01-you-shook-me-all-night-long-highway-to-hell.mp3'
-    },
-    {
-        title: 'Journey - Stone in Love / Any Way You Want It / Separate Ways',
-        src: '/audio/02-journey-stone-in-love-any-way-you-want-it-separate-ways.mp3'
-    },
-    {
-        title: '3 Doors Down - Kryptonite',
-        src: '/audio/03-3-doors-down-kryptonite.mp3'
-    },
-    {
-        title: 'Lady Gaga - Just Dance',
-        src: '/audio/04-lady-gaga-just-dance.mp3'
-    },
-    {
-        title: 'No Doubt - Hella Good',
-        src: '/audio/05-no-doubt-hella-good.mp3'
-    },
-    {
-        title: 'Miley Cyrus - Heart of Glass',
-        src: '/audio/06-heart-of-glass.mp3'
-    },
-    {
-        title: 'Heart - Barracuda',
-        src: '/audio/07-barracuda.mp3'
-    },
-    {
-        title: 'Gary Numan / Nine Inch Nails - Cars',
-        src: '/audio/08-gary-numan-nine-inch-nails-cars.mp3'
-    },
-    {
-        title: 'Soft Cell - Tainted Love',
-        src: '/audio/09-tainted-love.mp3'
-    },
-    {
-        title: 'Metallica - Enter Sandman',
-        src: '/audio/10-enter-sandman.mp3'
-    },
-    {
-        title: 'Billy Idol - Rebel Yell',
-        src: '/audio/11-rebel-yell.mp3'
-    },
-    {
-        title: 'Alice in Chains - Man in the Box',
-        src: '/audio/12-man-in-the-box.mp3'
-    }
-];
+const liveAudioRecordings = await getLiveAudioRecordings();
+const initialAudioTrack = liveAudioRecordings[0] ?? null;
 ---
 
 <!doctype html>
@@ -191,13 +104,19 @@ const liveAudioRecordings = [
                     </div>
                     <div class="m5-audio-deck">
                         <p class="m5-audio-now-label">Now Playing</p>
-                        <p class="m5-audio-now-title" id="m5AudioNowTitle">{liveAudioRecordings[0]?.title}</p>
-                        <audio controls preload="none" src={liveAudioRecordings[0]?.src} class="m5-audio-player" id="m5AudioPlayer">
-                            Your browser does not support the audio element.
-                        </audio>
+                        <p class="m5-audio-now-title" id="m5AudioNowTitle">{initialAudioTrack?.title ?? 'No recordings available'}</p>
+                        {
+                            initialAudioTrack ? (
+                                <audio controls preload="none" src={initialAudioTrack.src} class="m5-audio-player" id="m5AudioPlayer">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            ) : (
+                                <p class="m5-audio-empty">No live audio recordings are available right now.</p>
+                            )
+                        }
                         <div class="m5-audio-actions">
-                            <button type="button" id="m5AudioPrev" class="m5-audio-nav">Previous</button>
-                            <button type="button" id="m5AudioNext" class="m5-audio-nav">Next</button>
+                            <button type="button" id="m5AudioPrev" class="m5-audio-nav" disabled={!initialAudioTrack}>Previous</button>
+                            <button type="button" id="m5AudioNext" class="m5-audio-nav" disabled={!initialAudioTrack}>Next</button>
                         </div>
                     </div>
                 </section>
@@ -553,6 +472,13 @@ const liveAudioRecordings = [
         color: #f5f7fb;
     }
 
+    .m5-audio-empty {
+        margin: 0;
+        color: rgb(225 230 243 / 78%);
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
     .m5-audio-actions {
         display: flex;
         gap: 0.5rem;
@@ -574,6 +500,11 @@ const liveAudioRecordings = [
 
     .m5-audio-nav:hover {
         border-color: rgb(255 78 86 / 60%);
+    }
+
+    .m5-audio-nav:disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
     }
 
     .m5-audio-player {

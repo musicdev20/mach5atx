@@ -1,4 +1,5 @@
 import { getStore } from '@netlify/blobs';
+import { fallbackVenueLogo, importVenueLogoFromUrl, isExternalUrl, isVenueLogoStoredInternally } from './venueLogos';
 
 export type NotableVenue = {
     id: string;
@@ -17,21 +18,21 @@ export const defaultNotableVenues: NotableVenue[] = [
         name: 'Shooters',
         address: '1208 N I-35 Frontage Rd, Round Rock, TX',
         directionsUrl: 'https://maps.google.com/?q=Shooters+Round+Rock+TX',
-        logoUrl: '/images/logos/m5logo2.webp'
+        logoUrl: fallbackVenueLogo
     },
     {
         id: 'round-rock-tavern',
         name: 'Round Rock Tavern',
         address: '113 W Main St, Round Rock, TX',
         directionsUrl: 'https://maps.google.com/?q=Round+Rock+Tavern+Round+Rock+TX',
-        logoUrl: '/images/logos/m5logo2.webp'
+        logoUrl: fallbackVenueLogo
     },
     {
         id: 'austin-private-venue',
         name: 'Private Venue',
         address: 'Austin, TX',
         directionsUrl: 'https://maps.google.com/?q=Austin+TX',
-        logoUrl: '/images/logos/m5logo2.webp'
+        logoUrl: fallbackVenueLogo
     }
 ];
 
@@ -55,7 +56,7 @@ const normalizeVenues = (raw: unknown): NotableVenue[] => {
                     : `https://maps.google.com/?q=${encodeURIComponent(
                           (typeof venue.address === 'string' ? venue.address : String((venue as unknown as { city?: string }).city ?? '')).trim()
                       )}`,
-            logoUrl: typeof venue.logoUrl === 'string' && venue.logoUrl.trim().length > 0 ? venue.logoUrl.trim() : '/images/logos/m5logo2.webp'
+            logoUrl: typeof venue.logoUrl === 'string' && venue.logoUrl.trim().length > 0 ? venue.logoUrl.trim() : fallbackVenueLogo
         }))
         .filter((venue) => venue.id.length > 0 && venue.name.length > 0 && venue.address.length > 0);
     return cleaned.length > 0 ? cleaned : defaultNotableVenues;
@@ -71,7 +72,26 @@ export const getNotableVenues = async (): Promise<NotableVenue[]> => {
     }
 };
 
-export const setNotableVenues = async (venues: NotableVenue[]): Promise<void> => {
+export const setNotableVenues = async (venues: NotableVenue[]): Promise<NotableVenue[]> => {
     const store = getStore({ name: STORE_NAME, consistency: 'strong' });
-    await store.setJSON(STORE_KEY, normalizeVenues(venues));
+    const normalized = normalizeVenues(venues);
+    const localized = await Promise.all(
+        normalized.map(async (venue) => {
+            if (!venue.logoUrl || venue.logoUrl === fallbackVenueLogo || isVenueLogoStoredInternally(venue.logoUrl) || venue.logoUrl.startsWith('/')) {
+                return venue;
+            }
+
+            if (!isExternalUrl(venue.logoUrl)) {
+                throw new Error(`Unsupported venue logo path for ${venue.name}`);
+            }
+
+            const stored = await importVenueLogoFromUrl(venue.id, venue.logoUrl);
+            return {
+                ...venue,
+                logoUrl: stored.url
+            };
+        })
+    );
+    await store.setJSON(STORE_KEY, localized);
+    return localized;
 };

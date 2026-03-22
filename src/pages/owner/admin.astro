@@ -41,6 +41,7 @@ export const prerender = false;
                     <div class="m5-tab-bar" role="tablist" aria-label="Admin sections">
                         <button type="button" role="tab" id="tabArtists" class="m5-tab-btn is-active" aria-selected="true" data-tab="artists">Artists</button>
                         <button type="button" role="tab" id="tabVenues" class="m5-tab-btn" aria-selected="false" data-tab="venues">Venues</button>
+                        <button type="button" role="tab" id="tabMedia" class="m5-tab-btn" aria-selected="false" data-tab="media">Media</button>
                         <button type="button" role="tab" id="tabShows" class="m5-tab-btn" aria-selected="false" data-tab="shows">Shows</button>
                     </div>
 
@@ -57,8 +58,33 @@ export const prerender = false;
                             <h2>Venues</h2>
                             <button id="addVenueButton" type="button">Add Venue</button>
                         </div>
-                        <p class="m5-admin-hint">Required fields: ID, name, address, and directions URL. Logo URL is optional.</p>
+                        <p class="m5-admin-hint">Required fields: ID, name, address, and directions URL. Logos can use a local path or be uploaded and stored internally.</p>
                         <div id="venuesList" class="m5-admin-list"></div>
+                    </section>
+
+                    <section id="panelMedia" class="m5-tab-panel" role="tabpanel" aria-labelledby="tabMedia" data-panel="media" hidden>
+                        <div class="m5-panel-head">
+                            <h2>Media</h2>
+                        </div>
+                        <div class="m5-media-admin-sections">
+                            <section class="m5-media-admin-block">
+                                <div class="m5-panel-head">
+                                    <h3>Live Videos</h3>
+                                    <button id="addVideoButton" type="button">Add Video</button>
+                                </div>
+                                <p class="m5-admin-hint">Manage the video cards displayed on the videos page.</p>
+                                <div id="videosList" class="m5-admin-list"></div>
+                            </section>
+
+                            <section class="m5-media-admin-block">
+                                <div class="m5-panel-head">
+                                    <h3>Live Audio</h3>
+                                    <button id="addRecordingButton" type="button">Add Recording</button>
+                                </div>
+                                <p class="m5-admin-hint">Manage the live audio recordings used on the videos page. Uploads are stored internally.</p>
+                                <div id="recordingsList" class="m5-admin-list"></div>
+                            </section>
+                        </div>
                     </section>
 
                     <section id="panelShows" class="m5-tab-panel" role="tabpanel" aria-labelledby="tabShows" data-panel="shows" hidden>
@@ -94,7 +120,7 @@ export const prerender = false;
                 <label>Venue ID<input name="id" type="text" placeholder="shooters-round-rock" /></label>
                 <label>Address<input name="address" type="text" placeholder="1208 N I-35 Frontage Rd, Round Rock, TX" required /></label>
                 <label>Directions URL<input name="directionsUrl" type="url" placeholder="https://maps.google.com/?q=..." required /></label>
-                <label>Logo URL (optional)<input name="logoUrl" type="text" placeholder="/images/logos/m5logo2.webp" /></label>
+                <label>Logo URL or Path (optional)<input name="logoUrl" type="text" placeholder="/images/logos/m5logo2.webp" /></label>
                 <div class="m5-modal-actions">
                     <button type="button" data-action="cancel">Cancel</button>
                     <button type="submit" data-action="save">Save</button>
@@ -136,7 +162,12 @@ export const prerender = false;
                 <label>Venue ID<input data-field="id" type="text" placeholder="shooters-round-rock" /></label>
                 <label>Address<input data-field="address" type="text" placeholder="1208 N I-35 Frontage Rd, Round Rock, TX" /></label>
                 <label>Directions URL<input data-field="directionsUrl" type="url" placeholder="https://maps.google.com/?q=..." /></label>
-                <label>Logo URL (optional)<input data-field="logoUrl" type="text" placeholder="/images/logos/m5logo2.webp" /></label>
+                <label>Logo URL or Path (optional)<input data-field="logoUrl" type="text" placeholder="/images/logos/m5logo2.webp" /></label>
+                <label>Upload Logo<input data-field="logoFile" type="file" accept="image/*" /></label>
+                <div class="m5-logo-tools">
+                    <img data-field="logoPreview" alt="" hidden />
+                    <p class="m5-upload-status" data-field="logoStatus">No uploaded logo.</p>
+                </div>
                 <button data-action="remove" type="button">Remove</button>
             </article>
         </template>
@@ -150,6 +181,32 @@ export const prerender = false;
                 </label>
                 <label>Show ID<input data-field="id" type="text" /></label>
                 <p class="m5-linked-preview" data-field="venuePreview"></p>
+                <button data-action="remove" type="button">Remove</button>
+            </article>
+        </template>
+
+        <template id="mediaRecordingRowTemplate">
+            <article class="m5-row m5-recording-row">
+                <label>Recording Title<input data-field="title" type="text" placeholder="Song title" /></label>
+                <label>Recording ID<input data-field="id" type="text" placeholder="song-title" /></label>
+                <label class="m5-span-2">Audio URL or Path<input data-field="src" type="text" placeholder="/audio/song.mp3" /></label>
+                <label>Upload Audio<input data-field="audioFile" type="file" accept="audio/*" /></label>
+                <div class="m5-audio-tools">
+                    <audio data-field="audioPreview" controls preload="none" hidden></audio>
+                    <p class="m5-upload-status" data-field="audioStatus">No uploaded audio.</p>
+                </div>
+                <button data-action="remove" type="button">Remove</button>
+            </article>
+        </template>
+
+        <template id="mediaVideoRowTemplate">
+            <article class="m5-row m5-video-admin-row">
+                <label>Video Title<input data-field="title" type="text" placeholder="MACH 5 Promo" /></label>
+                <label>Video ID<input data-field="id" type="text" placeholder="mach-5-promo" /></label>
+                <label>Event Label<input data-field="event" type="text" placeholder="Main Promo" /></label>
+                <label>Video URL<input data-field="href" type="url" placeholder="https://youtu.be/..." /></label>
+                <label class="m5-span-2">Description<textarea data-field="description" rows="3" placeholder="Official MACH 5 promo video."></textarea></label>
+                <label class="m5-span-2">Thumbnail URL (optional)<input data-field="thumbnail" type="text" placeholder="https://i.ytimg.com/vi/.../hqdefault.jpg" /></label>
                 <button data-action="remove" type="button">Remove</button>
             </article>
         </template>
@@ -323,6 +380,16 @@ export const prerender = false;
         gap: 0.75rem;
     }
 
+    .m5-media-admin-sections {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .m5-media-admin-block {
+        display: grid;
+        gap: 0.6rem;
+    }
+
     .m5-row {
         border: 1px solid rgb(255 255 255 / 16%);
         border-radius: 0.8rem;
@@ -337,6 +404,8 @@ export const prerender = false;
     }
 
     .m5-venue-row,
+    .m5-recording-row,
+    .m5-video-admin-row,
     .m5-show-row {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -367,6 +436,39 @@ export const prerender = false;
         margin: 0;
         color: rgb(230 233 242 / 86%);
         min-height: 1.25em;
+    }
+
+    .m5-logo-tools {
+        display: grid;
+        gap: 0.5rem;
+        align-content: start;
+    }
+
+    .m5-logo-tools img {
+        width: 88px;
+        height: 88px;
+        object-fit: contain;
+        border-radius: 0.75rem;
+        border: 1px solid rgb(255 255 255 / 14%);
+        background: rgb(255 255 255 / 4%);
+        padding: 0.4rem;
+    }
+
+    .m5-upload-status {
+        margin: 0;
+        color: rgb(225 230 243 / 72%);
+        font-size: 0.84rem;
+    }
+
+    .m5-audio-tools {
+        display: grid;
+        gap: 0.5rem;
+        align-content: start;
+    }
+
+    .m5-audio-tools audio {
+        width: min(320px, 100%);
+        height: 36px;
     }
 
     .m5-modal {
@@ -419,6 +521,8 @@ export const prerender = false;
         }
         .m5-artist-row,
         .m5-venue-row,
+        .m5-recording-row,
+        .m5-video-admin-row,
         .m5-show-row {
             grid-template-columns: 1fr;
         }
@@ -441,6 +545,8 @@ export const prerender = false;
         const logoutButton = document.getElementById('logoutButton');
         const addArtistButton = document.getElementById('addArtistButton');
         const addVenueButton = document.getElementById('addVenueButton');
+        const addVideoButton = document.getElementById('addVideoButton');
+        const addRecordingButton = document.getElementById('addRecordingButton');
         const addShowButton = document.getElementById('addShowButton');
 
         const adminPassword = document.getElementById('adminPassword');
@@ -449,11 +555,15 @@ export const prerender = false;
 
         const artistsList = document.getElementById('artistsList');
         const venuesList = document.getElementById('venuesList');
+        const videosList = document.getElementById('videosList');
+        const recordingsList = document.getElementById('recordingsList');
         const showsList = document.getElementById('showsList');
 
         const artistTemplate = document.getElementById('artistRowTemplate');
         const venueTemplate = document.getElementById('venueRowTemplate');
         const showTemplate = document.getElementById('showRowTemplate');
+        const mediaVideoTemplate = document.getElementById('mediaVideoRowTemplate');
+        const mediaRecordingTemplate = document.getElementById('mediaRecordingRowTemplate');
         const artistModal = document.getElementById('artistModal');
         const venueModal = document.getElementById('venueModal');
         const showModal = document.getElementById('showModal');
@@ -485,6 +595,7 @@ export const prerender = false;
         };
 
         const slug = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        const fallbackVenueLogo = '/images/logos/m5logo2.webp';
         const isoToLocalInput = (isoString) => {
             if (!isoString || typeof isoString !== 'string') return '';
             const date = new Date(isoString);
@@ -578,20 +689,134 @@ export const prerender = false;
                 Array.from(new FormData(form).entries()).map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value])
             );
 
+        const updateVenueLogoPreview = (row) => {
+            const input = row.querySelector('[data-field="logoUrl"]');
+            const preview = row.querySelector('[data-field="logoPreview"]');
+            const status = row.querySelector('[data-field="logoStatus"]');
+            const value = input?.value?.trim() || '';
+
+            if (!value) {
+                preview.hidden = true;
+                preview.removeAttribute('src');
+                status.textContent = 'No uploaded logo.';
+                return;
+            }
+
+            preview.hidden = false;
+            preview.src = value;
+            preview.alt = 'Venue logo preview';
+            status.textContent = value.startsWith('/api/venue-logo?key=') ? 'Stored internally.' : 'Using configured path or URL.';
+        };
+
+        const uploadVenueLogo = async (row, file) => {
+            const idInput = row.querySelector('[data-field="id"]');
+            const nameInput = row.querySelector('[data-field="name"]');
+            const logoUrlInput = row.querySelector('[data-field="logoUrl"]');
+            const fileInput = row.querySelector('[data-field="logoFile"]');
+            const status = row.querySelector('[data-field="logoStatus"]');
+            const venueId = (idInput?.value || slug(nameInput?.value || '') || `venue-${Date.now()}`).trim();
+
+            idInput.value = venueId;
+            status.textContent = 'Uploading logo...';
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('venueId', venueId);
+
+            const response = await fetch('/api/venue-logo', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                const error = await response.json().catch(() => ({}));
+                status.textContent = error.error || 'Upload failed.';
+                fileInput.value = '';
+                return;
+            }
+
+            const data = await response.json();
+            logoUrlInput.value = data.logoUrl || fallbackVenueLogo;
+            fileInput.value = '';
+            updateVenueLogoPreview(row);
+        };
+
+        const updateRecordingPreview = (row) => {
+            const input = row.querySelector('[data-field="src"]');
+            const preview = row.querySelector('[data-field="audioPreview"]');
+            const status = row.querySelector('[data-field="audioStatus"]');
+            const value = input?.value?.trim() || '';
+
+            if (!value) {
+                preview.hidden = true;
+                preview.removeAttribute('src');
+                preview.load?.();
+                status.textContent = 'No uploaded audio.';
+                return;
+            }
+
+            preview.hidden = false;
+            preview.src = value;
+            preview.load?.();
+            status.textContent = value.startsWith('/api/media-audio?key=') ? 'Stored internally.' : 'Using configured path or URL.';
+        };
+
+        const uploadRecordingAudio = async (row, file) => {
+            const idInput = row.querySelector('[data-field="id"]');
+            const titleInput = row.querySelector('[data-field="title"]');
+            const srcInput = row.querySelector('[data-field="src"]');
+            const fileInput = row.querySelector('[data-field="audioFile"]');
+            const status = row.querySelector('[data-field="audioStatus"]');
+            const recordingId = (idInput?.value || slug(titleInput?.value || '') || `recording-${Date.now()}`).trim();
+
+            idInput.value = recordingId;
+            status.textContent = 'Uploading audio...';
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('recordingId', recordingId);
+
+            const response = await fetch('/api/media-audio', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                const error = await response.json().catch(() => ({}));
+                status.textContent = error.error || 'Upload failed.';
+                fileInput.value = '';
+                return;
+            }
+
+            const data = await response.json();
+            srcInput.value = data.src || '';
+            fileInput.value = '';
+            updateRecordingPreview(row);
+        };
+
         const createVenueRow = (venue = {}) => {
             const node = venueTemplate.content.firstElementChild.cloneNode(true);
             node.querySelectorAll('[data-field]').forEach((input) => {
                 const key = input.getAttribute('data-field');
+                if (key === 'logoFile' || key === 'logoPreview' || key === 'logoStatus') return;
                 input.value = typeof venue[key] === 'string' ? venue[key] : '';
             });
             node.querySelector('[data-action="remove"]').addEventListener('click', () => {
                 node.remove();
                 refreshVenueSelects();
             });
-            node.querySelectorAll('[data-field]').forEach((input) => {
+            node.querySelectorAll('[data-field="name"], [data-field="id"], [data-field="address"], [data-field="directionsUrl"], [data-field="logoUrl"]').forEach((input) => {
                 input.addEventListener('input', refreshVenueSelects);
             });
+            node.querySelector('[data-field="logoUrl"]').addEventListener('input', () => updateVenueLogoPreview(node));
+            node.querySelector('[data-field="logoFile"]').addEventListener('change', async (event) => {
+                const file = event.target.files?.[0];
+                if (!file) return;
+                await uploadVenueLogo(node, file);
+                refreshVenueSelects();
+            });
             venuesList.appendChild(node);
+            updateVenueLogoPreview(node);
             refreshVenueSelects();
         };
 
@@ -619,6 +844,34 @@ export const prerender = false;
             showsList.appendChild(node);
         };
 
+        const createRecordingRow = (recording = {}) => {
+            const node = mediaRecordingTemplate.content.firstElementChild.cloneNode(true);
+            node.querySelectorAll('[data-field]').forEach((input) => {
+                const key = input.getAttribute('data-field');
+                if (key === 'audioFile' || key === 'audioPreview' || key === 'audioStatus') return;
+                input.value = typeof recording[key] === 'string' ? recording[key] : '';
+            });
+            node.querySelector('[data-action="remove"]').addEventListener('click', () => node.remove());
+            node.querySelector('[data-field="src"]').addEventListener('input', () => updateRecordingPreview(node));
+            node.querySelector('[data-field="audioFile"]').addEventListener('change', async (event) => {
+                const file = event.target.files?.[0];
+                if (!file) return;
+                await uploadRecordingAudio(node, file);
+            });
+            recordingsList.appendChild(node);
+            updateRecordingPreview(node);
+        };
+
+        const createVideoRow = (video = {}) => {
+            const node = mediaVideoTemplate.content.firstElementChild.cloneNode(true);
+            node.querySelectorAll('[data-field]').forEach((input) => {
+                const key = input.getAttribute('data-field');
+                input.value = typeof video[key] === 'string' ? video[key] : '';
+            });
+            node.querySelector('[data-action="remove"]').addEventListener('click', () => node.remove());
+            videosList.appendChild(node);
+        };
+
         const createArtistRow = (artist = {}) => {
             const node = artistTemplate.content.firstElementChild.cloneNode(true);
             node.querySelectorAll('[data-field]').forEach((input) => {
@@ -633,8 +886,7 @@ export const prerender = false;
             artistsList.appendChild(node);
         };
 
-        const collectShows = () => {
-            const venues = collectVenues();
+        const collectShows = (venues = collectVenues()) => {
             return Array.from(showsList.querySelectorAll('.m5-show-row')).map((row, index) => {
                 const read = (field) => row.querySelector(`[data-field="${field}"]`)?.value.trim() ?? '';
                 const venueId = read('venueId');
@@ -667,15 +919,60 @@ export const prerender = false;
                 };
             });
 
+        const collectRecordings = () =>
+            Array.from(recordingsList.querySelectorAll('.m5-recording-row'))
+                .map((row, index) => {
+                    const read = (field) => row.querySelector(`[data-field="${field}"]`)?.value.trim() ?? '';
+                    const title = read('title');
+                    return {
+                        id: read('id') || `${slug(title) || 'recording'}-${index + 1}`,
+                        title,
+                        src: read('src')
+                    };
+                })
+                .filter((recording) => recording.title.length > 0 && recording.src.length > 0);
+
+        const collectVideos = () =>
+            Array.from(videosList.querySelectorAll('.m5-video-admin-row'))
+                .map((row, index) => {
+                    const read = (field) => row.querySelector(`[data-field="${field}"]`)?.value.trim() ?? '';
+                    const title = read('title');
+                    return {
+                        id: read('id') || `${slug(title) || 'video'}-${index + 1}`,
+                        title,
+                        event: read('event'),
+                        description: read('description'),
+                        href: read('href'),
+                        thumbnail: read('thumbnail') || undefined
+                    };
+                })
+                .filter((video) => video.title.length > 0 && video.event.length > 0 && video.description.length > 0 && video.href.length > 0);
+
         const loadAll = async () => {
-            const [artistsRes, venuesRes, showsRes] = await Promise.all([fetch('/api/artists'), fetch('/api/venues'), fetch('/api/shows')]);
-            const [artistsData, venuesData, showsData] = await Promise.all([artistsRes.json(), venuesRes.json(), showsRes.json()]);
+            const [artistsRes, venuesRes, videosRes, recordingsRes, showsRes] = await Promise.all([
+                fetch('/api/artists'),
+                fetch('/api/venues'),
+                fetch('/api/media-videos'),
+                fetch('/api/media-recordings'),
+                fetch('/api/shows')
+            ]);
+            const [artistsData, venuesData, videosData, recordingsData, showsData] = await Promise.all([
+                artistsRes.json(),
+                venuesRes.json(),
+                videosRes.json(),
+                recordingsRes.json(),
+                showsRes.json()
+            ]);
 
             artistsList.innerHTML = '';
             venuesList.innerHTML = '';
+            videosList.innerHTML = '';
+            recordingsList.innerHTML = '';
             showsList.innerHTML = '';
 
             (venuesData.venues ?? []).forEach((venue) => createVenueRow(venue));
+            (videosData.videos ?? []).forEach((video) => createVideoRow(video));
+            (recordingsData.recordings ?? []).forEach((recording) => createRecordingRow(recording));
             (showsData.shows ?? []).forEach((show) => createShowRow(show));
             (artistsData.artists ?? []).forEach((artist) => createArtistRow(artist));
 
@@ -703,15 +1000,27 @@ export const prerender = false;
         const saveAll = async () => {
             setMessage(editorMessage, '');
             const venues = collectVenues();
-            const shows = collectShows();
             const artists = collectArtists();
+            const videos = collectVideos();
+            const recordings = collectRecordings();
+
+            const venuesResponse = await fetch('/api/venues', {
+                method: 'PUT',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({ venues })
+            });
+
+            if (!venuesResponse.ok) {
+                const error = await venuesResponse.json().catch(() => ({}));
+                setMessage(editorMessage, error.error ?? 'Save failed.');
+                return;
+            }
+
+            const venuesData = await venuesResponse.json().catch(() => ({}));
+            const savedVenues = Array.isArray(venuesData.venues) ? venuesData.venues : venues;
+            const shows = collectShows(savedVenues);
 
             const responses = await Promise.all([
-                fetch('/api/venues', {
-                    method: 'PUT',
-                    headers: { 'content-type': 'application/json' },
-                    body: JSON.stringify({ venues })
-                }),
                 fetch('/api/shows', {
                     method: 'PUT',
                     headers: { 'content-type': 'application/json' },
@@ -721,6 +1030,16 @@ export const prerender = false;
                     method: 'PUT',
                     headers: { 'content-type': 'application/json' },
                     body: JSON.stringify({ artists })
+                }),
+                fetch('/api/media-videos', {
+                    method: 'PUT',
+                    headers: { 'content-type': 'application/json' },
+                    body: JSON.stringify({ videos })
+                }),
+                fetch('/api/media-recordings', {
+                    method: 'PUT',
+                    headers: { 'content-type': 'application/json' },
+                    body: JSON.stringify({ recordings })
                 })
             ]);
 
@@ -732,6 +1051,38 @@ export const prerender = false;
             }
 
             setMessage(editorMessage, 'Saved. Artists, venues, and shows are updated.');
+            Array.from(venuesList.querySelectorAll('.m5-venue-row')).forEach((row) => {
+                const id = row.querySelector('[data-field="id"]')?.value.trim();
+                const venue = savedVenues.find((item) => item.id === id);
+                if (!venue) return;
+                const logoInput = row.querySelector('[data-field="logoUrl"]');
+                logoInput.value = venue.logoUrl || fallbackVenueLogo;
+                updateVenueLogoPreview(row);
+            });
+            const videosResponse = responses[2];
+            const videosData = await videosResponse.json().catch(() => ({}));
+            const savedVideos = Array.isArray(videosData.videos) ? videosData.videos : videos;
+            Array.from(videosList.querySelectorAll('.m5-video-admin-row')).forEach((row) => {
+                const id = row.querySelector('[data-field="id"]')?.value.trim();
+                const video = savedVideos.find((item) => item.id === id);
+                if (!video) return;
+                row.querySelector('[data-field="title"]').value = video.title || '';
+                row.querySelector('[data-field="event"]').value = video.event || '';
+                row.querySelector('[data-field="description"]').value = video.description || '';
+                row.querySelector('[data-field="href"]').value = video.href || '';
+                row.querySelector('[data-field="thumbnail"]').value = video.thumbnail || '';
+            });
+            const recordingsResponse = responses[3];
+            const recordingsData = await recordingsResponse.json().catch(() => ({}));
+            const savedRecordings = Array.isArray(recordingsData.recordings) ? recordingsData.recordings : recordings;
+            Array.from(recordingsList.querySelectorAll('.m5-recording-row')).forEach((row) => {
+                const id = row.querySelector('[data-field="id"]')?.value.trim();
+                const recording = savedRecordings.find((item) => item.id === id);
+                if (!recording) return;
+                const srcInput = row.querySelector('[data-field="src"]');
+                srcInput.value = recording.src || '';
+                updateRecordingPreview(row);
+            });
             refreshVenueSelects();
         };
 
@@ -743,6 +1094,8 @@ export const prerender = false;
             setMessage(editorMessage, '');
             artistsList.innerHTML = '';
             venuesList.innerHTML = '';
+            videosList.innerHTML = '';
+            recordingsList.innerHTML = '';
             showsList.innerHTML = '';
         };
 
@@ -816,6 +1169,8 @@ export const prerender = false;
 
         addArtistButton.addEventListener('click', () => openModal(artistModal, artistModalForm));
         addVenueButton.addEventListener('click', () => openModal(venueModal, venueModalForm));
+        addVideoButton.addEventListener('click', () => createVideoRow());
+        addRecordingButton.addEventListener('click', () => createRecordingRow());
         addShowButton.addEventListener('click', () => {
             populateModalVenueSelect();
             openModal(showModal, showModalForm);
