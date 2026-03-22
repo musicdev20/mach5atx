@@ -1,12 +1,12 @@
 import type { APIRoute } from 'astro';
-import { getNotableVenues, setNotableVenues } from '../../lib/venues';
+import { getLiveAudioRecordings, setLiveAudioRecordings } from '../../lib/mediaRecordings';
 import { isAuthorized } from '../../lib/showsAuth';
 
 export const prerender = false;
 
 export const GET: APIRoute = async () => {
-    const venues = await getNotableVenues();
-    return new Response(JSON.stringify({ venues }), {
+    const recordings = await getLiveAudioRecordings();
+    return new Response(JSON.stringify({ recordings }), {
         headers: { 'content-type': 'application/json' }
     });
 };
@@ -20,8 +20,8 @@ export const PUT: APIRoute = async ({ request }) => {
     }
 
     const body = await request.json().catch(() => null);
-    const venues = body?.venues;
-    if (!Array.isArray(venues)) {
+    const recordings = body?.recordings;
+    if (!Array.isArray(recordings)) {
         return new Response(JSON.stringify({ error: 'Invalid payload' }), {
             status: 400,
             headers: { 'content-type': 'application/json' }
@@ -29,14 +29,14 @@ export const PUT: APIRoute = async ({ request }) => {
     }
 
     try {
-        const savedVenues = await setNotableVenues(venues);
-        return new Response(JSON.stringify({ ok: true, venues: savedVenues }), {
+        const savedRecordings = await setLiveAudioRecordings(recordings);
+        return new Response(JSON.stringify({ ok: true, recordings: savedRecordings }), {
             headers: { 'content-type': 'application/json' }
         });
     } catch (error) {
         return new Response(
             JSON.stringify({
-                error: error instanceof Error ? error.message : 'Failed to save venues'
+                error: error instanceof Error ? error.message : 'Failed to save recordings'
             }),
             {
                 status: 400,
