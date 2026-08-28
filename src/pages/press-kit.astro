@@ -162,11 +162,11 @@ const notableVenues = await getNotableVenues();
                         <div class="pk-stage-wrap">
                             <p class="pk-stage-label">Upstage</p>
                             <div class="pk-stage-plot">
-                                <div class="pk-position pk-front-left">Guitar<br />Stage Left</div>
+                                <div class="pk-position pk-back-left">Drums<br />Stage Right Back</div>
+                                <div class="pk-position pk-back-right">Keyboards<br />Stage Left Back</div>
+                                <div class="pk-position pk-front-left">Guitar<br />Stage Right</div>
                                 <div class="pk-position pk-front-center">Lead Vocal<br />Center</div>
-                                <div class="pk-position pk-front-right">Bass<br />Stage Right</div>
-                                <div class="pk-position pk-back-left">Drums<br />Stage Left Back</div>
-                                <div class="pk-position pk-back-right">Keyboards<br />Stage Right Back</div>
+                                <div class="pk-position pk-front-right">Bass<br />Stage Left</div>
                             </div>
                             <p class="pk-stage-label pk-stage-label-back">Audience</p>
                         </div>
@@ -456,15 +456,20 @@ const notableVenues = await getNotableVenues();
     }
 
     .pk-stage-plot {
-        height: 3.64in;
+        min-height: 3.64in;
         border: 1px dashed rgb(255 255 255 / 40%);
-        position: relative;
         background: linear-gradient(180deg, rgb(225 6 0 / 6%) 0%, rgb(255 255 255 / 2%) 100%);
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-rows: auto auto;
+        align-content: space-between;
+        gap: 0.14in 0.1in;
+        padding: 0.16in 0.14in;
+        box-sizing: border-box;
     }
 
     .pk-position {
-        position: absolute;
-        min-width: 1.35in;
+        min-width: 0;
         padding: 0.06in 0.07in;
         border: 1px solid rgb(255 255 255 / 24%);
         background: rgb(10 10 14 / 80%);
@@ -472,32 +477,36 @@ const notableVenues = await getNotableVenues();
         font-size: 10px;
         line-height: 1.35;
         text-align: center;
-    }
-
-    .pk-front-left {
-        left: 0.16in;
-        top: 2.7in;
-    }
-
-    .pk-front-center {
-        left: 50%;
-        transform: translateX(-50%);
-        top: 2.7in;
-    }
-
-    .pk-front-right {
-        right: 0.16in;
-        top: 2.7in;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow-wrap: anywhere;
+        box-sizing: border-box;
     }
 
     .pk-back-left {
-        left: 0.22in;
-        top: 0.55in;
+        grid-column: 1;
+        grid-row: 1;
     }
 
     .pk-back-right {
-        right: 0.22in;
-        top: 0.55in;
+        grid-column: 3;
+        grid-row: 1;
+    }
+
+    .pk-front-left {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .pk-front-center {
+        grid-column: 2;
+        grid-row: 2;
+    }
+
+    .pk-front-right {
+        grid-column: 3;
+        grid-row: 2;
     }
 
     .pk-booking {
@@ -535,6 +544,9 @@ const notableVenues = await getNotableVenues();
             display: grid;
             gap: 0.85rem;
             padding: 0.65rem;
+            box-sizing: border-box;
+            max-width: 100%;
+            overflow-x: hidden;
         }
 
         .pk-page {
@@ -542,6 +554,7 @@ const notableVenues = await getNotableVenues();
             height: auto;
             min-height: 0;
             padding: 1.25rem 0.85rem 0.95rem;
+            box-sizing: border-box;
             overflow: visible;
             border: 1px solid rgb(255 255 255 / 14%);
             border-radius: 0.75rem;
@@ -594,19 +607,14 @@ const notableVenues = await getNotableVenues();
         }
 
         .pk-stage-plot {
-            height: auto;
-            min-height: 0;
-            display: grid;
-            gap: 0.45rem;
-            padding: 0.55rem;
+            min-height: 13rem;
+            gap: 0.5rem 0.35rem;
+            padding: 0.55rem 0.45rem;
         }
 
         .pk-position {
-            position: static;
-            min-width: 0;
-            width: 100%;
-            box-sizing: border-box;
-            transform: none;
+            padding: 0.4rem 0.3rem;
+            font-size: 0.7rem;
         }
 
         .pk-footer {
@@ -650,6 +658,19 @@ const notableVenues = await getNotableVenues();
         .pk-icons a {
             width: 20px;
             height: 20px;
+        }
+
+        .pk-stage-plot {
+            min-height: 11rem;
+            gap: 0.4rem 0.25rem;
+            padding: 0.45rem 0.35rem;
+        }
+
+        .pk-position {
+            padding: 0.35rem 0.15rem;
+            font-size: 0.62rem;
+            line-height: 1.25;
+            hyphens: auto;
         }
     }
 </style>
