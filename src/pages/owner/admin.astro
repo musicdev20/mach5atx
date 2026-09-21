@@ -90,9 +90,12 @@ export const prerender = false;
                     <section id="panelShows" class="m5-tab-panel" role="tabpanel" aria-labelledby="tabShows" data-panel="shows" hidden>
                         <div class="m5-panel-head">
                             <h2>Shows</h2>
-                            <button id="addShowButton" type="button">Add Show</button>
+                            <div class="m5-panel-head-actions">
+                                <button id="sortShowsButton" type="button">Sort by Date</button>
+                                <button id="addShowButton" type="button">Add Show(s)</button>
+                            </div>
                         </div>
-                        <p class="m5-admin-hint">Each show must select a venue from the venues tab. Venue details are linked automatically.</p>
+                        <p class="m5-admin-hint">Pick the venue and start time once, then click every date on the calendar &mdash; they are all added in one go. Show IDs are generated automatically. Use <strong>Duplicate</strong> on any row to clone that show onto a new date.</p>
                         <div id="showsList" class="m5-admin-list"></div>
                     </section>
                 </section>
@@ -128,20 +131,60 @@ export const prerender = false;
             </form>
         </dialog>
 
-        <dialog id="showModal" class="m5-modal">
+        <dialog id="showModal" class="m5-modal m5-modal-wide">
             <form id="showModalForm" class="m5-modal-form" method="dialog">
-                <h3>Add Show</h3>
+                <h3>Add Shows</h3>
                 <label>Event Name<input name="eventName" type="text" required /></label>
-                <label>Start Date/Time<input name="startDateTime" type="datetime-local" step="60" required /></label>
-                <label>Venue
-                    <select name="venueId" required>
-                        <option value="">Select a venue</option>
-                    </select>
-                </label>
-                <label>Show ID<input name="id" type="text" /></label>
+                <div class="m5-modal-grid">
+                    <label>Venue
+                        <select name="venueId" required>
+                            <option value="">Select a venue</option>
+                        </select>
+                    </label>
+                    <label>Start Time<input name="startTime" type="time" step="60" value="20:00" required /></label>
+                </div>
+
+                <div class="m5-datepick">
+                    <div class="m5-cal">
+                        <div class="m5-cal-head">
+                            <button type="button" data-action="cal-prev" aria-label="Previous month">&lsaquo;</button>
+                            <strong data-field="calLabel"></strong>
+                            <button type="button" data-action="cal-next" aria-label="Next month">&rsaquo;</button>
+                        </div>
+                        <div class="m5-cal-dow" aria-hidden="true">
+                            <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+                        </div>
+                        <div class="m5-cal-grid" data-field="calGrid"></div>
+                        <p class="m5-admin-hint m5-cal-hint">Click a day to add or remove it. Shift-click a second day to take the whole range.</p>
+                    </div>
+
+                    <div class="m5-repeat">
+                        <p class="m5-repeat-title">Repeat helper</p>
+                        <div class="m5-repeat-row">
+                            <label>Starting<input name="repeatStart" type="date" /></label>
+                            <label>Every
+                                <select name="repeatEvery">
+                                    <option value="7">week</option>
+                                    <option value="14" selected>2 weeks</option>
+                                    <option value="21">3 weeks</option>
+                                    <option value="28">4 weeks</option>
+                                    <option value="month">month (same date)</option>
+                                </select>
+                            </label>
+                            <label>Times<input name="repeatCount" type="number" min="1" max="24" value="6" /></label>
+                        </div>
+                        <button type="button" data-action="repeat-fill">Fill Dates</button>
+
+                        <p class="m5-repeat-title">Selected dates (<span data-field="pickCount">0</span>)</p>
+                        <ul class="m5-pick-list" data-field="pickList"></ul>
+                        <button type="button" data-action="clear-dates">Clear All Dates</button>
+                    </div>
+                </div>
+
+                <p class="m5-admin-msg" data-field="showModalMsg"></p>
                 <div class="m5-modal-actions">
                     <button type="button" data-action="cancel">Cancel</button>
-                    <button type="submit" data-action="save">Save</button>
+                    <button type="submit" data-action="save">Add Shows</button>
                 </div>
             </form>
         </dialog>
@@ -179,9 +222,17 @@ export const prerender = false;
                 <label>Venue
                     <select data-field="venueId"></select>
                 </label>
-                <label>Show ID<input data-field="id" type="text" /></label>
-                <p class="m5-linked-preview" data-field="venuePreview"></p>
-                <button data-action="remove" type="button">Remove</button>
+                <label>Show ID
+                    <span class="m5-id-field">
+                        <input data-field="id" type="text" readonly />
+                        <button data-action="toggle-id" type="button" title="Override the auto-generated ID">Edit</button>
+                    </span>
+                </label>
+                <p class="m5-linked-preview m5-span-2" data-field="venuePreview"></p>
+                <div class="m5-row-actions">
+                    <button data-action="duplicate" type="button">Duplicate +1 Week</button>
+                    <button data-action="remove" type="button">Remove</button>
+                </div>
             </article>
         </template>
 
@@ -510,6 +561,221 @@ export const prerender = false;
         padding-top: 0.2rem;
     }
 
+    .m5-panel-head-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .m5-modal-wide {
+        width: min(900px, calc(100vw - 2rem));
+        max-height: calc(100vh - 2rem);
+        overflow-y: auto;
+    }
+
+    .m5-modal-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 0.65rem;
+    }
+
+    .m5-datepick {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 0.85rem;
+        border: 1px solid rgb(255 255 255 / 14%);
+        border-radius: 0.7rem;
+        padding: 0.7rem;
+        background: rgb(7 11 21 / 55%);
+    }
+
+    .m5-cal-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.4rem;
+        margin-bottom: 0.45rem;
+    }
+
+    .m5-cal-head button {
+        border: 1px solid rgb(255 255 255 / 26%);
+        border-radius: 0.5rem;
+        background: rgb(12 17 31 / 85%);
+        color: #fff;
+        font: inherit;
+        font-weight: 800;
+        line-height: 1;
+        padding: 0.32rem 0.62rem;
+        cursor: pointer;
+    }
+
+    .m5-cal-head button:hover {
+        border-color: #ff4e56;
+        color: #ff4e56;
+    }
+
+    .m5-cal-dow,
+    .m5-cal-grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 0.22rem;
+    }
+
+    .m5-cal-dow span {
+        text-align: center;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: rgb(226 231 244 / 62%);
+        padding-bottom: 0.22rem;
+    }
+
+    .m5-cal-day {
+        border: 1px solid rgb(255 255 255 / 12%);
+        border-radius: 0.45rem;
+        background: rgb(12 17 31 / 70%);
+        color: #f2f5ff;
+        font: inherit;
+        font-size: 0.86rem;
+        padding: 0.42rem 0;
+        cursor: pointer;
+    }
+
+    .m5-cal-day:hover {
+        border-color: #ff4e56;
+        color: #ff4e56;
+    }
+
+    .m5-cal-day.is-empty {
+        border-color: transparent;
+        background: none;
+        cursor: default;
+    }
+
+    .m5-cal-day.is-today {
+        border-color: rgb(255 255 255 / 48%);
+    }
+
+    .m5-cal-day.is-picked {
+        background: #ff4e56;
+        border-color: #ff4e56;
+        color: #14060a;
+        font-weight: 800;
+    }
+
+    .m5-cal-day.is-picked:hover {
+        color: #14060a;
+    }
+
+    .m5-cal-hint {
+        margin: 0.5rem 0 0;
+        font-size: 0.8rem;
+    }
+
+    .m5-repeat {
+        display: grid;
+        gap: 0.5rem;
+        align-content: start;
+    }
+
+    .m5-repeat-title {
+        margin: 0.15rem 0 0;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: rgb(226 231 244 / 68%);
+    }
+
+    .m5-repeat-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.45rem;
+    }
+
+    .m5-repeat label {
+        display: flex;
+        flex-direction: column;
+        gap: 0.22rem;
+        font-size: 0.82rem;
+    }
+
+    .m5-pick-list {
+        list-style: none;
+        margin: 0;
+        padding: 0.4rem;
+        display: grid;
+        gap: 0.3rem;
+        align-content: start;
+        max-height: 190px;
+        min-height: 3.2rem;
+        overflow-y: auto;
+        border: 1px solid rgb(255 255 255 / 14%);
+        border-radius: 0.5rem;
+        background: rgb(10 14 24 / 65%);
+    }
+
+    .m5-pick-list li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.4rem;
+        font-size: 0.86rem;
+        padding: 0.22rem 0.32rem;
+        border-radius: 0.35rem;
+        background: rgb(255 255 255 / 6%);
+    }
+
+    .m5-pick-list li.m5-pick-empty {
+        background: none;
+        color: rgb(226 231 244 / 55%);
+        font-style: italic;
+    }
+
+    .m5-pick-list button {
+        border: none;
+        background: none;
+        color: rgb(255 142 148 / 92%);
+        font: inherit;
+        font-weight: 800;
+        line-height: 1;
+        padding: 0.1rem 0.28rem;
+        cursor: pointer;
+    }
+
+    .m5-pick-list button:hover {
+        color: #ff4e56;
+    }
+
+    .m5-id-field {
+        display: flex;
+        align-items: stretch;
+        gap: 0.3rem;
+    }
+
+    .m5-id-field input {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .m5-id-field input[readonly] {
+        color: rgb(230 234 245 / 68%);
+        background: rgb(255 255 255 / 5%);
+    }
+
+    .m5-id-field button {
+        flex: 0 0 auto;
+        font-size: 0.8rem;
+        padding: 0.35rem 0.55rem;
+    }
+
+    .m5-row-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.42rem;
+        grid-column: span 2;
+    }
+
     @media (max-width: 860px) {
         .m5-checker {
             height: 32px;
@@ -528,6 +794,17 @@ export const prerender = false;
         }
         .m5-span-2 {
             grid-column: auto;
+        }
+        .m5-modal-grid,
+        .m5-datepick,
+        .m5-repeat-row {
+            grid-template-columns: 1fr;
+        }
+        .m5-row-actions {
+            grid-column: auto;
+        }
+        .m5-pick-list {
+            max-height: 240px;
         }
         .m5-panel-head {
             flex-direction: column;
@@ -548,6 +825,7 @@ export const prerender = false;
         const addVideoButton = document.getElementById('addVideoButton');
         const addRecordingButton = document.getElementById('addRecordingButton');
         const addShowButton = document.getElementById('addShowButton');
+        const sortShowsButton = document.getElementById('sortShowsButton');
 
         const adminPassword = document.getElementById('adminPassword');
         const loginMessage = document.getElementById('loginMessage');
@@ -652,18 +930,122 @@ export const prerender = false;
             select.value = selectedId && venues.some((venue) => venue.id === selectedId) ? selectedId : '';
         };
 
+        const pad2 = (n) => String(n).padStart(2, '0');
+        const weekdayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const monthNames = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+        ];
+
+        const dateKey = (date) => `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
+
+        const keyToDate = (key) => {
+            const [year, month, day] = String(key).split('-').map(Number);
+            return new Date(year, (month || 1) - 1, day || 1);
+        };
+
+        const addMonths = (date, count) => {
+            const day = date.getDate();
+            const result = new Date(date.getFullYear(), date.getMonth() + count, 1);
+            const lastDay = new Date(result.getFullYear(), result.getMonth() + 1, 0).getDate();
+            result.setDate(Math.min(day, lastDay));
+            return result;
+        };
+
+        const formatDateLabel = (key) => {
+            const date = keyToDate(key);
+            if (Number.isNaN(date.getTime())) return '';
+            return `${weekdayNames[date.getDay()]} ${monthNames[date.getMonth()].slice(0, 3)} ${date.getDate()}, ${date.getFullYear()}`;
+        };
+
+        const formatTimeLabel = (value) => {
+            if (!/^\d{1,2}:\d{2}/.test(value || '')) return '';
+            const [hours, minutes] = value.split(':').map(Number);
+            const suffix = hours >= 12 ? 'PM' : 'AM';
+            const hour12 = hours % 12 === 0 ? 12 : hours % 12;
+            return `${hour12}:${pad2(minutes)} ${suffix}`;
+        };
+
+        const showIdFor = (venueId, localValue) => {
+            const datePart = String(localValue || '').slice(0, 10);
+            const base = slug(venueId || '') || 'show';
+            return /^\d{4}-\d{2}-\d{2}$/.test(datePart) ? `${base}-${datePart}` : base;
+        };
+
+        const uniqueShowId = (base, ignoreRow) => {
+            const taken = new Set(
+                Array.from(showsList.querySelectorAll('.m5-show-row'))
+                    .filter((row) => row !== ignoreRow)
+                    .map((row) => row.querySelector('[data-field="id"]')?.value.trim())
+                    .filter(Boolean)
+            );
+            if (!taken.has(base)) return base;
+            let suffix = 2;
+            while (taken.has(`${base}-${suffix}`)) suffix += 1;
+            return `${base}-${suffix}`;
+        };
+
+        const autoAssignShowId = (row) => {
+            if (row.dataset.idManual === 'true') return;
+            const input = row.querySelector('[data-field="id"]');
+            if (!input) return;
+            const venueId = row.querySelector('[data-field="venueId"]')?.value || '';
+            const localValue = row.querySelector('[data-field="startDateTime"]')?.value || '';
+            input.value = uniqueShowId(showIdFor(venueId, localValue), row);
+        };
+
+        const looksAutoGenerated = (candidate, autoBase) => {
+            if (!candidate) return true;
+            if (candidate === autoBase) return true;
+            const escaped = autoBase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            return new RegExp(`^${escaped}-\\d+$`).test(candidate);
+        };
+
         const updateShowPreview = (row) => {
             const preview = row.querySelector('[data-field="venuePreview"]');
             const venueId = row.querySelector('[data-field="venueId"]')?.value;
             const venue = collectVenues().find((item) => item.id === venueId);
-            preview.textContent = venue ? `Linked Venue: ${venue.name} — ${venue.address}` : 'Linked Venue: none selected';
+            const localValue = row.querySelector('[data-field="startDateTime"]')?.value || '';
+            const when = localValue
+                ? `${formatDateLabel(localValue.slice(0, 10))} at ${formatTimeLabel(localValue.slice(11, 16))}`
+                : 'No date set yet';
+            preview.textContent = venue ? `${when} — ${venue.name}, ${venue.address}` : `${when} — no venue selected`;
+        };
+
+        const sortShowRows = () => {
+            Array.from(showsList.querySelectorAll('.m5-show-row'))
+                .map((row) => ({
+                    row,
+                    at: new Date(row.querySelector('[data-field="startDateTime"]')?.value || '').getTime()
+                }))
+                .sort((a, b) => {
+                    const aBad = Number.isNaN(a.at);
+                    const bBad = Number.isNaN(b.at);
+                    if (aBad && bBad) return 0;
+                    if (aBad) return 1;
+                    if (bBad) return -1;
+                    return a.at - b.at;
+                })
+                .forEach(({ row }) => showsList.appendChild(row));
         };
 
         const refreshVenueSelects = () => {
             showsList.querySelectorAll('[data-field="venueId"]').forEach((select) => {
                 const current = select.value;
                 populateVenueSelect(select, current);
-                updateShowPreview(select.closest('.m5-show-row'));
+                const row = select.closest('.m5-show-row');
+                autoAssignShowId(row);
+                updateShowPreview(row);
             });
         };
 
@@ -820,11 +1202,11 @@ export const prerender = false;
             refreshVenueSelects();
         };
 
-        const createShowRow = (show = {}) => {
+        const createShowRow = (show = {}, options = {}) => {
             const node = showTemplate.content.firstElementChild.cloneNode(true);
             node.querySelectorAll('[data-field]').forEach((input) => {
                 const key = input.getAttribute('data-field');
-                if (key === 'venueId' || key === 'venuePreview' || key === 'startDateTime') return;
+                if (key === 'venueId' || key === 'venuePreview' || key === 'startDateTime' || key === 'id') return;
                 input.value = typeof show[key] === 'string' ? show[key] : '';
             });
             const dateInput = node.querySelector('[data-field="startDateTime"]');
@@ -837,11 +1219,92 @@ export const prerender = false;
                     : collectVenues().find((venue) => venue.name === show.venueName)?.id || '';
 
             populateVenueSelect(venueSelect, fallbackVenueId);
-            updateShowPreview(node);
 
-            venueSelect.addEventListener('change', () => updateShowPreview(node));
+            const idInput = node.querySelector('[data-field="id"]');
+            const idToggle = node.querySelector('[data-action="toggle-id"]');
+            const providedId = typeof show.id === 'string' ? show.id.trim() : '';
+            const autoBase = showIdFor(venueSelect.value, dateInput.value);
+            node.dataset.idManual = looksAutoGenerated(providedId, autoBase) ? 'false' : 'true';
+            if (providedId) idInput.value = providedId;
+
+            const setIdLocked = (locked) => {
+                if (locked) {
+                    idInput.setAttribute('readonly', '');
+                    idToggle.textContent = 'Edit';
+                    idToggle.title = 'Override the auto-generated ID';
+                } else {
+                    idInput.removeAttribute('readonly');
+                    idToggle.textContent = 'Auto';
+                    idToggle.title = 'Go back to the auto-generated ID';
+                }
+            };
+
+            setIdLocked(true);
+
+            idToggle.addEventListener('click', () => {
+                if (idInput.hasAttribute('readonly')) {
+                    node.dataset.idManual = 'true';
+                    setIdLocked(false);
+                    idInput.focus();
+                    idInput.select();
+                } else {
+                    node.dataset.idManual = 'false';
+                    setIdLocked(true);
+                    autoAssignShowId(node);
+                }
+            });
+
+            idInput.addEventListener('input', () => {
+                if (!idInput.hasAttribute('readonly')) node.dataset.idManual = 'true';
+            });
+
+            const onShowFieldChange = () => {
+                autoAssignShowId(node);
+                updateShowPreview(node);
+            };
+
+            venueSelect.addEventListener('change', onShowFieldChange);
+            dateInput.addEventListener('change', onShowFieldChange);
+            dateInput.addEventListener('input', onShowFieldChange);
+            node.querySelector('[data-action="duplicate"]').addEventListener('click', () => duplicateShowRow(node));
             node.querySelector('[data-action="remove"]').addEventListener('click', () => node.remove());
-            showsList.appendChild(node);
+
+            if (options.after instanceof HTMLElement && options.after.parentElement === showsList) {
+                options.after.insertAdjacentElement('afterend', node);
+            } else {
+                showsList.appendChild(node);
+            }
+
+            autoAssignShowId(node);
+            updateShowPreview(node);
+            return node;
+        };
+
+        const duplicateShowRow = (row) => {
+            const read = (field) => row.querySelector(`[data-field="${field}"]`)?.value ?? '';
+            const localValue = read('startDateTime');
+            let nextLocal = localValue;
+            if (localValue) {
+                const base = new Date(localValue);
+                if (!Number.isNaN(base.getTime())) {
+                    base.setDate(base.getDate() + 7);
+                    nextLocal = `${dateKey(base)}T${pad2(base.getHours())}:${pad2(base.getMinutes())}`;
+                }
+            }
+            const node = createShowRow(
+                {
+                    eventName: read('eventName'),
+                    venueId: read('venueId'),
+                    startDateTime: nextLocal ? localInputToIso(nextLocal) : ''
+                },
+                { after: row }
+            );
+            node.querySelector('[data-field="startDateTime"]').focus();
+            setMessage(
+                editorMessage,
+                'Show duplicated one week later. Change the date if needed, then hit Save All Changes.'
+            );
+            return node;
         };
 
         const createRecordingRow = (recording = {}) => {
@@ -887,12 +1350,20 @@ export const prerender = false;
         };
 
         const collectShows = (venues = collectVenues()) => {
+            const usedIds = new Set();
             return Array.from(showsList.querySelectorAll('.m5-show-row')).map((row, index) => {
                 const read = (field) => row.querySelector(`[data-field="${field}"]`)?.value.trim() ?? '';
                 const venueId = read('venueId');
                 const venue = venues.find((item) => item.id === venueId);
+                let id = read('id') || showIdFor(venueId, read('startDateTime')) || `show-${index + 1}`;
+                if (usedIds.has(id)) {
+                    let suffix = 2;
+                    while (usedIds.has(`${id}-${suffix}`)) suffix += 1;
+                    id = `${id}-${suffix}`;
+                }
+                usedIds.add(id);
                 return {
-                    id: read('id') || `show-${Date.now()}-${index}`,
+                    id,
                     eventName: read('eventName'),
                     startDateTime: localInputToIso(read('startDateTime')),
                     venueId,
@@ -977,6 +1448,7 @@ export const prerender = false;
             (artistsData.artists ?? []).forEach((artist) => createArtistRow(artist));
 
             refreshVenueSelects();
+            sortShowRows();
         };
 
         const login = async () => {
@@ -1138,21 +1610,196 @@ export const prerender = false;
             closeModal(venueModal, venueModalForm);
         });
 
+        const showModalMsg = showModalForm.querySelector('[data-field="showModalMsg"]');
+        const calLabel = showModalForm.querySelector('[data-field="calLabel"]');
+        const calGrid = showModalForm.querySelector('[data-field="calGrid"]');
+        const pickList = showModalForm.querySelector('[data-field="pickList"]');
+        const pickCount = showModalForm.querySelector('[data-field="pickCount"]');
+        const repeatStartInput = showModalForm.querySelector('input[name="repeatStart"]');
+        const repeatEverySelect = showModalForm.querySelector('select[name="repeatEvery"]');
+        const repeatCountInput = showModalForm.querySelector('input[name="repeatCount"]');
+        const showTimeInput = showModalForm.querySelector('input[name="startTime"]');
+
+        const pickedDates = new Set();
+        let calCursor = new Date();
+        let lastPickedKey = '';
+
+        const renderPickList = () => {
+            const keys = [...pickedDates].sort();
+            pickCount.textContent = String(keys.length);
+            pickList.innerHTML = '';
+
+            if (keys.length === 0) {
+                const empty = document.createElement('li');
+                empty.className = 'm5-pick-empty';
+                empty.textContent = 'No dates picked yet.';
+                pickList.appendChild(empty);
+                return;
+            }
+
+            const time = formatTimeLabel(showTimeInput.value);
+            keys.forEach((key) => {
+                const item = document.createElement('li');
+                const label = document.createElement('span');
+                label.textContent = time ? `${formatDateLabel(key)} · ${time}` : formatDateLabel(key);
+                const drop = document.createElement('button');
+                drop.type = 'button';
+                drop.textContent = '✕';
+                drop.setAttribute('aria-label', `Remove ${formatDateLabel(key)}`);
+                drop.addEventListener('click', () => {
+                    pickedDates.delete(key);
+                    renderCalendar();
+                    renderPickList();
+                });
+                item.append(label, drop);
+                pickList.appendChild(item);
+            });
+        };
+
+        const toggleDate = (key, extendRange) => {
+            if (extendRange && lastPickedKey && lastPickedKey !== key) {
+                const startKey = lastPickedKey < key ? lastPickedKey : key;
+                const endKey = lastPickedKey < key ? key : lastPickedKey;
+                const end = keyToDate(endKey);
+                for (let cursor = keyToDate(startKey); cursor <= end; cursor.setDate(cursor.getDate() + 1)) {
+                    pickedDates.add(dateKey(cursor));
+                }
+                lastPickedKey = key;
+            } else if (pickedDates.has(key)) {
+                pickedDates.delete(key);
+            } else {
+                pickedDates.add(key);
+                lastPickedKey = key;
+            }
+            setMessage(showModalMsg, '');
+            renderCalendar();
+            renderPickList();
+        };
+
+        const renderCalendar = () => {
+            const year = calCursor.getFullYear();
+            const month = calCursor.getMonth();
+            calLabel.textContent = `${monthNames[month]} ${year}`;
+            calGrid.innerHTML = '';
+
+            const leading = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const todayKey = dateKey(new Date());
+
+            for (let i = 0; i < leading; i += 1) {
+                const blank = document.createElement('span');
+                blank.className = 'm5-cal-day is-empty';
+                calGrid.appendChild(blank);
+            }
+
+            for (let day = 1; day <= daysInMonth; day += 1) {
+                const key = dateKey(new Date(year, month, day));
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'm5-cal-day';
+                button.textContent = String(day);
+                button.dataset.key = key;
+                button.setAttribute('aria-pressed', pickedDates.has(key) ? 'true' : 'false');
+                if (key === todayKey) button.classList.add('is-today');
+                if (pickedDates.has(key)) button.classList.add('is-picked');
+                button.addEventListener('click', (event) => toggleDate(key, event.shiftKey));
+                calGrid.appendChild(button);
+            }
+        };
+
+        const repeatFill = () => {
+            const sorted = [...pickedDates].sort();
+            const startKey = repeatStartInput.value || sorted[0] || dateKey(new Date());
+            const count = Math.max(1, Math.min(24, Number(repeatCountInput.value) || 1));
+            const every = repeatEverySelect.value;
+            const start = keyToDate(startKey);
+
+            for (let i = 0; i < count; i += 1) {
+                const next = every === 'month' ? addMonths(start, i) : new Date(start);
+                if (every !== 'month') next.setDate(next.getDate() + i * Number(every));
+                pickedDates.add(dateKey(next));
+            }
+
+            repeatStartInput.value = startKey;
+            calCursor = keyToDate(startKey);
+            lastPickedKey = startKey;
+            renderCalendar();
+            renderPickList();
+            setMessage(showModalMsg, `${count} date${count === 1 ? '' : 's'} filled in starting ${formatDateLabel(startKey)}.`);
+        };
+
+        const resetShowModal = () => {
+            pickedDates.clear();
+            lastPickedKey = '';
+            calCursor = new Date();
+            showTimeInput.value = '20:00';
+            repeatStartInput.value = '';
+            repeatEverySelect.value = '14';
+            repeatCountInput.value = '6';
+            setMessage(showModalMsg, '');
+            renderCalendar();
+            renderPickList();
+        };
+
+        showModalForm.querySelector('[data-action="cal-prev"]').addEventListener('click', () => {
+            calCursor = addMonths(new Date(calCursor.getFullYear(), calCursor.getMonth(), 1), -1);
+            renderCalendar();
+        });
+
+        showModalForm.querySelector('[data-action="cal-next"]').addEventListener('click', () => {
+            calCursor = addMonths(new Date(calCursor.getFullYear(), calCursor.getMonth(), 1), 1);
+            renderCalendar();
+        });
+
+        showModalForm.querySelector('[data-action="repeat-fill"]').addEventListener('click', repeatFill);
+
+        showModalForm.querySelector('[data-action="clear-dates"]').addEventListener('click', () => {
+            pickedDates.clear();
+            lastPickedKey = '';
+            renderCalendar();
+            renderPickList();
+            setMessage(showModalMsg, 'All dates cleared.');
+        });
+
+        showTimeInput.addEventListener('input', renderPickList);
+
         showModalForm.addEventListener('submit', (event) => {
             event.preventDefault();
-            const values = readModalForm(showModalForm);
-            const venue = collectVenues().find((item) => item.id === values.venueId);
-            createShowRow({
-                id: values.id,
-                eventName: values.eventName,
-                startDateTime: localInputToIso(values.startDateTime),
-                venueId: values.venueId,
-                venueName: venue?.name ?? '',
-                venueAddress: venue?.address ?? '',
-                directionsUrl: venue?.directionsUrl ?? '',
-                venueLogo: venue?.logoUrl || '/images/logos/m5logo2.webp'
+            const eventName = showModalForm.querySelector('input[name="eventName"]').value.trim();
+            const venueId = showModalForm.querySelector('select[name="venueId"]').value;
+            const time = showTimeInput.value || '20:00';
+            const keys = [...pickedDates].sort();
+
+            if (!venueId) {
+                setMessage(showModalMsg, 'Pick a venue first.');
+                return;
+            }
+            if (keys.length === 0) {
+                setMessage(showModalMsg, 'Click at least one date on the calendar.');
+                return;
+            }
+
+            const venue = collectVenues().find((item) => item.id === venueId);
+            keys.forEach((key) => {
+                createShowRow({
+                    eventName,
+                    venueId,
+                    startDateTime: localInputToIso(`${key}T${time}`),
+                    venueName: venue?.name ?? '',
+                    venueAddress: venue?.address ?? '',
+                    directionsUrl: venue?.directionsUrl ?? '',
+                    venueLogo: venue?.logoUrl || fallbackVenueLogo
+                });
             });
+
+            sortShowRows();
+            const added = keys.length;
             closeModal(showModal, showModalForm);
+            setTab('shows');
+            setMessage(
+                editorMessage,
+                `Added ${added} show${added === 1 ? '' : 's'} at ${venue?.name || 'the venue'}. Review the list, then hit Save All Changes.`
+            );
         });
 
         loginButton.addEventListener('click', login);
@@ -1174,6 +1821,11 @@ export const prerender = false;
         addShowButton.addEventListener('click', () => {
             populateModalVenueSelect();
             openModal(showModal, showModalForm);
+            resetShowModal();
+        });
+        sortShowsButton.addEventListener('click', () => {
+            sortShowRows();
+            setMessage(editorMessage, 'Shows sorted by date.');
         });
         saveAllButton.addEventListener('click', saveAll);
         logoutButton.addEventListener('click', logout);
