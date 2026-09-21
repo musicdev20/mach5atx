@@ -133,56 +133,50 @@ export const prerender = false;
 
         <dialog id="showModal" class="m5-modal m5-modal-wide">
             <form id="showModalForm" class="m5-modal-form" method="dialog">
-                <h3>Add Shows</h3>
-                <label>Event Name<input name="eventName" type="text" required /></label>
-                <div class="m5-modal-grid">
-                    <label>Venue
-                        <select name="venueId" required>
-                            <option value="">Select a venue</option>
-                        </select>
-                    </label>
-                    <label>Start Time<input name="startTime" type="time" step="60" value="20:00" required /></label>
+                <div class="m5-modal-sticky">
+                    <h3>Add Shows</h3>
+                    <label>Event Name<input name="eventName" type="text" required /></label>
+                    <div class="m5-modal-grid">
+                        <label>Venue
+                            <select name="venueId" required>
+                                <option value="">Select a venue</option>
+                            </select>
+                        </label>
+                        <label>Start Time<input name="startTime" type="time" step="60" value="20:00" /></label>
+                    </div>
+                </div>
+
+                <div class="m5-year">
+                    <div class="m5-year-head">
+                        <button type="button" data-action="year-prev" aria-label="Previous year">&lsaquo;</button>
+                        <strong data-field="yearLabel"></strong>
+                        <button type="button" data-action="year-next" aria-label="Next year">&rsaquo;</button>
+                        <span class="m5-year-hint">Click any day to add or remove it. Shift-click a second day for a whole range.</span>
+                    </div>
+                    <div class="m5-year-grid" data-field="yearGrid"></div>
                 </div>
 
                 <div class="m5-datepick">
-                    <div class="m5-cal">
-                        <div class="m5-cal-head">
-                            <button type="button" data-action="cal-prev" aria-label="Previous month">&lsaquo;</button>
-                            <strong data-field="calLabel"></strong>
-                            <button type="button" data-action="cal-next" aria-label="Next month">&rsaquo;</button>
-                        </div>
-                        <div class="m5-cal-dow" aria-hidden="true">
-                            <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
-                        </div>
-                        <div class="m5-cal-grid" data-field="calGrid"></div>
-                        <p class="m5-admin-hint m5-cal-hint">Click a day to add or remove it. Shift-click a second day to take the whole range.</p>
+                    <div class="m5-paste">
+                        <p class="m5-pick-title">Or paste the venue's list</p>
+                        <textarea
+                            name="pasteDates"
+                            rows="6"
+                            spellcheck="false"
+                            placeholder="One date per line, or comma separated:&#10;1/16/27&#10;3/7/27 9pm&#10;jul 4 2027&#10;2027-09-18"></textarea>
+                        <p class="m5-parse-report" data-field="parseReport"></p>
+                        <button type="button" data-action="paste-add">Add These Dates</button>
                     </div>
 
-                    <div class="m5-repeat">
-                        <p class="m5-repeat-title">Repeat helper</p>
-                        <div class="m5-repeat-row">
-                            <label>Starting<input name="repeatStart" type="date" /></label>
-                            <label>Every
-                                <select name="repeatEvery">
-                                    <option value="7">week</option>
-                                    <option value="14" selected>2 weeks</option>
-                                    <option value="21">3 weeks</option>
-                                    <option value="28">4 weeks</option>
-                                    <option value="month">month (same date)</option>
-                                </select>
-                            </label>
-                            <label>Times<input name="repeatCount" type="number" min="1" max="24" value="6" /></label>
-                        </div>
-                        <button type="button" data-action="repeat-fill">Fill Dates</button>
-
-                        <p class="m5-repeat-title">Selected dates (<span data-field="pickCount">0</span>)</p>
+                    <div class="m5-picked">
+                        <p class="m5-pick-title">Selected dates (<span data-field="pickCount">0</span>)</p>
                         <ul class="m5-pick-list" data-field="pickList"></ul>
                         <button type="button" data-action="clear-dates">Clear All Dates</button>
                     </div>
                 </div>
 
-                <p class="m5-admin-msg" data-field="showModalMsg"></p>
-                <div class="m5-modal-actions">
+                <div class="m5-modal-actions m5-modal-foot">
+                    <p class="m5-admin-msg" data-field="showModalMsg"></p>
                     <button type="button" data-action="cancel">Cancel</button>
                     <button type="submit" data-action="save">Add Shows</button>
                 </div>
@@ -557,8 +551,37 @@ export const prerender = false;
     .m5-modal-actions {
         display: flex;
         justify-content: flex-end;
+        align-items: center;
         gap: 0.5rem;
         padding-top: 0.2rem;
+    }
+
+    .m5-modal-sticky {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        display: grid;
+        gap: 0.6rem;
+        padding: 0.95rem 0.95rem 0.65rem;
+        margin: -0.95rem -0.95rem 0;
+        background: rgb(11 14 30 / 98%);
+        border-bottom: 1px solid rgb(255 255 255 / 12%);
+    }
+
+    .m5-modal-foot {
+        position: sticky;
+        bottom: 0;
+        z-index: 2;
+        padding: 0.65rem 0.95rem;
+        margin: 0 -0.95rem -0.95rem;
+        background: rgb(11 14 30 / 98%);
+        border-top: 1px solid rgb(255 255 255 / 12%);
+    }
+
+    .m5-modal-foot .m5-admin-msg {
+        margin-right: auto;
+        font-size: 0.86rem;
+        text-align: left;
     }
 
     .m5-panel-head-actions {
@@ -568,7 +591,7 @@ export const prerender = false;
     }
 
     .m5-modal-wide {
-        width: min(900px, calc(100vw - 2rem));
+        width: min(1120px, calc(100vw - 2rem));
         max-height: calc(100vh - 2rem);
         overflow-y: auto;
     }
@@ -589,15 +612,28 @@ export const prerender = false;
         background: rgb(7 11 21 / 55%);
     }
 
-    .m5-cal-head {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.4rem;
-        margin-bottom: 0.45rem;
+    .m5-year {
+        border: 1px solid rgb(255 255 255 / 14%);
+        border-radius: 0.7rem;
+        padding: 0.7rem;
+        background: rgb(7 11 21 / 55%);
     }
 
-    .m5-cal-head button {
+    .m5-year-head {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .m5-year-head strong {
+        font-size: 1.05rem;
+        letter-spacing: 0.06em;
+        min-width: 4.2rem;
+        text-align: center;
+    }
+
+    .m5-year-head button {
         border: 1px solid rgb(255 255 255 / 26%);
         border-radius: 0.5rem;
         background: rgb(12 17 31 / 85%);
@@ -605,39 +641,72 @@ export const prerender = false;
         font: inherit;
         font-weight: 800;
         line-height: 1;
-        padding: 0.32rem 0.62rem;
+        padding: 0.3rem 0.6rem;
         cursor: pointer;
     }
 
-    .m5-cal-head button:hover {
+    .m5-year-head button:hover {
         border-color: #ff4e56;
         color: #ff4e56;
     }
 
-    .m5-cal-dow,
-    .m5-cal-grid {
-        display: grid;
-        grid-template-columns: repeat(7, minmax(0, 1fr));
-        gap: 0.22rem;
+    .m5-year-hint {
+        margin-left: auto;
+        font-size: 0.8rem;
+        color: rgb(230 233 242 / 70%);
+        text-align: right;
     }
 
-    .m5-cal-dow span {
+    .m5-year-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.7rem 0.85rem;
+    }
+
+    .m5-month {
+        min-width: 0;
+    }
+
+    .m5-month-name {
+        margin: 0 0 0.3rem;
+        font-size: 0.74rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgb(226 231 244 / 72%);
+    }
+
+    .m5-month.has-picks .m5-month-name {
+        color: #ff8a90;
+    }
+
+    .m5-month-dow,
+    .m5-month-grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 2px;
+    }
+
+    .m5-month-dow span {
         text-align: center;
-        font-size: 0.72rem;
+        font-size: 0.6rem;
         font-weight: 700;
-        letter-spacing: 0.04em;
-        color: rgb(226 231 244 / 62%);
-        padding-bottom: 0.22rem;
+        color: rgb(226 231 244 / 45%);
+        padding-bottom: 2px;
     }
 
     .m5-cal-day {
-        border: 1px solid rgb(255 255 255 / 12%);
-        border-radius: 0.45rem;
+        border: 1px solid rgb(255 255 255 / 10%);
+        border-radius: 0.3rem;
         background: rgb(12 17 31 / 70%);
         color: #f2f5ff;
         font: inherit;
-        font-size: 0.86rem;
-        padding: 0.42rem 0;
+        font-size: 0.72rem;
+        line-height: 1;
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        padding: 0;
         cursor: pointer;
     }
 
@@ -652,8 +721,12 @@ export const prerender = false;
         cursor: default;
     }
 
+    .m5-cal-day.is-weekend {
+        background: rgb(255 255 255 / 7%);
+    }
+
     .m5-cal-day.is-today {
-        border-color: rgb(255 255 255 / 48%);
+        border-color: rgb(255 255 255 / 55%);
     }
 
     .m5-cal-day.is-picked {
@@ -667,19 +740,26 @@ export const prerender = false;
         color: #14060a;
     }
 
-    .m5-cal-hint {
-        margin: 0.5rem 0 0;
-        font-size: 0.8rem;
-    }
-
-    .m5-repeat {
+    .m5-paste {
         display: grid;
-        gap: 0.5rem;
+        gap: 0.45rem;
         align-content: start;
     }
 
-    .m5-repeat-title {
-        margin: 0.15rem 0 0;
+    .m5-paste textarea {
+        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        font-size: 0.86rem;
+        resize: vertical;
+    }
+
+    .m5-picked {
+        display: grid;
+        gap: 0.45rem;
+        align-content: start;
+    }
+
+    .m5-pick-title {
+        margin: 0;
         font-size: 0.78rem;
         font-weight: 800;
         letter-spacing: 0.06em;
@@ -687,17 +767,20 @@ export const prerender = false;
         color: rgb(226 231 244 / 68%);
     }
 
-    .m5-repeat-row {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 0.45rem;
+    .m5-parse-report {
+        margin: 0;
+        font-size: 0.83rem;
+        line-height: 1.4;
+        color: rgb(230 233 242 / 80%);
+        min-height: 1.3em;
     }
 
-    .m5-repeat label {
-        display: flex;
-        flex-direction: column;
-        gap: 0.22rem;
-        font-size: 0.82rem;
+    .m5-parse-report .m5-parse-bad {
+        color: #ff8a90;
+    }
+
+    .m5-parse-report .m5-parse-warn {
+        color: #ffca7a;
     }
 
     .m5-pick-list {
@@ -724,6 +807,19 @@ export const prerender = false;
         padding: 0.22rem 0.32rem;
         border-radius: 0.35rem;
         background: rgb(255 255 255 / 6%);
+    }
+
+    .m5-pick-list li.is-past {
+        border: 1px dashed rgb(255 202 122 / 55%);
+    }
+
+    .m5-pick-list li.is-past > span:first-child {
+        color: #ffca7a;
+    }
+
+    .m5-pick-list li .m5-pick-time {
+        color: rgb(255 180 184 / 90%);
+        font-size: 0.8rem;
     }
 
     .m5-pick-list li.m5-pick-empty {
@@ -796,9 +892,14 @@ export const prerender = false;
             grid-column: auto;
         }
         .m5-modal-grid,
-        .m5-datepick,
-        .m5-repeat-row {
+        .m5-datepick {
             grid-template-columns: 1fr;
+        }
+        .m5-year-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .m5-year-hint {
+            display: none;
         }
         .m5-row-actions {
             grid-column: auto;
@@ -809,6 +910,15 @@ export const prerender = false;
         .m5-panel-head {
             flex-direction: column;
             align-items: flex-start;
+        }
+    }
+
+    @media (max-width: 520px) {
+        .m5-year-grid {
+            grid-template-columns: 1fr;
+        }
+        .m5-modal-wide {
+            width: calc(100vw - 1rem);
         }
     }
 </style>
@@ -1611,18 +1721,155 @@ export const prerender = false;
         });
 
         const showModalMsg = showModalForm.querySelector('[data-field="showModalMsg"]');
-        const calLabel = showModalForm.querySelector('[data-field="calLabel"]');
-        const calGrid = showModalForm.querySelector('[data-field="calGrid"]');
+        const yearLabel = showModalForm.querySelector('[data-field="yearLabel"]');
+        const yearGrid = showModalForm.querySelector('[data-field="yearGrid"]');
         const pickList = showModalForm.querySelector('[data-field="pickList"]');
         const pickCount = showModalForm.querySelector('[data-field="pickCount"]');
-        const repeatStartInput = showModalForm.querySelector('input[name="repeatStart"]');
-        const repeatEverySelect = showModalForm.querySelector('select[name="repeatEvery"]');
-        const repeatCountInput = showModalForm.querySelector('input[name="repeatCount"]');
+        const pasteInput = showModalForm.querySelector('textarea[name="pasteDates"]');
+        const parseReport = showModalForm.querySelector('[data-field="parseReport"]');
         const showTimeInput = showModalForm.querySelector('input[name="startTime"]');
 
         const pickedDates = new Set();
-        let calCursor = new Date();
+        const pickedTimes = new Map();
+        let calYear = new Date().getFullYear();
         let lastPickedKey = '';
+
+        const MONTH_LOOKUP = {
+            jan: 0, january: 0,
+            feb: 1, february: 1,
+            mar: 2, march: 2,
+            apr: 3, april: 3,
+            may: 4,
+            jun: 5, june: 5,
+            jul: 6, july: 6,
+            aug: 7, august: 7,
+            sep: 8, sept: 8, september: 8,
+            oct: 9, october: 9,
+            nov: 10, november: 10,
+            dec: 11, december: 11
+        };
+
+        const expandYear = (raw) => {
+            const value = Number(raw);
+            return String(raw).length <= 2 ? 2000 + value : value;
+        };
+
+        const parseTimeToken = (token) => {
+            const match = String(token)
+                .trim()
+                .toLowerCase()
+                .replace(/\s+/g, '')
+                .match(/^(\d{1,2})(?::(\d{2}))?(am|pm)?$/);
+            if (!match) return null;
+            const minutes = Number(match[2] || 0);
+            const meridiem = match[3];
+            let hours = Number(match[1]);
+            if (minutes > 59) return null;
+            if (meridiem) {
+                if (hours < 1 || hours > 12) return null;
+                if (meridiem === 'pm' && hours !== 12) hours += 12;
+                if (meridiem === 'am' && hours === 12) hours = 0;
+            } else if (!match[2] || hours > 23) {
+                return null;
+            }
+            return `${pad2(hours)}:${pad2(minutes)}`;
+        };
+
+        const parseDateChunk = (chunk, defaultYear) => {
+            const raw = String(chunk).trim();
+            if (!raw) return null;
+
+            let rest = raw;
+            let time = null;
+
+            const timeMatch = rest.match(/[\s@]+(\d{1,2}(?::\d{2})?\s*(?:am|pm)|\d{1,2}:\d{2})\s*$/i);
+            if (timeMatch) {
+                const parsed = parseTimeToken(timeMatch[1]);
+                if (parsed) {
+                    time = parsed;
+                    rest = rest.slice(0, timeMatch.index).trim();
+                }
+            }
+
+            rest = rest.replace(/,/g, ' ').replace(/\s+/g, ' ').trim();
+            let year;
+            let month;
+            let day;
+
+            let match = rest.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/);
+            if (match) {
+                year = Number(match[1]);
+                month = Number(match[2]) - 1;
+                day = Number(match[3]);
+            }
+
+            if (year === undefined) {
+                match = rest.match(/^(\d{1,2})[-/.](\d{1,2})(?:[-/.](\d{2,4}))?$/);
+                if (match) {
+                    month = Number(match[1]) - 1;
+                    day = Number(match[2]);
+                    year = match[3] ? expandYear(match[3]) : defaultYear;
+                }
+            }
+
+            if (year === undefined) {
+                match = rest.match(/^([a-z]+)\.? (\d{1,2})(?:st|nd|rd|th)?(?: (\d{2,4}))?$/i);
+                if (match && MONTH_LOOKUP[match[1].toLowerCase()] !== undefined) {
+                    month = MONTH_LOOKUP[match[1].toLowerCase()];
+                    day = Number(match[2]);
+                    year = match[3] ? expandYear(match[3]) : defaultYear;
+                }
+            }
+
+            if (year === undefined) {
+                match = rest.match(/^(\d{1,2})(?:st|nd|rd|th)? ([a-z]+)\.?(?: (\d{2,4}))?$/i);
+                if (match && MONTH_LOOKUP[match[2].toLowerCase()] !== undefined) {
+                    day = Number(match[1]);
+                    month = MONTH_LOOKUP[match[2].toLowerCase()];
+                    year = match[3] ? expandYear(match[3]) : defaultYear;
+                }
+            }
+
+            if (year === undefined || month < 0 || month > 11 || day < 1) return { raw, ok: false };
+
+            const probe = new Date(year, month, day);
+            if (probe.getFullYear() !== year || probe.getMonth() !== month || probe.getDate() !== day) {
+                return { raw, ok: false };
+            }
+
+            return { raw, ok: true, key: dateKey(probe), time };
+        };
+
+        const parseDateInput = (text, defaultYear) => {
+            const results = [];
+            String(text)
+                .split(/[\n;]+/)
+                .forEach((line) => {
+                    const trimmed = line.trim();
+                    if (!trimmed) return;
+
+                    const whole = parseDateChunk(trimmed, defaultYear);
+                    if (whole && whole.ok) {
+                        results.push(whole);
+                        return;
+                    }
+
+                    if (trimmed.includes(',')) {
+                        const pieces = trimmed
+                            .split(',')
+                            .map((piece) => piece.trim())
+                            .filter(Boolean)
+                            .map((piece) => parseDateChunk(piece, defaultYear));
+                        if (pieces.length > 1 && pieces.every((piece) => piece && piece.ok)) {
+                            results.push(...pieces);
+                            return;
+                        }
+                    }
+
+                    results.push(whole || { raw: trimmed, ok: false });
+                });
+            return results;
+        };
 
         const renderPickList = () => {
             const keys = [...pickedDates].sort();
@@ -1637,128 +1884,252 @@ export const prerender = false;
                 return;
             }
 
-            const time = formatTimeLabel(showTimeInput.value);
+            const defaultTime = showTimeInput.value || '20:00';
             keys.forEach((key) => {
                 const item = document.createElement('li');
                 const label = document.createElement('span');
-                label.textContent = time ? `${formatDateLabel(key)} · ${time}` : formatDateLabel(key);
+                label.textContent = formatDateLabel(key);
+
+                const override = pickedTimes.get(key);
+                const time = document.createElement('span');
+                time.className = 'm5-pick-time';
+                time.textContent = formatTimeLabel(override || defaultTime) + (override ? ' ✎' : '');
+                if (override) time.title = 'Time set from your pasted list';
+
+                if (isPastKey(key)) {
+                    item.classList.add('is-past');
+                    label.textContent += ' · past';
+                    label.title = 'The site only lists upcoming shows, so this one would not appear.';
+                }
+
                 const drop = document.createElement('button');
                 drop.type = 'button';
                 drop.textContent = '✕';
                 drop.setAttribute('aria-label', `Remove ${formatDateLabel(key)}`);
                 drop.addEventListener('click', () => {
                     pickedDates.delete(key);
-                    renderCalendar();
+                    pickedTimes.delete(key);
+                    renderYearCalendar();
                     renderPickList();
                 });
-                item.append(label, drop);
+
+                const left = document.createElement('span');
+                left.append(label);
+                item.append(left, time, drop);
                 pickList.appendChild(item);
             });
         };
 
+        const MAX_RANGE_DAYS = 62;
+        const isPastKey = (key) => key < dateKey(new Date());
+
         const toggleDate = (key, extendRange) => {
+            let message = '';
+
             if (extendRange && lastPickedKey && lastPickedKey !== key) {
                 const startKey = lastPickedKey < key ? lastPickedKey : key;
                 const endKey = lastPickedKey < key ? key : lastPickedKey;
+                const start = keyToDate(startKey);
                 const end = keyToDate(endKey);
-                for (let cursor = keyToDate(startKey); cursor <= end; cursor.setDate(cursor.getDate() + 1)) {
-                    pickedDates.add(dateKey(cursor));
+                const span = Math.round((end - start) / 86400000) + 1;
+
+                if (span > MAX_RANGE_DAYS) {
+                    pickedDates.add(key);
+                    message = `That range spans ${span} days — too many to add in one go, so only ${formatDateLabel(key)} was added.`;
+                } else {
+                    for (let cursor = new Date(start); cursor <= end; cursor.setDate(cursor.getDate() + 1)) {
+                        pickedDates.add(dateKey(cursor));
+                    }
+                    message = `Added ${span} days, ${formatDateLabel(startKey)} through ${formatDateLabel(endKey)}.`;
                 }
                 lastPickedKey = key;
             } else if (pickedDates.has(key)) {
                 pickedDates.delete(key);
+                pickedTimes.delete(key);
             } else {
                 pickedDates.add(key);
                 lastPickedKey = key;
             }
-            setMessage(showModalMsg, '');
-            renderCalendar();
+
+            setMessage(showModalMsg, message);
+            renderYearCalendar();
             renderPickList();
         };
 
-        const renderCalendar = () => {
-            const year = calCursor.getFullYear();
-            const month = calCursor.getMonth();
-            calLabel.textContent = `${monthNames[month]} ${year}`;
-            calGrid.innerHTML = '';
-
-            const leading = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const renderYearCalendar = () => {
+            yearLabel.textContent = String(calYear);
+            yearGrid.innerHTML = '';
             const todayKey = dateKey(new Date());
 
-            for (let i = 0; i < leading; i += 1) {
-                const blank = document.createElement('span');
-                blank.className = 'm5-cal-day is-empty';
-                calGrid.appendChild(blank);
-            }
+            for (let month = 0; month < 12; month += 1) {
+                const wrap = document.createElement('div');
+                wrap.className = 'm5-month';
 
-            for (let day = 1; day <= daysInMonth; day += 1) {
-                const key = dateKey(new Date(year, month, day));
-                const button = document.createElement('button');
-                button.type = 'button';
-                button.className = 'm5-cal-day';
-                button.textContent = String(day);
-                button.dataset.key = key;
-                button.setAttribute('aria-pressed', pickedDates.has(key) ? 'true' : 'false');
-                if (key === todayKey) button.classList.add('is-today');
-                if (pickedDates.has(key)) button.classList.add('is-picked');
-                button.addEventListener('click', (event) => toggleDate(key, event.shiftKey));
-                calGrid.appendChild(button);
+                const name = document.createElement('p');
+                name.className = 'm5-month-name';
+                name.textContent = monthNames[month].slice(0, 3);
+                wrap.appendChild(name);
+
+                const dow = document.createElement('div');
+                dow.className = 'm5-month-dow';
+                dow.setAttribute('aria-hidden', 'true');
+                ['S', 'M', 'T', 'W', 'T', 'F', 'S'].forEach((letter) => {
+                    const cell = document.createElement('span');
+                    cell.textContent = letter;
+                    dow.appendChild(cell);
+                });
+                wrap.appendChild(dow);
+
+                const grid = document.createElement('div');
+                grid.className = 'm5-month-grid';
+
+                const leading = new Date(calYear, month, 1).getDay();
+                const daysInMonth = new Date(calYear, month + 1, 0).getDate();
+                let picksInMonth = 0;
+
+                for (let i = 0; i < leading; i += 1) {
+                    const blank = document.createElement('span');
+                    blank.className = 'm5-cal-day is-empty';
+                    grid.appendChild(blank);
+                }
+
+                for (let day = 1; day <= daysInMonth; day += 1) {
+                    const date = new Date(calYear, month, day);
+                    const key = dateKey(date);
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'm5-cal-day';
+                    button.textContent = String(day);
+                    button.dataset.key = key;
+                    button.title = formatDateLabel(key);
+                    const weekday = date.getDay();
+                    if (weekday === 0 || weekday === 6) button.classList.add('is-weekend');
+                    if (key === todayKey) button.classList.add('is-today');
+                    if (pickedDates.has(key)) {
+                        button.classList.add('is-picked');
+                        picksInMonth += 1;
+                    }
+                    button.setAttribute('aria-pressed', pickedDates.has(key) ? 'true' : 'false');
+                    grid.appendChild(button);
+                }
+
+                if (picksInMonth > 0) wrap.classList.add('has-picks');
+                wrap.appendChild(grid);
+                yearGrid.appendChild(wrap);
             }
         };
 
-        const repeatFill = () => {
-            const sorted = [...pickedDates].sort();
-            const startKey = repeatStartInput.value || sorted[0] || dateKey(new Date());
-            const count = Math.max(1, Math.min(24, Number(repeatCountInput.value) || 1));
-            const every = repeatEverySelect.value;
-            const start = keyToDate(startKey);
-
-            for (let i = 0; i < count; i += 1) {
-                const next = every === 'month' ? addMonths(start, i) : new Date(start);
-                if (every !== 'month') next.setDate(next.getDate() + i * Number(every));
-                pickedDates.add(dateKey(next));
+        const renderParseReport = () => {
+            const text = pasteInput.value;
+            if (!text.trim()) {
+                parseReport.textContent = '';
+                return [];
             }
 
-            repeatStartInput.value = startKey;
-            calCursor = keyToDate(startKey);
-            lastPickedKey = startKey;
-            renderCalendar();
+            const parsed = parseDateInput(text, calYear);
+            const good = parsed.filter((entry) => entry.ok);
+            const bad = parsed.filter((entry) => !entry.ok);
+
+            parseReport.innerHTML = '';
+            if (good.length > 0) {
+                const line = document.createElement('span');
+                const preview = good.slice(0, 4).map((entry) => formatDateLabel(entry.key)).join(' · ');
+                line.textContent = `✓ ${good.length} date${good.length === 1 ? '' : 's'}: ${preview}${good.length > 4 ? ` · +${good.length - 4} more` : ''}`;
+                parseReport.appendChild(line);
+            }
+            if (bad.length > 0) {
+                if (parseReport.childNodes.length > 0) parseReport.appendChild(document.createElement('br'));
+                const line = document.createElement('span');
+                line.className = 'm5-parse-bad';
+                line.textContent = `✕ couldn't read: ${bad.map((entry) => `"${entry.raw}"`).join(', ')}`;
+                parseReport.appendChild(line);
+            }
+
+            const past = good.filter((entry) => isPastKey(entry.key));
+            if (past.length > 0) {
+                if (parseReport.childNodes.length > 0) parseReport.appendChild(document.createElement('br'));
+                const line = document.createElement('span');
+                line.className = 'm5-parse-warn';
+                line.textContent = `⚠ ${past.length} in the past (${past
+                    .map((entry) => formatDateLabel(entry.key))
+                    .join(', ')}) — check the year, the site only lists upcoming shows.`;
+                parseReport.appendChild(line);
+            }
+
+            return good;
+        };
+
+        const addPastedDates = () => {
+            const good = renderParseReport();
+            if (good.length === 0) {
+                setMessage(showModalMsg, 'Nothing to add — type or paste dates like 1/16/27 or jul 4 2027.');
+                return;
+            }
+
+            good.forEach((entry) => {
+                pickedDates.add(entry.key);
+                if (entry.time) pickedTimes.set(entry.key, entry.time);
+            });
+
+            const firstKey = [...pickedDates].sort()[0];
+            calYear = keyToDate(good[0].key).getFullYear();
+            lastPickedKey = good[good.length - 1].key;
+            pasteInput.value = '';
+            parseReport.textContent = '';
+            renderYearCalendar();
             renderPickList();
-            setMessage(showModalMsg, `${count} date${count === 1 ? '' : 's'} filled in starting ${formatDateLabel(startKey)}.`);
+            setMessage(
+                showModalMsg,
+                `Added ${good.length} date${good.length === 1 ? '' : 's'}. ${pickedDates.size} selected in total, starting ${formatDateLabel(firstKey)}.`
+            );
         };
 
         const resetShowModal = () => {
             pickedDates.clear();
+            pickedTimes.clear();
             lastPickedKey = '';
-            calCursor = new Date();
+            calYear = new Date().getFullYear();
             showTimeInput.value = '20:00';
-            repeatStartInput.value = '';
-            repeatEverySelect.value = '14';
-            repeatCountInput.value = '6';
+            pasteInput.value = '';
+            parseReport.textContent = '';
             setMessage(showModalMsg, '');
-            renderCalendar();
+            renderYearCalendar();
             renderPickList();
         };
 
-        showModalForm.querySelector('[data-action="cal-prev"]').addEventListener('click', () => {
-            calCursor = addMonths(new Date(calCursor.getFullYear(), calCursor.getMonth(), 1), -1);
-            renderCalendar();
+        yearGrid.addEventListener('click', (event) => {
+            const button = event.target.closest('.m5-cal-day');
+            if (!button || !button.dataset.key) return;
+            toggleDate(button.dataset.key, event.shiftKey);
         });
 
-        showModalForm.querySelector('[data-action="cal-next"]').addEventListener('click', () => {
-            calCursor = addMonths(new Date(calCursor.getFullYear(), calCursor.getMonth(), 1), 1);
-            renderCalendar();
+        showModalForm.querySelector('[data-action="year-prev"]').addEventListener('click', () => {
+            calYear -= 1;
+            renderYearCalendar();
         });
 
-        showModalForm.querySelector('[data-action="repeat-fill"]').addEventListener('click', repeatFill);
+        showModalForm.querySelector('[data-action="year-next"]').addEventListener('click', () => {
+            calYear += 1;
+            renderYearCalendar();
+        });
+
+        showModalForm.querySelector('[data-action="paste-add"]').addEventListener('click', addPastedDates);
 
         showModalForm.querySelector('[data-action="clear-dates"]').addEventListener('click', () => {
             pickedDates.clear();
+            pickedTimes.clear();
             lastPickedKey = '';
-            renderCalendar();
+            renderYearCalendar();
             renderPickList();
             setMessage(showModalMsg, 'All dates cleared.');
+        });
+
+        pasteInput.addEventListener('input', renderParseReport);
+        pasteInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
+                event.preventDefault();
+                addPastedDates();
+            }
         });
 
         showTimeInput.addEventListener('input', renderPickList);
@@ -1775,7 +2146,7 @@ export const prerender = false;
                 return;
             }
             if (keys.length === 0) {
-                setMessage(showModalMsg, 'Click at least one date on the calendar.');
+                setMessage(showModalMsg, 'Pick at least one date on the calendar, or paste a list and hit Add These Dates.');
                 return;
             }
 
@@ -1784,7 +2155,7 @@ export const prerender = false;
                 createShowRow({
                     eventName,
                     venueId,
-                    startDateTime: localInputToIso(`${key}T${time}`),
+                    startDateTime: localInputToIso(`${key}T${pickedTimes.get(key) || time}`),
                     venueName: venue?.name ?? '',
                     venueAddress: venue?.address ?? '',
                     directionsUrl: venue?.directionsUrl ?? '',
@@ -1794,11 +2165,16 @@ export const prerender = false;
 
             sortShowRows();
             const added = keys.length;
+            const pastCount = keys.filter((key) => isPastKey(key)).length;
             closeModal(showModal, showModalForm);
             setTab('shows');
             setMessage(
                 editorMessage,
-                `Added ${added} show${added === 1 ? '' : 's'} at ${venue?.name || 'the venue'}. Review the list, then hit Save All Changes.`
+                `Added ${added} show${added === 1 ? '' : 's'} at ${venue?.name || 'the venue'}.` +
+                    (pastCount > 0
+                        ? ` ${pastCount} ${pastCount === 1 ? 'is' : 'are'} in the past and will not show on the site — check the year.`
+                        : '') +
+                    ' Review the list, then hit Save All Changes.'
             );
         });
 
