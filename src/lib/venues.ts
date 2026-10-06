@@ -72,6 +72,14 @@ export const getNotableVenues = async (): Promise<NotableVenue[]> => {
     }
 };
 
+/** Same list the site shows, but throws if the store cannot be read instead of quietly
+ *  returning the defaults. Use this before rewriting the list. */
+export const getStoredVenues = async (): Promise<NotableVenue[]> => {
+    const store = getStore({ name: STORE_NAME, consistency: 'strong' });
+    const stored = await store.get(STORE_KEY, { type: 'json' });
+    return normalizeVenues(stored);
+};
+
 export const setNotableVenues = async (venues: NotableVenue[]): Promise<NotableVenue[]> => {
     const store = getStore({ name: STORE_NAME, consistency: 'strong' });
     const normalized = normalizeVenues(venues);

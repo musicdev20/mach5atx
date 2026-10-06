@@ -25,6 +25,15 @@ export const isAuthorized = (request: Request): boolean => {
     return token === expected;
 };
 
+/** Header the scheduled calendar sync sends, since it has no browser session. */
+export const INTERNAL_SYNC_HEADER = 'x-mach5-sync';
+
+export const isInternalSyncCall = (request: Request): boolean => {
+    const expected = getExpectedDigest();
+    if (!expected) return false;
+    return request.headers.get(INTERNAL_SYNC_HEADER) === expected;
+};
+
 export const verifyPassword = (password: string): boolean => {
     const expected = getExpectedDigest();
     if (!expected) return false;

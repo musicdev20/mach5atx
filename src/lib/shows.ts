@@ -88,6 +88,14 @@ export const getUpcomingShows = async (): Promise<UpcomingShow[]> => {
     }
 };
 
+/** Everything in the store, past shows included, with no fallback to the defaults.
+ *  Throws if the store cannot be read, so a caller that rewrites the list never starts from a blank. */
+export const getStoredShows = async (): Promise<UpcomingShow[]> => {
+    const store = getStore({ name: STORE_NAME, consistency: 'strong' });
+    const stored = await store.get(STORE_KEY, { type: 'json' });
+    return Array.isArray(stored) ? stored.filter(isValidShow) : [];
+};
+
 export const setUpcomingShows = async (shows: UpcomingShow[]): Promise<void> => {
     const store = getStore({ name: STORE_NAME, consistency: 'strong' });
     await store.setJSON(STORE_KEY, normalizeShows(shows));
