@@ -419,7 +419,7 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
     }
 </style>
 
-<script is:inline>
+<script is:inline data-astro-rerun>
     (() => {
         const dataNode = document.getElementById('showsData');
         const listNode = document.getElementById('showsList');
@@ -442,7 +442,7 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
         } catch {
             shows = [];
         }
-        if (!Array.isArray(shows) || !shows.length) return;
+        if (!Array.isArray(shows)) shows = [];
 
         const fullFmt = new Intl.DateTimeFormat('en-US', {
             weekday: 'short',
