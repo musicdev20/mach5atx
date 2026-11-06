@@ -49,12 +49,20 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
                         <h2>Upcoming Shows</h2>
                         <p class="m5-shows-hint">Select a show to view full details.</p>
                         <div class="m5-shows-tools">
-                            <label for="monthFilter">Filter Month</label>
-                            <select id="monthFilter" aria-label="Filter shows by month">
-                                <option value="all">All Upcoming</option>
-                            </select>
+                            <div class="m5-filter-field">
+                                <label for="monthFilter">Filter Month</label>
+                                <select id="monthFilter" aria-label="Filter shows by month">
+                                    <option value="all">All Upcoming</option>
+                                </select>
+                            </div>
+                            <div class="m5-filter-field">
+                                <label for="venueFilter">Filter Venue</label>
+                                <select id="venueFilter" aria-label="Filter shows by venue">
+                                    <option value="all">All Venues</option>
+                                </select>
+                            </div>
                         </div>
-                        <p id="showsEmpty" class="m5-shows-empty" hidden>No shows found for this month.</p>
+                        <p id="showsEmpty" class="m5-shows-empty" hidden>No shows match the selected filters.</p>
                         <div id="showsList" class="m5-shows-list" role="list"></div>
                     </div>
 
@@ -190,8 +198,14 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
         margin-top: 0.65rem;
         display: flex;
         align-items: center;
-        gap: 0.55rem;
+        gap: 0.6rem 1.1rem;
         flex-wrap: wrap;
+    }
+    .m5-filter-field {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        min-width: 0;
     }
     .m5-shows-tools label {
         color: rgb(225 230 243 / 88%);
@@ -208,6 +222,7 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
         padding: 0.45rem 0.58rem;
         font: inherit;
         font-size: 0.92rem;
+        max-width: 100%;
     }
     .m5-shows-empty {
         margin: 0.7rem 0 0;
@@ -416,9 +431,10 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
         const detailShare = document.getElementById('detailShare');
         const detailVenueLogo = document.getElementById('detailVenueLogo');
         const monthFilter = document.getElementById('monthFilter');
+        const venueFilter = document.getElementById('venueFilter');
         const showsEmpty = document.getElementById('showsEmpty');
 
-        if (!dataNode || !listNode || !detailName || !detailVenue || !detailDate || !detailAddress || !detailDirections || !detailShare || !detailVenueLogo || !monthFilter || !showsEmpty) return;
+        if (!dataNode || !listNode || !detailName || !detailVenue || !detailDate || !detailAddress || !detailDirections || !detailShare || !detailVenueLogo || !monthFilter || !venueFilter || !showsEmpty) return;
 
         let shows = [];
         try {
@@ -481,7 +497,7 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
         };
 
         const clearDetail = () => {
-            detailName.textContent = 'No shows for selected month';
+            detailName.textContent = 'No shows match the selected filters';
             detailVenue.textContent = '';
             detailDate.textContent = '';
             detailAddress.textContent = '';
@@ -542,7 +558,30 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
             });
         };
 
+        const venueKeyFor = (show) => String(show.venueName || '').trim().toLowerCase();
+
+        const renderVenueFilter = (rows) => {
+            const previous = venueFilter.value;
+            const venues = new Map();
+            rows.forEach((show) => {
+                const key = venueKeyFor(show);
+                if (!key || venues.has(key)) return;
+                venues.set(key, String(show.venueName).trim());
+            });
+            venueFilter.innerHTML = '<option value="all">All Venues</option>';
+            [...venues.entries()]
+                .sort((a, b) => a[1].localeCompare(b[1], 'en', { sensitivity: 'base' }))
+                .forEach(([key, label]) => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = label;
+                    venueFilter.appendChild(option);
+                });
+            venueFilter.value = venues.has(previous) ? previous : 'all';
+        };
+
         const renderMonthFilter = (rows) => {
+            const previous = monthFilter.value;
             const months = [];
             const seen = new Set();
             rows.forEach((show) => {
@@ -560,6 +599,7 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
                 option.textContent = month.label;
                 monthFilter.appendChild(option);
             });
+            monthFilter.value = seen.has(previous) ? previous : 'all';
         };
 
         const renderList = (rows) => {
@@ -606,21 +646,23 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
 
         const applyFilter = () => {
             const selectedMonth = monthFilter.value;
-            const filtered =
-                selectedMonth === 'all'
-                    ? shows
-                    : shows.filter((show) => {
-                          const date = new Date(show.startDateTime);
-                          if (Number.isNaN(date.getTime())) return false;
-                          return monthKeyFor(date) === selectedMonth;
-                      });
+            const selectedVenue = venueFilter.value;
+            const filtered = shows.filter((show) => {
+                if (selectedVenue !== 'all' && venueKeyFor(show) !== selectedVenue) return false;
+                if (selectedMonth === 'all') return true;
+                const date = new Date(show.startDateTime);
+                if (Number.isNaN(date.getTime())) return false;
+                return monthKeyFor(date) === selectedMonth;
+            });
             renderList(filtered);
         };
 
         shows = sortShows(shows);
         renderMonthFilter(shows);
+        renderVenueFilter(shows);
         applyFilter();
         monthFilter.addEventListener('change', applyFilter);
+        venueFilter.addEventListener('change', applyFilter);
 
         fetch('/api/shows')
             .then((response) => (response.ok ? response.json() : null))
@@ -628,6 +670,7 @@ const fallbackVenueLogo = '/images/logos/m5logo2.webp';
                 if (!payload || !Array.isArray(payload.shows) || !payload.shows.length) return;
                 shows = sortShows(payload.shows);
                 renderMonthFilter(shows);
+                renderVenueFilter(shows);
                 applyFilter();
             })
             .catch(() => {
